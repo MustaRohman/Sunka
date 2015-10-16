@@ -1,3 +1,6 @@
+# TEAM TUCAN # 
+
+
 # Lectures #
 
 * Monday: 9-12
@@ -32,3 +35,5 @@
 * Monday Environment & Git Flow & User Stories
 * Tuesday JUnit & TDD
 * Wednesday Dev Work
+
+Feel free to edit the readme with any information
