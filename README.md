@@ -27,7 +27,7 @@
 * Thursday TBD
 * Friday TBD
 
-# Plan for next week # 
+# Plan for next week 
 
 * Monday Environment & Git Flow & User Stories
 * Tuesday JUnit & TDD
