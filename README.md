@@ -26,3 +26,9 @@
 * Wednesday 12:00 to 4-5
 * Thursday TBD
 * Friday TBD
+
+# Plan for next week # 
+
+* Monday Environment & Git Flow & User Stories
+* Tuesday JUnit & TDD
+* Wednesday Dev Work
