@@ -5,7 +5,7 @@
 * Mert: 07775429535
 * Konstantin: 07845125471
 
-# Remaining weeks goal 
+# Remaining goals for Mon and Tues
 * Lab pack 
 * JUnit 
 
@@ -41,8 +41,6 @@
 
 # Plan for next week (19/10)
 
-* Monday Environment & Git Flow & User Stories
-* Tuesday JUnit & TDD
 * Wednesday Dev Work
 
 Feel free to edit the readme with any information
