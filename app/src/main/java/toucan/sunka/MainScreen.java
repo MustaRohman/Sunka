@@ -4,13 +4,23 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.Button;
 
 public class MainScreen extends AppCompatActivity {
+
+    Button singlePlayer;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main_screen);
+        singlePlayer = (Button) findViewById(R.id.singlePlayer);
+    }
+
+    //Method only for testing
+    public int randomMethod(){
+        return 5;
     }
 
     @Override

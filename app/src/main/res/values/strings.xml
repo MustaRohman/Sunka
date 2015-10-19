@@ -1,5 +1,5 @@
 <resources>
     <string name="app_name">Sunka</string>
-
+    <string name="single_player">Single Player</string>
     <string name="action_settings">Settings</string>
 </resources>
