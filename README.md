@@ -25,9 +25,10 @@
 # Practice Labs #
 
 * Monday: Free
-* Tuesday: 2 - 4  ( Mert & Musta )
+* Tuesday: 2 - 4  ( Mert & Musta & Konstantin )
 * Wednesday: 9 - 11 ( Tsveto ) 
 * Thursday: 2 - 4 ( Andrei ) 
+* Thursday: 4 - 6 ( Konstantin )
 * Friday: 1 -3 ( Tsveto & Merto ) 3 - 5 ( Andrei & Musta ) 
 
 
