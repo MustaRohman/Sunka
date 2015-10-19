@@ -1,4 +1,4 @@
-package andrei.tucan_sunka;
+package toucan.sunka;
 
 import android.app.Application;
 import android.test.ApplicationTestCase;
