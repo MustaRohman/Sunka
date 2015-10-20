@@ -5,9 +5,9 @@
 * Mert: 07775429535
 * Konstantin: 07845125471
 
-# Remaining goals for Mon and Tues
-* Lab pack 
-* JUnit 
+# Wednesday Meeting:
+
+~12PM, same room as before (S5.33?). Check slack for any news
 
 # DEADLINES:
 -
