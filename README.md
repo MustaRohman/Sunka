@@ -7,7 +7,8 @@
 
 # Wednesday Meeting:
 
-~12PM, same room as before (S5.33?). Check slack for any news
+* ~12PM, same room as before (S5.33?). Check slack for any news
+* Basic layout & data model implementation
 
 # DEADLINES:
 -
