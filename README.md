@@ -1,7 +1,7 @@
 # TEAM TUCAN 
 
-Player
-	Variables
+# Player
+* Variables
 * Store (Crater)
 * Name (String)
 * Games won (int)
@@ -12,7 +12,7 @@ Methods
 * setGamesLost()
 
 Crater
-	Variables
+Variables
 * Owner (Player)
 * nextCrater (Crater)
 * oppositeCrater (Crater)
