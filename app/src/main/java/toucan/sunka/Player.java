@@ -61,7 +61,7 @@ public class Player {
         return store;
     }
 
-    public static Comparator<Player> PersonNameComparator = new Comparator<Player>()
+    public static Comparator<Player> PlayerScoreComparator = new Comparator<Player>()
     {
         public int compare(Player p1, Player p2)
         {

@@ -1,6 +1,7 @@
 package toucan.sunka;
 
 import java.util.ArrayList;
+import java.util.Collections;
 
 public class PlayerCollection {
 
@@ -27,5 +28,13 @@ public class PlayerCollection {
         }
 
         return null;
+    }
+
+    public void sortByGamesWon()
+    {
+        if (!players.isEmpty())
+        {
+            Collections.sort(players, Player.PlayerScoreComparator);
+        }
     }
 }
