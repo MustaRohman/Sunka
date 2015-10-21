@@ -15,7 +15,6 @@ public class MainScreen extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main_screen);
-        singlePlayer = (Button) findViewById(R.id.singlePlayer);
     }
 
     //Method only for testing
