@@ -1,5 +1,7 @@
 package toucan.sunka;
 
+import java.util.Comparator;
+
 public class Player {
 
     private String playerName;
@@ -58,4 +60,15 @@ public class Player {
     public Crater getStore(){
         return store;
     }
+
+    public static Comparator<Player> PersonNameComparator = new Comparator<Player>()
+    {
+        public int compare(Player p1, Player p2)
+        {
+            int score1 = p1.getNumberOfGamesWon();
+            int score2 = p2.getNumberOfGamesWon();
+
+            return score2 - score1;
+        }
+    };
 }
