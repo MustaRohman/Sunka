@@ -11,8 +11,8 @@ Methods
 * setGamesWon()
 * setGamesLost()
 
-Crater
-Variables
+# Crater
+* Variables
 * Owner (Player)
 * nextCrater (Crater)
 * oppositeCrater (Crater)
