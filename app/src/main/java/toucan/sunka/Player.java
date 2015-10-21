@@ -5,6 +5,7 @@ public class Player {
     private String playerName;
     private int gamesWon;
     private int gamesLost;
+    private Crater store;
     private int playerRank;
 
     public Player(String pN)
@@ -30,6 +31,10 @@ public class Player {
         playerRank = pR;
     }
 
+    public void setStore(Crater crater){
+        store = crater;
+    }
+
     public String getPlayerName()
     {
         return playerName;
@@ -48,5 +53,9 @@ public class Player {
     public int getPlayerRank()
     {
         return playerRank;
+    }
+
+    public Crater getStore(){
+        return store;
     }
 }

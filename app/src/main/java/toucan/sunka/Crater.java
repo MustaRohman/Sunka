@@ -7,12 +7,12 @@ import android.widget.Button;
  */
 public class Crater {
 
-    Player Owner;
-    Crater nextCrater, oppositeCrater;
-    int stones = 7; // Defaulted to 7
+    private Player Owner;
+    private Crater nextCrater, oppositeCrater;
+    private int stones;
 
     public Crater(){
-
+        stones = 7;
     }
 
     public void placeAlong(int remainingStones){
@@ -33,6 +33,14 @@ public class Crater {
 
     public Player getOwner(){
         return Owner;
+    }
+
+    public int getStones(){
+        return stones;
+    }
+
+    public void setStones(int stones){
+        this.stones = stones;
     }
 
     public void setNextCrater(Crater crater){
