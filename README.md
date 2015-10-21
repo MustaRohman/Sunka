@@ -2,10 +2,10 @@
 
 Player
 	Variables
--	Store (Crater)
--	Name (String)
--	Games won (int)
--	Games lost (int)
+* Store (Crater)
+* Name (String)
+* Games won (int)
+* Games lost (int)
 Methods
 * Getters/Setters
 * setGamesWon()
