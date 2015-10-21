@@ -17,6 +17,11 @@ public class PlayerCollection {
         players.add(p);
     }
 
+    public ArrayList<Player> getAllPlayers()
+    {
+        return players;
+    }
+
     public Player findPlayer(String n)
     {
         for(Player player : players)
