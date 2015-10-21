@@ -7,7 +7,7 @@ import android.widget.Button;
  */
 public class Crater {
 
-    //Player Owner;
+    Player Owner;
     Crater nextCrater, oppositeCrater;
     int stones = 7; // Defaulted to 7
 
@@ -31,11 +31,19 @@ public class Crater {
         return oppositeCrater;
     }
 
+    public Player getOwner(){
+        return Owner;
+    }
+
     public void setNextCrater(Crater crater){
         nextCrater = crater;
     }
 
     public void setOppositeCrater(Crater crater) {
         oppositeCrater = crater;
+    }
+
+    public void setOwner(Player player){
+        Owner = player;
     }
 }
