@@ -1,9 +1,12 @@
 package toucan.sunka;
 
+import android.test.ActivityInstrumentationTestCase2;
+
 import org.junit.*;
 import static org.junit.Assert.*;
 
-public class PlayerCollectionTest {
+public class PlayerCollectionTest  {
+
 
     @Test
     public void sortTest()
