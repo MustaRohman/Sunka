@@ -1,5 +1,28 @@
 # TEAM TUCAN 
 
+Player
+	Variables
+-	Store (Crater)
+-	Name (String)
+-	Games won (int)
+-	Games lost (int)
+Methods
+* Getters/Setters
+* setGamesWon()
+* setGamesLost()
+
+Crater
+	Variables
+* Owner (Player)
+* nextCrater (Crater)
+* oppositeCrater (Crater)
+* numberOfStones (int)
+Methods
+* Getters/Setters
+* placeAlong(int) – recursively places stones in the next crater until there are none remaining.
+* isStealable()
+
+
 * Andrei: 07478343678
 * Musta: 07510978119
 * Mert: 07775429535
