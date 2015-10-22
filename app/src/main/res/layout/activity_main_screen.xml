@@ -14,7 +14,7 @@
         android:text="@string/title"
         android:layout_alignParentTop="true"
         android:layout_centerHorizontal="true"
-        android:textSize="40sp"
+        android:textSize="45sp"
         android:layout_marginBottom="60dp"/>
 
 
