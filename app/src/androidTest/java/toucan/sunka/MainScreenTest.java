@@ -90,6 +90,8 @@ public class MainScreenTest extends ActivityInstrumentationTestCase2<MainScreen>
     {
         Player player1 = new Player("John");
         Player player2 = new Player("Tim");
+        player1.setPlayingTurnTo(true);
+
         Crater[] board = new Crater[16];
         for(int i = 0; i < 16; ++i)
         {

@@ -31,13 +31,17 @@ public class Crater {
         {
             if (!(nextCrater.isStore() && !Owner.getStore().equals(nextCrater)))
             {
-                nextCrater.setStones(nextCrater.getStones() + 1);
-                nextCrater.placeAlong(remainingStones - 1);
+
                 if (remainingStones == 1 && nextCrater.isEmpty() && Owner.isPlayingTurn())
                 {
                     Crater ownerStore = Owner.getStore();
-                    ownerStore.setStones(nextCrater.getOppositeCrater().getStones() + ownerStore.getStones());
+                    ownerStore.setStones(nextCrater.getOppositeCrater().getStones() + ownerStore.getStones() + 1);
                     nextCrater.getOppositeCrater().setStones(0);
+                }
+                else
+                {
+                    nextCrater.setStones(nextCrater.getStones() + 1);
+                    nextCrater.placeAlong(remainingStones - 1);
                 }
             }
             else
