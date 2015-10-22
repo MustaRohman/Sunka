@@ -14,15 +14,7 @@ public class Crater {
 
     public Crater(boolean s){
         store = s;
-
-        if (s == false)
-        {
-            stones = 7;
-        }
-        else
-        {
-            stones = 0;
-        }
+        stones = s ? 0 : 7;
     }
 
     public void placeAlong(int remainingStones)
