@@ -45,8 +45,8 @@
 * Thursday TBD
 * Friday TBD
 
-# Plan for next week (19/10)
-
-* Wednesday Dev Work
+# Ideas after Minimum Viable Product is done 
+* Validate Player Names 
+* AI vs AI?
 
 Feel free to edit the readme with any information
