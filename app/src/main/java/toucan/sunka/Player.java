@@ -9,6 +9,7 @@ public class Player {
     private int gamesLost;
     private Crater store;
     private int playerRank;
+    private boolean playingTurn;
 
     public Player(String pN)
     {
@@ -16,11 +17,17 @@ public class Player {
         gamesWon = 0;
         gamesLost = 0;
         playerRank = 0;
+        playingTurn = false;
     }
 
     public void setGamesWon(int gW)
     {
         gamesWon = gW;
+    }
+
+    public void setPlayingTurnTo(boolean b)
+    {
+        playingTurn = b;
     }
 
     public void setGamesLost(int gL)
@@ -59,6 +66,11 @@ public class Player {
 
     public Crater getStore(){
         return store;
+    }
+
+    public boolean isPlayingTurn()
+    {
+        return playingTurn;
     }
 
     public static Comparator<Player> PlayerScoreComparator = new Comparator<Player>()

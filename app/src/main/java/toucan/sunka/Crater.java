@@ -15,8 +15,19 @@ public class Crater {
         stones = 7;
     }
 
-    public void placeAlong(int remainingStones){
-
+    public void placeAlong(int remainingStones)
+    {
+        if (remainingStones != 0)
+        {
+            if (remainingStones == 1 && nextCrater.isEmpty() && Owner.isPlayingTurn())
+            {
+                Crater ownerStore = Owner.getStore();
+                ownerStore.setStones(nextCrater.getOppositeCrater().getStones() + ownerStore.getStones());
+                nextCrater.getOppositeCrater().setStones(0);
+            }
+            nextCrater.setStones(nextCrater.getStones() + 1);
+            nextCrater.placeAlong(remainingStones - 1);
+        }
     }
 
     public boolean isEmpty(){
