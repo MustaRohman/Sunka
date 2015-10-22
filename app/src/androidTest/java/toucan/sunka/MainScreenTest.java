@@ -1,16 +1,9 @@
 package toucan.sunka;
 
 import android.test.ActivityInstrumentationTestCase2;
-import android.test.TouchUtils;
-import android.util.Log;
-import android.view.KeyEvent;
-import android.widget.Button;
-import android.widget.EditText;
 
-
-import java.security.KeyException;
-
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
 
 /**
  * Created by andrei on 19/10/15.
