@@ -10,28 +10,50 @@ public class Crater {
     private Player Owner;
     private Crater nextCrater, oppositeCrater;
     private int stones;
+    private boolean store;
 
-    public Crater(){
-        stones = 7;
+    public Crater(boolean s){
+        store = s;
+
+        if (s == false)
+        {
+            stones = 7;
+        }
+        else
+        {
+            stones = 0;
+        }
     }
 
     public void placeAlong(int remainingStones)
     {
         if (remainingStones != 0)
         {
-            if (remainingStones == 1 && nextCrater.isEmpty() && Owner.isPlayingTurn())
+            if (!(nextCrater.isStore() && !Owner.getStore().equals(nextCrater)))
             {
-                Crater ownerStore = Owner.getStore();
-                ownerStore.setStones(nextCrater.getOppositeCrater().getStones() + ownerStore.getStones());
-                nextCrater.getOppositeCrater().setStones(0);
+                nextCrater.setStones(nextCrater.getStones() + 1);
+                nextCrater.placeAlong(remainingStones - 1);
+                if (remainingStones == 1 && nextCrater.isEmpty() && Owner.isPlayingTurn())
+                {
+                    Crater ownerStore = Owner.getStore();
+                    ownerStore.setStones(nextCrater.getOppositeCrater().getStones() + ownerStore.getStones());
+                    nextCrater.getOppositeCrater().setStones(0);
+                }
             }
-            nextCrater.setStones(nextCrater.getStones() + 1);
-            nextCrater.placeAlong(remainingStones - 1);
+            else
+            {
+                placeAlong(remainingStones);
+            }
         }
     }
 
     public boolean isEmpty(){
         return (stones == 0);
+    }
+
+    public boolean isStore()
+    {
+        return store;
     }
 
     public Crater getNextCrater(){
