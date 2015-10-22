@@ -1,37 +1,16 @@
 # TEAM TUCAN 
 
-# Player
-* Variables
-* Store (Crater)
-* Name (String)
-* Games won (int)
-* Games lost (int)
-Methods
-* Getters/Setters
-* setGamesWon()
-* setGamesLost()
-
-# Crater
-* Variables
-* Owner (Player)
-* nextCrater (Crater)
-* oppositeCrater (Crater)
-* numberOfStones (int)
-Methods
-* Getters/Setters
-* placeAlong(int) – recursively places stones in the next crater until there are none remaining.
-* isStealable()
-
 
 * Andrei: 07478343678
 * Musta: 07510978119
 * Mert: 07775429535
 * Konstantin: 07845125471
 
-# Wednesday Meeting:
+# Thursday Meeting(2pm):
 
-* ~12PM, same room as before (S5.33?). Check slack for any news
-* Basic layout & data model implementation
+* Revisit JUnit 
+* Dialog Layout
+* Start game?
 
 # DEADLINES:
 -
