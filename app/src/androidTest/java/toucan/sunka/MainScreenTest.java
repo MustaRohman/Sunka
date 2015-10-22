@@ -46,7 +46,8 @@ public class MainScreenTest extends ActivityInstrumentationTestCase2<MainScreen>
         assertEquals(example, 5);
     }
 
-    public void testSort()
+
+    public static PlayerCollection initialiseCollection()
     {
         PlayerCollection pC = new PlayerCollection();
         Player p1 = new Player("John");
@@ -60,9 +61,28 @@ public class MainScreenTest extends ActivityInstrumentationTestCase2<MainScreen>
         pC.addPlayer(p2);
         pC.addPlayer(p3);
         pC.addPlayer(p4);
+        return pC;
+    }
+    public void testSort()
+    {
+        PlayerCollection pC = initialiseCollection();
+        Object[] tempArray = pC.getAllPlayers().toArray();
         pC.sortByGamesWon();
         Object[] sortedList = pC.getAllPlayers().toArray();
-        Player[] expected = {p4, p3, p1, p2};
+
+        Object[] expected = {tempArray[3], tempArray[2], tempArray[0], tempArray[1]};
         assertArrayEquals(expected, sortedList);
+    }
+    public void testFindPlayer()
+    {
+        PlayerCollection pC = initialiseCollection();
+        Player player = pC.findPlayer("John");
+        assertTrue("John".equals(player.getPlayerName()));
+    }
+    public void testFindPlayerFalse()
+    {
+        PlayerCollection pC = initialiseCollection();
+        Player player = pC.findPlayer("Tim");
+        assertTrue(player == null);
     }
 }
