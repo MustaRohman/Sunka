@@ -7,7 +7,11 @@
 * Konstantin: 07845125471
 
 # Availability During Reading Week?
-* 
+* Monday -
+* Tuesday -
+* Wednesday - 
+* Thursday -
+* Friday - 
 
 # DEADLINES:
 -
