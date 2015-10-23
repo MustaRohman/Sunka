@@ -8,10 +8,10 @@
 
 # Availability During Reading Week?
 * Monday -
-* Tuesday -
-* Wednesday - 
-* Thursday -
-* Friday - 
+* Tuesday - Mert
+* Wednesday - Mert
+* Thursday - Mert
+* Friday - Mert
 
 # DEADLINES:
 -
