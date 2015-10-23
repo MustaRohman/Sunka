@@ -6,4 +6,9 @@
     <dimen name="margin_bottom_big">20dp</dimen>
     <dimen name="boardHeight">100dp</dimen>
     <dimen name="buttonHeight">50dp</dimen>
+<<<<<<< 541a65327d37645ee57ed9b14fd52c53e93884ba
+=======
+    <dimen name="button_width">45dp</dimen>
+
+>>>>>>> Added xml board layout example.
 </resources>
