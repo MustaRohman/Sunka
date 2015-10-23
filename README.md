@@ -6,11 +6,8 @@
 * Mert: 07775429535
 * Konstantin: 07845125471
 
-# Thursday Meeting(2pm):
-
-* Revisit JUnit 
-* Dialog Layout
-* Start game?
+# Availability During Reading Week?
+* 
 
 # DEADLINES:
 -
