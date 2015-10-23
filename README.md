@@ -7,10 +7,10 @@
 * Konstantin: 07845125471
 
 # Availability During Reading Week?
-* Monday -
-* Tuesday - Mert
-* Wednesday - Mert
-* Thursday - Mert
+* Monday - Musta
+* Tuesday - Mert, Musta
+* Wednesday - Mert, Musta
+* Thursday - Mert, Musta
 * Friday - Mert
 
 # DEADLINES:
