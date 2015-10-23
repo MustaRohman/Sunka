@@ -1,20 +1,33 @@
 package toucan.sunka;
 
-import android.support.v7.app.AppCompatActivity;
+import android.support.v4.app.DialogFragment;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentActivity;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
 import android.widget.Button;
 
-public class MainScreen extends AppCompatActivity {
+public class MainScreen extends FragmentActivity{
 
-    Button singlePlayer;
+    Button multiPlayerLocal;
 
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main_screen);
+
+        multiPlayerLocal = (Button) findViewById(R.id.two_player_local);
+        multiPlayerLocal.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                createMultiplayerDialog();
+            }
+        });
+
+
     }
 
     //Method only for testing
@@ -42,5 +55,15 @@ public class MainScreen extends AppCompatActivity {
         }
 
         return super.onOptionsItemSelected(item);
+    }
+
+    public void createMultiplayerDialog() {
+        System.out.println("Created Dialog");
+
+        DialogFragment fragment = new MultiplayerDialogFragment();
+        FragmentManager fm = getSupportFragmentManager();
+        fragment.show(fm,"multiplayerDialog");
+
+        System.out.println("Created Dialog");
     }
 }

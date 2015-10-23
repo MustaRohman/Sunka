@@ -7,4 +7,8 @@
     <string name="statistics">Statistics</string>
     <string name="exit">Exit</string>
     <string name="title">Sunka</string>
+    <string name="player_one">Player One</string>
+    <string name="player_two">Player Two</string>
+    <string name="play">Play</string>
+    <string name="cancel">Cancel</string>
 </resources>

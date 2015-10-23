@@ -4,5 +4,7 @@
     <dimen name="activity_vertical_margin">16dp</dimen>
     <dimen name="margin_bottom">10dp</dimen>
     <dimen name="margin_bottom_big">20dp</dimen>
+    <dimen name="boardHeight">100dp</dimen>
+    <dimen name="buttonHeight">50dp</dimen>
 
 </resources>
