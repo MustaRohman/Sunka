@@ -16,6 +16,10 @@ import android.view.LayoutInflater;
 
 public class MultiplayerDialogFragment extends DialogFragment {
     @Override
+    /**
+     * Creates and returns an AlertDialog, which is inflated with dialog_multiplayer layout.
+     * Sets the functionality of the negative and positive buttons of the dialog.
+     */
     public Dialog onCreateDialog(Bundle savedInstanceState) {
         // Use the Builder class for convenient dialog construction
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());

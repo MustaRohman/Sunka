@@ -57,13 +57,15 @@ public class MainScreen extends FragmentActivity{
         return super.onOptionsItemSelected(item);
     }
 
+
+    /**
+     * Creates an instance of the MultiplayerDialogFragment and displays it on screen.
+     */
     public void createMultiplayerDialog() {
-        System.out.println("Created Dialog");
 
         DialogFragment fragment = new MultiplayerDialogFragment();
         FragmentManager fm = getSupportFragmentManager();
         fragment.show(fm,"multiplayerDialog");
 
-        System.out.println("Created Dialog");
     }
 }
