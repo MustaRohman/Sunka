@@ -22,13 +22,20 @@ public class Crater {
             // Checks if next Crater is a not a store
             if (!(nextCrater.isStore() && !Owner.isPlayingTurn())){
                 // Checks if it's last move & conditions are met to steal other players stones
-                if (remainingStones == 1 && nextCrater.isEmpty() && Owner.isPlayingTurn()) {
+                if (remainingStones == 1 && nextCrater.isEmpty() && Owner.isPlayingTurn() && !nextCrater.isStore()) {
                     Crater ownerStore = Owner.getStore();
                     ownerStore.setStones(nextCrater.getOppositeCrater().getStones() + ownerStore.getStones() + 1);
                     nextCrater.getOppositeCrater().setStones(0);
+                    changeTurn();
                 }
                 // Makes a normal move
                 else {
+                    // If its a finishing turn and it doesn't finish on a store...
+                    if (remainingStones == 1 && !nextCrater.isStore()) {
+                        // Then swap the player turns
+                        changeTurn();
+                    }
+
                     nextCrater.setStones(nextCrater.getStones() + 1);
                     nextCrater.placeAlong(remainingStones - 1);
                 }
@@ -36,8 +43,31 @@ public class Crater {
             //If next crater is other players' store, ignores it
             else {
                 nextCrater.getNextCrater().setStones(nextCrater.getNextCrater().getStones() + 1);
-                nextCrater.getNextCrater().placeAlong(remainingStones - 1);
+                if (remainingStones == 1)
+                {
+                    // Finishing move
+                    changeTurn();
+                }
+                else {
+                    nextCrater.getNextCrater().placeAlong(remainingStones - 1);
+                }
             }
+        }
+    }
+
+    private void changeTurn()
+    {
+        Player otherPlayer = nextCrater.getOppositeCrater().getOwner();
+
+        if (Owner.isPlayingTurn())
+        {
+            Owner.setPlayingTurnTo(false);
+            otherPlayer.setPlayingTurnTo(true);
+        }
+        else
+        {
+            otherPlayer.setPlayingTurnTo(false);
+            Owner.setPlayingTurnTo(true);
         }
     }
 

@@ -11,6 +11,8 @@ public class CraterTest{
 
     Crater regularCrater, storeCrater;
     Crater[] board;
+    Player player1 = new Player("John");
+    Player player2 = new Player("Tim");
 
     @Before
     public void init(){
@@ -21,8 +23,7 @@ public class CraterTest{
 
     public Crater[] initialiseBoard() {
 
-        Player player1 = new Player("John");
-        Player player2 = new Player("Tim");
+
         player1.setPlayingTurnTo(true);
 
         Crater[] board = new Crater[16];
@@ -47,10 +48,13 @@ public class CraterTest{
         for(int i = 0; i < 16; ++i) {
             if (i != 0 && i != 8)
                 board[i].setOppositeCrater(board[16 - i]);
+
         }
 
         player1.setStore(board[0]);
         player2.setStore(board[8]);
+        board[0].setOppositeCrater(board[8]);
+        board[8].setOppositeCrater(board[0]);
         return board;
     }
 
@@ -93,6 +97,8 @@ public class CraterTest{
                 7, 7, 7,
                 7};
         assertArrayEquals(expected, result);
+        assertTrue(player2.isPlayingTurn());
+        assertFalse(player1.isPlayingTurn());
     }
     @Test
     public void testPlaceAlong2(){
@@ -113,6 +119,8 @@ public class CraterTest{
                 0, 8, 8,
                 8};
         assertArrayEquals(expected, result);
+        assertTrue(player2.isPlayingTurn());
+        assertFalse(player1.isPlayingTurn());
     }
     @Test
     public void testPlaceAlong3(){
@@ -129,6 +137,27 @@ public class CraterTest{
                 7, 7, 7,
                 0};
         assertArrayEquals(expected, result);
+        assertTrue(player2.isPlayingTurn());
+        assertFalse(player1.isPlayingTurn());
+    }
+    @Test
+    public void testPlaceAlong4()
+    {
+        board[15].setStones(1);
+
+        board[15].placeAlong(board[15].getStones());
+        board[15].setStones(0);
+        int[] result = getResultsFrom(board);
+        int[] expected = {
+                1, 7, 7,
+                7, 7, 7,
+                7, 7, 0,
+                7, 7, 7,
+                7, 7, 7,
+                0};
+        assertArrayEquals(expected, result);
+        assertTrue(player1.isPlayingTurn());
+        assertFalse(player2.isPlayingTurn());
     }
 
 }
