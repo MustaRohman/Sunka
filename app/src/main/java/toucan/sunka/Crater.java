@@ -27,12 +27,13 @@ public class Crater {
                     ownerStore.setStones(nextCrater.getOppositeCrater().getStones() + ownerStore.getStones() + 1);
                     nextCrater.getOppositeCrater().setStones(0);
                 }
-                
+                // Makes a normal move
                 else {
                     nextCrater.setStones(nextCrater.getStones() + 1);
                     nextCrater.placeAlong(remainingStones - 1);
                 }
             }
+            //If next crater is other players' store, ignores it
             else {
                 placeAlong(remainingStones);
             }
