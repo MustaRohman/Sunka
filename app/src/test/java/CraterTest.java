@@ -17,11 +17,6 @@ public class CraterTest{
         regularCrater = new Crater(false);
         storeCrater = new Crater(true);
         board = initialiseBoard();
-        board[10].setStones(1);
-        board[11].setStones(0);
-        board[5].setStones(5);
-        board[8].setStones(0);
-        board[0].setStones(0);
     }
 
     public Crater[] initialiseBoard() {
@@ -59,7 +54,17 @@ public class CraterTest{
         return board;
     }
 
-
+    public int[] getResultsFrom(Crater[] board)
+    {
+        int[] result =  {
+                board[0].getStones(), board[1].getStones(), board[2].getStones(),
+                board[3].getStones(),board[4].getStones(), board[5].getStones(),
+                board[6].getStones(), board[7].getStones(), board[8].getStones(),
+                board[9].getStones(), board[10].getStones(), board[11].getStones(),
+                board[12].getStones(), board[13].getStones(), board[14].getStones(),
+                board[15].getStones()};
+        return result;
+    }
     //A crater should be both able to hold 7 stones and 0 stones in case it is a store
     @Test
     public void testCreation(){
@@ -69,11 +74,60 @@ public class CraterTest{
 
     //When a user chooses a crater the stones should move according to the rules
     @Test
-    public void testPlaceAlong() {
+    public void testPlaceAlong1() {
+        board[10].setStones(1);
+        board[11].setStones(0);
+        board[5].setStones(5);
+        board[8].setStones(0);
+        board[0].setStones(0);
+
         board[10].placeAlong(board[10].getStones());
         board[10].setStones(0);
-        int[] result = {board[10].getStones(), board[11].getStones(), board[5].getStones(), board[0].getStones()};
-        int[] expected = {0, 0, 0, 6};
+
+        int[] result = getResultsFrom(board);
+        int[] expected = {
+                6, 7, 7,
+                7, 7, 0,
+                7, 7, 0,
+                7, 0, 0,
+                7, 7, 7,
+                7};
+        assertArrayEquals(expected, result);
+    }
+    @Test
+    public void testPlaceAlong2(){
+        board[10].setStones(1);
+        board[11].setStones(0);
+        board[5].setStones(5);
+        board[8].setStones(0);
+        board[0].setStones(0);
+
+        board[12].placeAlong(board[12].getStones());
+        board[12].setStones(0);
+        int[] result = getResultsFrom(board);
+        int[] expected = {
+                1, 8, 8,
+                8, 7, 5,
+                7, 7, 0,
+                7, 1, 0,
+                0, 8, 8,
+                8};
+        assertArrayEquals(expected, result);
+    }
+    @Test
+    public void testPlaceAlong3(){
+        board[15].setStones(9);
+
+        board[15].placeAlong(board[15].getStones());
+        board[15].setStones(0);
+        int[] result = getResultsFrom(board);
+        int[] expected = {
+                1, 8, 8,
+                8, 8, 8,
+                8, 8, 0,
+                8, 7, 7,
+                7, 7, 7,
+                0};
         assertArrayEquals(expected, result);
     }
 

@@ -20,7 +20,7 @@ public class Crater {
     public void placeAlong(int remainingStones) {
         if (remainingStones != 0) {
             // Checks if next Crater is a not a store
-            if (!(nextCrater.isStore() && !Owner.getStore().equals(nextCrater))) {
+            if (!(nextCrater.isStore() && !Owner.isPlayingTurn())){
                 // Checks if it's last move & conditions are met to steal other players stones
                 if (remainingStones == 1 && nextCrater.isEmpty() && Owner.isPlayingTurn()) {
                     Crater ownerStore = Owner.getStore();
@@ -35,7 +35,8 @@ public class Crater {
             }
             //If next crater is other players' store, ignores it
             else {
-                placeAlong(remainingStones);
+                nextCrater.getNextCrater().setStones(nextCrater.getNextCrater().getStones() + 1);
+                nextCrater.getNextCrater().placeAlong(remainingStones - 1);
             }
         }
     }
