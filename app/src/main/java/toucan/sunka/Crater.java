@@ -12,32 +12,28 @@ public class Crater {
     private int stones;
     private boolean store;
 
-    public Crater(boolean s){
-        store = s;
-        stones = s ? 0 : 7;
+    public Crater(boolean store){
+        this.store = store;
+        stones = this.store ? 0 : 7;
     }
 
-    public void placeAlong(int remainingStones)
-    {
-        if (remainingStones != 0)
-        {
-            if (!(nextCrater.isStore() && !Owner.getStore().equals(nextCrater)))
-            {
-
-                if (remainingStones == 1 && nextCrater.isEmpty() && Owner.isPlayingTurn())
-                {
+    public void placeAlong(int remainingStones) {
+        if (remainingStones != 0) {
+            // Checks if next Crater is a not a store
+            if (!(nextCrater.isStore() && !Owner.getStore().equals(nextCrater))) {
+                // Checks if it's last move & conditions are met to steal other players stones
+                if (remainingStones == 1 && nextCrater.isEmpty() && Owner.isPlayingTurn()) {
                     Crater ownerStore = Owner.getStore();
                     ownerStore.setStones(nextCrater.getOppositeCrater().getStones() + ownerStore.getStones() + 1);
                     nextCrater.getOppositeCrater().setStones(0);
                 }
-                else
-                {
+                
+                else {
                     nextCrater.setStones(nextCrater.getStones() + 1);
                     nextCrater.placeAlong(remainingStones - 1);
                 }
             }
-            else
-            {
+            else {
                 placeAlong(remainingStones);
             }
         }

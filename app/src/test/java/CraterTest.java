@@ -28,7 +28,7 @@ public class CraterTest{
         board[10].setStones(0);
     }
 
-    public static Crater[] initialiseBoard() {
+    public Crater[] initialiseBoard() {
 
         Player player1 = new Player("John");
         Player player2 = new Player("Tim");
