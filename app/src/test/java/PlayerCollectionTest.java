@@ -9,20 +9,10 @@ public class PlayerCollectionTest{
     private PlayerCollection pC;
 
 
+
     @Before
     public void init(){
-        pC = new PlayerCollection();
-        Player p1 = new Player("John");
-        p1.setGamesWon(1);
-        Player p2 = new Player("Beth");
-        Player p3 = new Player("Simon");
-        p3.setGamesWon(5);
-        Player p4 = new Player("Jane");
-        p4.setGamesWon(100);
-        pC.addPlayer(p1);
-        pC.addPlayer(p2);
-        pC.addPlayer(p3);
-        pC.addPlayer(p4);
+        pC = PlayerTest.initializePlayers();
     }
 
     @Test

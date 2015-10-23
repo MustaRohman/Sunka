@@ -12,7 +12,6 @@ import static org.junit.Assert.*;
 public class MainScreenTest extends ActivityInstrumentationTestCase2<MainScreen> {
 
     MainScreen mainScreen;
-    int example;
 
     // Constructor
     public MainScreenTest() {

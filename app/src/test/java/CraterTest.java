@@ -14,7 +14,6 @@ public class CraterTest{
 
     @Before
     public void init(){
-
         regularCrater = new Crater(false);
         storeCrater = new Crater(true);
         board = initialiseBoard();
@@ -23,12 +22,9 @@ public class CraterTest{
         board[5].setStones(5);
         board[8].setStones(0);
         board[0].setStones(0);
-
-        board[10].placeAlong(board[10].getStones());
-        board[10].setStones(0);
     }
 
-    public static Crater[] initialiseBoard() {
+    public Crater[] initialiseBoard() {
 
         Player player1 = new Player("John");
         Player player2 = new Player("Tim");
@@ -74,6 +70,8 @@ public class CraterTest{
     //When a user chooses a crater the stones should move according to the rules
     @Test
     public void testPlaceAlong() {
+        board[10].placeAlong(board[10].getStones());
+        board[10].setStones(0);
         int[] result = {board[10].getStones(), board[11].getStones(), board[5].getStones(), board[0].getStones()};
         int[] expected = {0, 0, 0, 6};
         assertArrayEquals(expected, result);

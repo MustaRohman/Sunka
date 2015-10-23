@@ -10,9 +10,8 @@ public class PlayerTest{
 
     private PlayerCollection pC;
 
-    @Before
-    public void init(){
-        pC = new PlayerCollection();
+    public static PlayerCollection initializePlayers(){
+        PlayerCollection mockedPlayerList = new PlayerCollection();
         Player p1 = new Player("John");
         p1.setGamesWon(1);
         Player p2 = new Player("Beth");
@@ -20,10 +19,16 @@ public class PlayerTest{
         p3.setGamesWon(5);
         Player p4 = new Player("Jane");
         p4.setGamesWon(100);
-        pC.addPlayer(p1);
-        pC.addPlayer(p2);
-        pC.addPlayer(p3);
-        pC.addPlayer(p4);
+        mockedPlayerList.addPlayer(p1);
+        mockedPlayerList.addPlayer(p2);
+        mockedPlayerList.addPlayer(p3);
+        mockedPlayerList.addPlayer(p4);
+        return mockedPlayerList;
+    }
+
+    @Before
+    public void init(){
+        pC = initializePlayers();
     }
 
     @Test
