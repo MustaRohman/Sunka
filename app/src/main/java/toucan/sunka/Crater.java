@@ -15,47 +15,51 @@ public class Crater {
         stones = this.store ? 0 : 7;
     }
 
-    public void placeAlong(int remainingStones) {
-        if (remainingStones != 0) {
-            // Checks if next Crater is a not a store
-            if (!(nextCrater.isStore() && !owner.isPlayingTurn())){
-                // Checks if it's last move & conditions are met to steal other players stones
-                if (remainingStones == 1 && nextCrater.isEmpty() && owner.isPlayingTurn() && !nextCrater.isStore()) {
-                    Crater ownerStore = owner.getStore();
-                    ownerStore.setStones(nextCrater.getOppositeCrater().getStones() + ownerStore.getStones() + 1);
-                    nextCrater.getOppositeCrater().setStones(0);
-                    changeTurn();
-                }
-                // Makes a normal move
-                else {
-                    // If its a finishing turn and it doesn't finish on a store...
-                    if (remainingStones == 1 && !nextCrater.isStore()) {
-                        // Then swap the player turns
-                        changeTurn();
-                    }
-
-                    nextCrater.setStones(nextCrater.getStones() + 1);
-                    nextCrater.placeAlong(remainingStones - 1);
-                }
+    public void placeAlong(int stones){
+        if ( stones != 0 ){
+            if (!nextCrater.isStore()){ //checks if it's not a store
+                if ( stones == 1 )  // checks if it's last stone
+                    stealOrMove(nextCrater); // recursive tree ends
+                else moveStone(nextCrater, stones - 1); //recursive call
             }
-            //If next crater is other players' store, ignores it
-            else {
-                nextCrater.getNextCrater().setStones(nextCrater.getNextCrater().getStones() + 1);
-                if (remainingStones == 1)
-                {
-                    // Finishing move
-                    changeTurn();
-                }
-                else {
-                    nextCrater.getNextCrater().placeAlong(remainingStones - 1);
-                }
+            else { // it is a store
+                if ( belongsToCurrentPlayer(nextCrater) ) // checks if it's current player's store
+                    moveStone(nextCrater, stones - 1 ); // recursive call - if stones = 1 then the next call will be
+                                                         // moveStone( nextCrater, 0 ) which will signal the current player has an extra turn
+                else  // it is other player's store
+                    if ( stones == 1 ) stealOrMove(nextCrater.getNextCrater()); // recursive tree ends
+                    else moveStone(nextCrater.getNextCrater(), stones - 1);
             }
         }
     }
 
+    public void stealOrMove(Crater crater) {
+        if ( crater.isEmpty() && belongsToCurrentPlayer(crater) ) //checks if you can steal
+            stealCrater(crater.getOppositeCrater());
+        else crater.setStones(crater.getStones() + 1); // does a normal move
+        changeTurn();
+    }
+
+    public boolean belongsToCurrentPlayer(Crater crater) {
+        return crater.getOwner().isPlayingTurn();
+    }
+
+    public void moveStone(Crater nextCrater, int remainingStones){
+        nextCrater.setStones(nextCrater.getStones() + 1);
+        nextCrater.placeAlong(remainingStones);
+    }
+
+    public void stealCrater(Crater oppositeCrater){
+        Crater ownerStore = owner.getStore();
+        ownerStore.setStones(oppositeCrater.getStones() + ownerStore.getStones() + 1);
+        oppositeCrater.setStones(0);
+    }
+
     private void changeTurn()
     {
-        Player otherPlayer = nextCrater.getOppositeCrater().getOwner();
+        Player otherPlayer = nextCrater.getOwner().equals(owner) ?
+                nextCrater.getOppositeCrater().getOwner() :
+                nextCrater.getOwner();
 
         if (owner.isPlayingTurn())
         {
@@ -67,6 +71,10 @@ public class Crater {
             otherPlayer.setPlayingTurnTo(false);
             owner.setPlayingTurnTo(true);
         }
+    }
+
+    public boolean belongsTo(Player owner){
+        return nextCrater.getOwner().equals(owner);
     }
 
     public boolean isEmpty(){
