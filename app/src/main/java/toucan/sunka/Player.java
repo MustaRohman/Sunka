@@ -1,5 +1,7 @@
 package toucan.sunka;
 
+import java.util.Comparator;
+
 public class Player {
 
     private String playerName;
@@ -7,6 +9,7 @@ public class Player {
     private int gamesLost;
     private Crater store;
     private int playerRank;
+    private boolean playingTurn;
 
     public Player(String pN)
     {
@@ -14,11 +17,17 @@ public class Player {
         gamesWon = 0;
         gamesLost = 0;
         playerRank = 0;
+        playingTurn = false;
     }
 
     public void setGamesWon(int gW)
     {
         gamesWon = gW;
+    }
+
+    public void setPlayingTurnTo(boolean b)
+    {
+        playingTurn = b;
     }
 
     public void setGamesLost(int gL)
@@ -58,4 +67,20 @@ public class Player {
     public Crater getStore(){
         return store;
     }
+
+    public boolean isPlayingTurn()
+    {
+        return playingTurn;
+    }
+
+    public static Comparator<Player> PlayerScoreComparator = new Comparator<Player>()
+    {
+        public int compare(Player p1, Player p2)
+        {
+            int score1 = p1.getNumberOfGamesWon();
+            int score2 = p2.getNumberOfGamesWon();
+
+            return score2 - score1;
+        }
+    };
 }

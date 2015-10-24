@@ -2,8 +2,7 @@ package toucan.sunka;
 
 import android.test.ActivityInstrumentationTestCase2;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.*;
 
 /**
  * Created by andrei on 19/10/15.
@@ -13,7 +12,6 @@ import static org.junit.Assert.assertNotNull;
 public class MainScreenTest extends ActivityInstrumentationTestCase2<MainScreen> {
 
     MainScreen mainScreen;
-    int example;
 
     // Constructor
     public MainScreenTest() {
@@ -31,11 +29,5 @@ public class MainScreenTest extends ActivityInstrumentationTestCase2<MainScreen>
     //This is a basic test to see if JUnit is configured properly
     public void testScreenExists() {
         assertNotNull(mainScreen);
-    }
-
-    // Testing the output of a method
-    public void testRandomMethod() {
-        example = mainScreen.randomMethod();
-        assertEquals(example, 5);
     }
 }
