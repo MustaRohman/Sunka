@@ -32,7 +32,7 @@ public class Crater extends Button {
     }
 
     /**
-     * Method encapsulates the picking up of stones and setting the current
+     * Method encapsulates the picking up of stones and setting the just now chosen
      * crater's stones to zero.
      */
     public void makeMoveFromHere()
