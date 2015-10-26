@@ -16,7 +16,7 @@ public class Player {
         playerName = pN;
         gamesWon = 0;
         gamesLost = 0;
-        playerRank = 0;
+        playerRank = -1;
         playingTurn = false;
     }
 
@@ -83,4 +83,12 @@ public class Player {
             return score2 - score1;
         }
     };
+
+    public String toString()
+    {
+        return playerName + "\n" +
+                playerRank + "\n" +
+                gamesWon + "\n" +
+                gamesLost;
+    }
 }

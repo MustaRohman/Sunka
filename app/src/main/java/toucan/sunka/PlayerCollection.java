@@ -1,7 +1,13 @@
 package toucan.sunka;
 
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Scanner;
 
 public class PlayerCollection {
 
@@ -43,13 +49,90 @@ public class PlayerCollection {
         }
     }
 
-    public void savePlayerInfoToFile()
+    public void savePlayerInfoToFile(File directory)
     {
-
+        try {
+            File playerDatabase = new File(directory, "GameData\\PlayerDatabase.pd");
+            FileOutputStream fOut = new FileOutputStream(playerDatabase, true);
+            fOut.write(getDataInFileFormat().getBytes());
+            fOut.close();
+        }
+        catch (FileNotFoundException fNFE)
+        {
+            fNFE.printStackTrace();
+        }
+        catch (SecurityException sE)
+        {
+            sE.printStackTrace();
+        }
+        catch (IOException iOE)
+        {
+            iOE.printStackTrace();
+        }
     }
 
-    public void loadPlayerInfoToFile()
+    public void loadPlayerInfoFromFile(File directory)
     {
+        try {
+            File playerDatabase = new File(directory, "GameData\\PlayerDatabase.pd");
+            FileInputStream fIn = new FileInputStream(playerDatabase);
 
+            int character;
+            String fileData = "";
+
+            while((character = fIn.read()) != -1)
+            {
+                fileData += Character.toString((char) character);
+            }
+
+            recoverDataFromFileFormat(fileData);
+        }
+        catch (FileNotFoundException fNFE)
+        {
+            fNFE.printStackTrace();
+        }
+        catch (SecurityException sE)
+        {
+            sE.printStackTrace();
+        }
+        catch (IOException iOE)
+        {
+            iOE.printStackTrace();
+        }
+    }
+
+    public String getDataInFileFormat()
+    {
+        String data = "";
+
+        for(Player p : players)
+        {
+            data += p + "\n\n";
+        }
+
+        return data;
+    }
+
+    public void recoverDataFromFileFormat(String data)
+    {
+        clearCollection();
+
+        Scanner inPlayer = new Scanner(data);
+        inPlayer.useDelimiter("\n\n");
+        while(inPlayer.hasNext())
+        {
+            Scanner inData = new Scanner(inPlayer.next());
+            inData.useDelimiter("\n");
+            Player tempPlayer = new Player(inData.next());
+            tempPlayer.setPlayerRank(Integer.parseInt(inData.next()));
+            tempPlayer.setGamesWon(Integer.parseInt(inData.next()));
+            tempPlayer.setGamesLost(Integer.parseInt(inData.next()));
+            addPlayer(tempPlayer);
+        }
+    }
+
+    public void clearCollection()
+    {
+        players.clear();
     }
 }
