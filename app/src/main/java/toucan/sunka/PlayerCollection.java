@@ -78,7 +78,7 @@ public class PlayerCollection {
         }
         catch (Exception e) {
             e.printStackTrace();
-        }
+        }    
     }
 
     public String putDataInFileFormat() {
