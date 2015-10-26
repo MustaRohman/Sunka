@@ -32,6 +32,24 @@ public class Crater extends Button {
         setStones(this.store ? 0 : 7);
     }
 
+    public boolean checkGameOver(Crater currentCrater){
+        boolean sideOne, sideTwo;
+        do currentCrater = currentCrater.getNextCrater();
+            while (!currentCrater.isStore()); // first crater after first store
+        sideOne = checkSide(currentCrater);
+        currentCrater = currentCrater.getNextCrater(); // first crater after second store
+        sideTwo = checkSide(currentCrater);
+        return sideOne || sideTwo;
+    }
+
+    public boolean checkSide(Crater currentCrater){
+        while(!currentCrater.isStore()) {
+            if ( !currentCrater.isEmpty() ) return false;
+            currentCrater = currentCrater.getNextCrater();
+        }
+        return true;
+    }
+
     /**
      * Method encapsulates the picking up of stones and setting the just now chosen
      * crater's stones to zero.

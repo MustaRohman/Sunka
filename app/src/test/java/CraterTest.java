@@ -161,4 +161,16 @@ public class CraterTest{
         assertFalse(player2.isPlayingTurn());
     }
 
+    @Test
+    public void checkGameOverTest(){
+        board[1].setStones(0);
+        board[2].setStones(0);
+        board[3].setStones(0);
+        board[4].setStones(0);
+        board[5].setStones(0);
+        board[6].setStones(0);
+        board[7].setStones(0);
+        assertTrue(board[1].checkGameOver(board[15]));
+     }
+
 }
