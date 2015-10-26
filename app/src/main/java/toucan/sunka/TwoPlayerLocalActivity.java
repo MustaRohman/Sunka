@@ -2,8 +2,10 @@ package toucan.sunka;
 
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.Toast;
 
 public class TwoPlayerLocalActivity extends AppCompatActivity {
 
@@ -11,6 +13,9 @@ public class TwoPlayerLocalActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_two_player_local);
+
+        Player player1 = (Player) getIntent().getParcelableExtra(MultiplayerDialogFragment.PLAYER_ONE_KEY);
+        Player player2 = (Player) getIntent().getParcelableExtra(MultiplayerDialogFragment.PLAYER_TWO_KEY);
     }
 
     @Override
