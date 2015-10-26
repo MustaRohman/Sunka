@@ -1,6 +1,7 @@
 package toucan.sunka;
 
 import android.content.Context;
+import android.util.AttributeSet;
 import android.util.Log;
 import android.widget.Button;
 
@@ -15,13 +16,13 @@ public class Crater extends Button {
     private int stones;
     private boolean store;
 
-    public Crater(boolean store, Context context){
-        super(context);
+    public Crater(boolean store, Context context, AttributeSet attrs){
+        super(context, attrs);
         initialise(store);
     }
 
     public Crater(boolean store){
-        super(null);
+        super(null, null);
         initialise(store);
     }
 
