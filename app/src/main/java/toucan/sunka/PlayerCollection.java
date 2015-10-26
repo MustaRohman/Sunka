@@ -42,4 +42,14 @@ public class PlayerCollection {
             Collections.sort(players, Player.PlayerScoreComparator);
         }
     }
+
+    public void savePlayerInfoToFile()
+    {
+
+    }
+
+    public void loadPlayerInfoToFile()
+    {
+
+    }
 }
