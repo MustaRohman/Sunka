@@ -1,10 +1,12 @@
 package toucan.sunka;
 
 import android.util.Log;
+import android.widget.Button;
+
 /**
  * Created by andrei on 21/10/15.
  */
-public class Crater {
+public class Crater extends Button {
 
     public static final int ACTION_DELAY = 1000;
     private Player owner;
@@ -13,6 +15,7 @@ public class Crater {
     private boolean store;
 
     public Crater(boolean store){
+        super(null);
         this.store = store;
         stones = this.store ? 0 : 7;
     }
