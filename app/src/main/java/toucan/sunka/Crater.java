@@ -1,11 +1,12 @@
 package toucan.sunka;
 
+import android.util.Log;
 /**
  * Created by andrei on 21/10/15.
  */
 public class Crater {
 
-    public static final int ACTION_DELAY = 60;
+    public static final int ACTION_DELAY = 1000;
     private Player owner;
     private Crater nextCrater, oppositeCrater;
     private int stones;
@@ -25,10 +26,17 @@ public class Crater {
      * @param stones represents how many stones are left to be placed
      */
     public void placeAlong(int stones){
-        if ( stones != 0 )
-            if (!nextCrater.isStore()) performMove(nextCrater, stones - 1);
-            else if ( belongsToActivePlayer(nextCrater) ) moveStone(nextCrater, stones - 1);
-                 else performMove(nextCrater.getNextCrater(), stones - 1);
+        try {
+            if (stones != 0)
+                if (!nextCrater.isStore()) performMove(nextCrater, stones - 1);
+                else if (belongsToActivePlayer(nextCrater))
+                    performRegularMove(nextCrater, stones - 1);
+                else performMove(nextCrater.getNextCrater(), stones - 1);
+            Thread.sleep(ACTION_DELAY);
+        }
+        catch (InterruptedException e){
+            Log.d("Exception", String.format("Sleep thread interrupted, error: %s", e));
+        }
     }
     /**
      * Method first checks if the remaining stones are 0 - if it's the last move
@@ -36,7 +44,7 @@ public class Crater {
      *              if it can't perform a steal it does the last move,
      *              and does NOT call placeAlong(0), which means the player does
      *              NOT receive an extra turn
-     *    if it isn't the last move, it calls moveStone()
+     *    if it isn't the last move, it calls performRegularMove()
      * @param crater is the next crater on which the stone will be added
      * @param remainingStones is the number of remaining stones to be added
      */
@@ -51,7 +59,7 @@ public class Crater {
             else crater.setStones(crater.getStones() + 1);
             changeTurn();
         }
-        else moveStone(crater, remainingStones); //recursive call
+        else performRegularMove(crater, remainingStones); //recursive call
     }
 
     /**
@@ -60,7 +68,7 @@ public class Crater {
      * @param crater is the next crater on which the stone will be added
      * @param remainingStones
      */
-    public void moveStone(Crater crater, int remainingStones){
+    public void performRegularMove(Crater crater, int remainingStones){
         crater.setStones(crater.getStones() + 1);
         crater.placeAlong(remainingStones);
     }
