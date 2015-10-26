@@ -27,8 +27,8 @@ public class PlayerCollection {
     }
 
     public Player findPlayer(String n) {
-        for(Player player : players) 
-            if (player.getPlayerName().equals(n)) 
+        for(Player player : players)
+            if (player.getPlayerName().equals(n))
                 return player;
         return null;
     }
@@ -78,7 +78,7 @@ public class PlayerCollection {
         }
         catch (Exception e) {
             e.printStackTrace();
-        }    
+        }
     }
 
     public String putDataInFileFormat() {
@@ -125,15 +125,5 @@ public class PlayerCollection {
         }
 
         return playerDatabase;
-    }
-
-    public void savePlayerInfoToFile()
-    {
-
-    }
-
-    public void loadPlayerInfoToFile()
-    {
-
     }
 }

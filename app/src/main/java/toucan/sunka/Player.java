@@ -6,7 +6,7 @@ import android.os.Parcelable;
 import java.io.Serializable;
 import java.util.Comparator;
 
-public class Player implements Parcelable{
+public class Player implements Parcelable {
 
     private String playerName;
     private int gamesWon;
