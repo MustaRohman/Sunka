@@ -1,3 +1,5 @@
+import android.util.Log;
+
 import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
@@ -6,6 +8,7 @@ import toucan.sunka.Crater;
 import toucan.sunka.Player;
 
 import static org.junit.Assert.*;
+import static org.mockito.Mockito.*;
 
 public class CraterTest{
 
@@ -38,13 +41,12 @@ public class CraterTest{
                 board[i].setOwner(player1);
         }
 
-        for(int i = 0; i < 16; ++i) {
-            if (i != 15)
+        board[15].setNextCrater(board[0]);
+        for(int i = 0; i < 15; ++i) {
                 board[i].setNextCrater(board[i + 1]);
-            else
-                board[i].setNextCrater(board[0]);
         }
-
+        board[0].setOppositeCrater(board[8]);
+        board[8].setOppositeCrater(board[0]);
         for(int i = 0; i < 16; ++i) {
             if (i != 0 && i != 8)
                 board[i].setOppositeCrater(board[16 - i]);
@@ -76,7 +78,7 @@ public class CraterTest{
         assertEquals(storeCrater.getStones(), 0);
     }
 
-    //When a user chooses a crater the stones should move according to the rules
+    // Steal
     @Test
     public void testPlaceAlong1() {
         board[10].setStones(1);
@@ -85,8 +87,7 @@ public class CraterTest{
         board[8].setStones(0);
         board[0].setStones(0);
 
-        board[10].placeAlong(board[10].getStones());
-        board[10].setStones(0);
+        board[10].makeMoveFromHere();
 
         int[] result = getResultsFrom(board);
         int[] expected = {
@@ -108,8 +109,8 @@ public class CraterTest{
         board[8].setStones(0);
         board[0].setStones(0);
 
-        board[12].placeAlong(board[12].getStones());
-        board[12].setStones(0);
+        board[12].makeMoveFromHere();
+
         int[] result = getResultsFrom(board);
         int[] expected = {
                 1, 8, 8,
@@ -126,8 +127,8 @@ public class CraterTest{
     public void testPlaceAlong3(){
         board[15].setStones(9);
 
-        board[15].placeAlong(board[15].getStones());
-        board[15].setStones(0);
+        board[15].makeMoveFromHere();
+
         int[] result = getResultsFrom(board);
         int[] expected = {
                 1, 8, 8,
@@ -145,8 +146,8 @@ public class CraterTest{
     {
         board[15].setStones(1);
 
-        board[15].placeAlong(board[15].getStones());
-        board[15].setStones(0);
+        board[15].makeMoveFromHere();
+
         int[] result = getResultsFrom(board);
         int[] expected = {
                 1, 7, 7,
