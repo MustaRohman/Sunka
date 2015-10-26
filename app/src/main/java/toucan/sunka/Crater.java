@@ -28,7 +28,7 @@ public class Crater extends Button {
     private void initialise(boolean store)
     {
         this.store = store;
-        stones = this.store ? 0 : 7;
+        setStones(this.store ? 0 : 7);
     }
 
     /**
@@ -38,7 +38,7 @@ public class Crater extends Button {
     public void makeMoveFromHere()
     {
         placeAlong(this.stones);
-        this.stones = 0;
+        setStones(0);
     }
 
     /**
@@ -146,6 +146,7 @@ public class Crater extends Button {
 
     public void setStones(int stones){
         this.stones = stones;
+        setText(Integer.toString(stones));
     }
 
     public void setNextCrater(Crater crater){
