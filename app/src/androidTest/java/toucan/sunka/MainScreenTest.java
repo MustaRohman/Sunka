@@ -1,14 +1,6 @@
 package toucan.sunka;
 
 import android.test.ActivityInstrumentationTestCase2;
-import android.test.TouchUtils;
-import android.util.Log;
-import android.view.KeyEvent;
-import android.widget.Button;
-import android.widget.EditText;
-
-
-import java.security.KeyException;
 
 import static org.junit.Assert.*;
 
@@ -20,7 +12,6 @@ import static org.junit.Assert.*;
 public class MainScreenTest extends ActivityInstrumentationTestCase2<MainScreen> {
 
     MainScreen mainScreen;
-    int example;
 
     // Constructor
     public MainScreenTest() {
@@ -38,11 +29,5 @@ public class MainScreenTest extends ActivityInstrumentationTestCase2<MainScreen>
     //This is a basic test to see if JUnit is configured properly
     public void testScreenExists() {
         assertNotNull(mainScreen);
-    }
-
-    // Testing the output of a method
-    public void testRandomMethod() {
-        example = mainScreen.randomMethod();
-        assertEquals(example, 5);
     }
 }

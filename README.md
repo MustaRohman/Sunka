@@ -1,37 +1,17 @@
 # TEAM TUCAN 
 
-# Player
-* Variables
-* Store (Crater)
-* Name (String)
-* Games won (int)
-* Games lost (int)
-Methods
-* Getters/Setters
-* setGamesWon()
-* setGamesLost()
-
-# Crater
-* Variables
-* Owner (Player)
-* nextCrater (Crater)
-* oppositeCrater (Crater)
-* numberOfStones (int)
-Methods
-* Getters/Setters
-* placeAlong(int) – recursively places stones in the next crater until there are none remaining.
-* isStealable()
-
 
 * Andrei: 07478343678
 * Musta: 07510978119
 * Mert: 07775429535
 * Konstantin: 07845125471
 
-# Wednesday Meeting:
-
-* ~12PM, same room as before (S5.33?). Check slack for any news
-* Basic layout & data model implementation
+# Availability During Reading Week?
+* Monday - Musta, Mert
+* Tuesday - Mert, Musta
+* Wednesday - Mert, Musta
+* Thursday - Musta
+* Friday - Mert
 
 # DEADLINES:
 -
@@ -66,8 +46,8 @@ Methods
 * Thursday TBD
 * Friday TBD
 
-# Plan for next week (19/10)
-
-* Wednesday Dev Work
+# Ideas after Minimum Viable Product is done 
+* Validate Player Names 
+* AI vs AI?
 
 Feel free to edit the readme with any information
