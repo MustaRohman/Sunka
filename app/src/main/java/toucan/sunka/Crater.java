@@ -18,6 +18,16 @@ public class Crater {
     }
 
     /**
+     * Method encapsulates the picking up of stones and setting the current
+     * crater's stones to zero.
+     */
+    public void makeMoveFromHere()
+    {
+        placeAlong(this.stones);
+        this.stones = 0;
+    }
+
+    /**
      * Method first checks if the next crater is not a store.
      *  If it isn't, it calls performMove()
      *  Otherwise, it checks if the next store belongs to the active player

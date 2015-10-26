@@ -87,8 +87,7 @@ public class CraterTest{
         board[8].setStones(0);
         board[0].setStones(0);
 
-        board[10].placeAlong(board[10].getStones());
-        board[10].setStones(0);
+        board[10].makeMoveFromHere();
 
         int[] result = getResultsFrom(board);
         int[] expected = {
@@ -110,8 +109,8 @@ public class CraterTest{
         board[8].setStones(0);
         board[0].setStones(0);
 
-        board[12].placeAlong(board[12].getStones());
-        board[12].setStones(0);
+        board[12].makeMoveFromHere();
+
         int[] result = getResultsFrom(board);
         int[] expected = {
                 1, 8, 8,
@@ -128,8 +127,8 @@ public class CraterTest{
     public void testPlaceAlong3(){
         board[15].setStones(9);
 
-        board[15].placeAlong(board[15].getStones());
-        board[15].setStones(0);
+        board[15].makeMoveFromHere();
+
         int[] result = getResultsFrom(board);
         int[] expected = {
                 1, 8, 8,
@@ -147,8 +146,8 @@ public class CraterTest{
     {
         board[15].setStones(1);
 
-        board[15].placeAlong(board[15].getStones());
-        board[15].setStones(0);
+        board[15].makeMoveFromHere();
+
         int[] result = getResultsFrom(board);
         int[] expected = {
                 1, 7, 7,
