@@ -126,4 +126,14 @@ public class PlayerCollection {
 
         return playerDatabase;
     }
+
+    public void savePlayerInfoToFile()
+    {
+
+    }
+
+    public void loadPlayerInfoToFile()
+    {
+
+    }
 }
