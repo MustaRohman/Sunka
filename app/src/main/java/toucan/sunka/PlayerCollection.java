@@ -53,6 +53,8 @@ public class PlayerCollection {
     {
         try {
             File playerDatabase = new File(directory, "GameData\\PlayerDatabase.pd");
+            playerDatabase.getParentFile().mkdir();
+            playerDatabase.createNewFile();
             FileOutputStream fOut = new FileOutputStream(playerDatabase, true);
             fOut.write(getDataInFileFormat().getBytes());
             fOut.close();
@@ -75,6 +77,8 @@ public class PlayerCollection {
     {
         try {
             File playerDatabase = new File(directory, "GameData\\PlayerDatabase.pd");
+            playerDatabase.getParentFile().mkdir();
+            playerDatabase.createNewFile();
             FileInputStream fIn = new FileInputStream(playerDatabase);
 
             int character;
@@ -134,5 +138,18 @@ public class PlayerCollection {
     public void clearCollection()
     {
         players.clear();
+    }
+
+    public String toString()
+    {
+        String playerDatabase = "";
+        int counter = 1;
+        for(Player p: players)
+        {
+            playerDatabase += "*** Player " + counter + " ***" + "\n" + p + "\n";
+            ++counter;
+        }
+
+        return playerDatabase;
     }
 }
