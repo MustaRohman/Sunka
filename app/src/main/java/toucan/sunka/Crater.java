@@ -26,8 +26,7 @@ public class Crater extends Button {
         initialise(store);
     }
 
-    public void initialise(boolean store)
-    {
+    public void initialise(boolean store) {
         this.store = store;
         setStones(this.store ? 0 : 7);
     }
@@ -36,8 +35,7 @@ public class Crater extends Button {
      * Method encapsulates the picking up of stones and setting the just now chosen
      * crater's stones to zero.
      */
-    public void makeMoveFromHere()
-    {
+    public void makeMoveFromHere() {
         placeAlong(this.stones);
         setStones(0);
     }
@@ -103,13 +101,11 @@ public class Crater extends Button {
                 nextCrater.getOppositeCrater().getOwner() :
                 nextCrater.getOwner();
 
-        if (owner.isPlayingTurn())
-        {
+        if (owner.isPlayingTurn()) {
             owner.setPlayingTurnTo(false);
             otherPlayer.setPlayingTurnTo(true);
         }
-        else
-        {
+        else {
             otherPlayer.setPlayingTurnTo(false);
             owner.setPlayingTurnTo(true);
         }

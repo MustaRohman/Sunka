@@ -36,17 +36,13 @@ public class MultiplayerDialogFragment extends DialogFragment {
                 builder.setPositiveButton(R.string.play, new DialogInterface.OnClickListener() {
 
                     public void onClick(DialogInterface dialog, int id) {
-
                         Context context = getContext();
                         Intent newIntent = new Intent(context, TwoPlayerLocalActivity.class);
                         context.startActivity(newIntent);
                     }
                 });
                 builder.setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog, int id) {
-
-                    }
-                });
+                    public void onClick(DialogInterface dialog, int id) {}});
         return builder.create();
     }
 }
