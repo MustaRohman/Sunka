@@ -121,11 +121,13 @@ public class Crater extends Button {
     }
     public boolean checkGameOver(Crater currentCrater){
         boolean sideOne, sideTwo;
-        do currentCrater = currentCrater.getNextCrater();
-        while (!currentCrater.isStore()); // first crater after first store
-        sideOne = checkSide(currentCrater);
-        currentCrater = currentCrater.getNextCrater(); // first crater after second store
-        sideTwo = checkSide(currentCrater);
+        while (!currentCrater.isStore())
+            currentCrater = currentCrater.getNextCrater();
+        sideOne = checkSide(currentCrater.getNextCrater());
+        currentCrater = currentCrater.getNextCrater();
+        while (!currentCrater.isStore())
+            currentCrater = currentCrater.getNextCrater();
+        sideTwo = checkSide(currentCrater.getNextCrater());
         return sideOne || sideTwo;
     }
 

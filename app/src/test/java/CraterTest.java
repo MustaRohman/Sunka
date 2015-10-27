@@ -204,5 +204,4 @@ public class CraterTest{
         assertFalse(board[14].checkGameOver(board[14]));
         assertFalse(board[15].checkGameOver(board[15]));
      }
-
 }
