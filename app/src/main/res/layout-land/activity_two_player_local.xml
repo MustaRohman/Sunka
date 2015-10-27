@@ -8,6 +8,7 @@
 
 
     <LinearLayout
+        android:id="@+id/main_board"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_centerVertical="true"
@@ -86,5 +87,25 @@
             android:id="@+id/player_one_store"/>
 
     </LinearLayout>
+
+<!--Player Labels, top and bottom respectively-->
+    <TextView
+        android:id="@+id/player_two_view"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:rotation="180.00"
+        android:layout_alignTop="@id/main_board"
+        android:layout_alignParentTop="true"
+        android:layout_centerInParent="true"
+        android:text="Player Two"/>
+
+    <TextView
+        android:id="@+id/player_one_view"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignBottom="@id/main_board"
+        android:layout_alignParentBottom="true"
+        android:layout_centerInParent="true"
+        android:text="Player One" />
 
 </RelativeLayout>

@@ -161,4 +161,47 @@ public class CraterTest{
         assertFalse(player2.isPlayingTurn());
     }
 
+    @Test
+    public void checkGameOverTest(){
+        board[1].setStones(0);
+        board[2].setStones(0);
+        board[3].setStones(0);
+        board[4].setStones(0);
+        board[5].setStones(0);
+        board[6].setStones(0);
+        board[7].setStones(0);
+        assertTrue(board[0].checkGameOver(board[0]));
+        assertTrue(board[1].checkGameOver(board[1]));
+        assertTrue(board[2].checkGameOver(board[2]));
+        assertTrue(board[3].checkGameOver(board[3]));
+        assertTrue(board[4].checkGameOver(board[4]));
+        assertTrue(board[5].checkGameOver(board[5]));
+        assertTrue(board[6].checkGameOver(board[6]));
+        assertTrue(board[7].checkGameOver(board[7]));
+        assertTrue(board[8].checkGameOver(board[8]));
+        assertTrue(board[9].checkGameOver(board[9]));
+        assertTrue(board[10].checkGameOver(board[10]));
+        assertTrue(board[11].checkGameOver(board[11]));
+        assertTrue(board[12].checkGameOver(board[12]));
+        assertTrue(board[13].checkGameOver(board[13]));
+        assertTrue(board[14].checkGameOver(board[14]));
+        assertTrue(board[15].checkGameOver(board[15]));
+        board[1].setStones(1);
+        assertFalse(board[0].checkGameOver(board[0]));
+        assertFalse(board[1].checkGameOver(board[1]));
+        assertFalse(board[2].checkGameOver(board[2]));
+        assertFalse(board[3].checkGameOver(board[3]));
+        assertFalse(board[4].checkGameOver(board[4]));
+        assertFalse(board[5].checkGameOver(board[5]));
+        assertFalse(board[6].checkGameOver(board[6]));
+        assertFalse(board[7].checkGameOver(board[7]));
+        assertFalse(board[8].checkGameOver(board[8]));
+        assertFalse(board[9].checkGameOver(board[9]));
+        assertFalse(board[10].checkGameOver(board[10]));
+        assertFalse(board[11].checkGameOver(board[11]));
+        assertFalse(board[12].checkGameOver(board[12]));
+        assertFalse(board[13].checkGameOver(board[13]));
+        assertFalse(board[14].checkGameOver(board[14]));
+        assertFalse(board[15].checkGameOver(board[15]));
+     }
 }

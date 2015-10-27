@@ -13,6 +13,8 @@ public class MainScreen extends FragmentActivity{
 
     Button multiPlayerLocal;
 
+    public static PlayerCollection collection; // needs to be saved in phone memory
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -26,6 +28,7 @@ public class MainScreen extends FragmentActivity{
                 createMultiplayerDialog();
             }
         });
+        collection = new PlayerCollection();
 
 
     }

@@ -4,19 +4,26 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.TextView;
+
 
 public class TwoPlayerLocalActivity extends AppCompatActivity {
-    private Crater player_one_store;
-    private Crater player_two_store;
+
+    private Player firstPlayer;
+    private Player secondPlayer;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_two_player_local);
-        player_one_store = (Crater) findViewById(R.id.player_one_store);
-        player_one_store.initialise(true);
-        player_two_store = (Crater) findViewById(R.id.player_two_store);
-        player_two_store.initialise(true);
+
+        firstPlayer = getIntent().getParcelableExtra(MultiplayerDialogFragment.PLAYER_ONE_KEY);
+        secondPlayer = getIntent().getParcelableExtra(MultiplayerDialogFragment.PLAYER_TWO_KEY);
+
+        TextView firstPlayerLabel = (TextView) findViewById(R.id.player_one_view);
+        firstPlayerLabel.setText(firstPlayer.getPlayerName());
+        TextView secondPlayerLabel = (TextView) findViewById(R.id.player_two_view);
+        secondPlayerLabel.setText(secondPlayer.getPlayerName());
     }
 
     @Override
