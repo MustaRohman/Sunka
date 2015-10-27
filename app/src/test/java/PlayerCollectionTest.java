@@ -1,28 +1,40 @@
-import android.util.Log;
-
+import org.junit.After;
+import org.junit.AfterClass;
+import org.junit.Assert;
 import org.junit.Test;
 import org.junit.Before;
 
 import java.io.File;
-import java.net.URL;
 
 import toucan.sunka.Player;
 import toucan.sunka.PlayerCollection;
 import static org.junit.Assert.*;
 
-public class PlayerCollectionTest{
+public class PlayerCollectionTest {
 
     private PlayerCollection pC;
-
-
+    private File startLocation;
 
     @Before
-    public void init(){
+    public void init() {
         pC = PlayerTest.initializePlayers();
+        startLocation = new File(System.getProperty("user.dir"));
+    }
+
+    @After
+    public void clearUp() {
+        try {
+            File playerDatabase = new File(System.getProperty("user.dir") + "\\GameData\\PlayerDatabase.pd");
+            playerDatabase.delete(); // First the file
+            playerDatabase = playerDatabase.getParentFile();
+            playerDatabase.delete(); // Second the empty directory
+        } catch(Exception e) {
+            e.printStackTrace();
+        }
     }
 
     @Test
-    public void testFindPlayer(){
+    public void testFindPlayer() {
         Player player = pC.findPlayer("John");
         Player inexistentPlayer = pC.findPlayer("Tim");
         assertTrue("John".equals(player.getPlayerName()));
@@ -30,12 +42,50 @@ public class PlayerCollectionTest{
     }
 
     @Test
-    public void testFileWritting()
-    {
+    public void testFileStoring1() {
         String expected = pC.toString();
-        pC.savePlayerInfoToFile(new File(getClass().getResource(".").getPath()));
-        pC.loadPlayerInfoFromFile(new File(getClass().getResource(".").getPath()));
+
+        doFileWritingAndReading();
         String result = pC.toString();
+
         assertTrue(expected.equals(result));
+    }
+
+    @Test
+    public void testFileStoring2() {
+        Player newP1 = new Player("Kate");
+        Player newP2 = new Player("Lynn");
+
+        pC.addPlayer(newP1, true);
+        pC.addPlayer(newP2, true);
+
+        String expected = pC.toString();
+
+        doFileWritingAndReading();
+        String result = pC.toString();
+
+        assertTrue(expected.equals(result));
+    }
+
+    @Test
+    public void testFileStoring3() {
+        Player newP1 = new Player("Rachel");
+        Player newP2 = new Player("Trevor");
+
+        pC.addPlayer(newP1, true);
+        pC.addPlayer(newP2, false);
+
+        String expected = pC.toString();
+        expected = expected.replace("*** Player 6 ***\n" + newP2.toString() + "\n", "");
+
+        doFileWritingAndReading();
+        String result = pC.toString();
+
+        assertTrue(expected.equals(result));
+    }
+
+    public void doFileWritingAndReading() {
+        pC.savePlayerInfoToFile(startLocation);
+        pC.loadPlayerInfoFromFile(startLocation);
     }
 }

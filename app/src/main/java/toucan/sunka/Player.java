@@ -11,8 +11,7 @@ public class Player {
     private int playerRank;
     private boolean playingTurn;
 
-    public Player(String pN)
-    {
+    public Player(String pN) {
         playerName = pN;
         gamesWon = 0;
         gamesLost = 0;
@@ -20,8 +19,7 @@ public class Player {
         playingTurn = false;
     }
 
-    public void setGamesWon(int gW)
-    {
+    public void setGamesWon(int gW) {
         gamesWon = gW;
     }
 
@@ -30,13 +28,11 @@ public class Player {
         playingTurn = b;
     }
 
-    public void setGamesLost(int gL)
-    {
+    public void setGamesLost(int gL) {
         gamesLost = gL;
     }
 
-    public void setPlayerRank(int pR)
-    {
+    public void setPlayerRank(int pR) {
         playerRank = pR;
     }
 
@@ -84,8 +80,7 @@ public class Player {
         }
     };
 
-    public String toString()
-    {
+    public String toString() {
         return playerName + "\n" +
                 playerRank + "\n" +
                 gamesWon + "\n" +

@@ -19,10 +19,10 @@ public class PlayerTest{
         p3.setGamesWon(5);
         Player p4 = new Player("Jane");
         p4.setGamesWon(100);
-        mockedPlayerList.addPlayer(p1);
-        mockedPlayerList.addPlayer(p2);
-        mockedPlayerList.addPlayer(p3);
-        mockedPlayerList.addPlayer(p4);
+        mockedPlayerList.addPlayer(p1, true);
+        mockedPlayerList.addPlayer(p2, true);
+        mockedPlayerList.addPlayer(p3, true);
+        mockedPlayerList.addPlayer(p4, true);
         return mockedPlayerList;
     }
 
