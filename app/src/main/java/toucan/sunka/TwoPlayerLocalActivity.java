@@ -22,10 +22,14 @@ public class TwoPlayerLocalActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_two_player_local);
-        initialisingCraters();
 
         firstPlayer = getIntent().getParcelableExtra(MultiplayerDialogFragment.PLAYER_ONE_KEY);
         secondPlayer = getIntent().getParcelableExtra(MultiplayerDialogFragment.PLAYER_TWO_KEY);
+
+        firstPlayer.setPlayingTurnTo(false);
+        secondPlayer.setPlayingTurnTo(true);
+
+        initializeCraters();
 
         TextView firstPlayerLabel = (TextView) findViewById(R.id.player_one_view);
         firstPlayerLabel.setText(firstPlayer.getPlayerName());
@@ -70,7 +74,7 @@ public class TwoPlayerLocalActivity extends AppCompatActivity {
         craterList[8] = playerOneStore;
     }
 
-    public void initialisingCraters(){
+    public void initializeCraters(){
         initializeStores();
         LinearLayout topRow = (LinearLayout) findViewById(R.id.top_row);
         LinearLayout bottomRow = (LinearLayout) findViewById(R.id.bottom_row);
@@ -90,11 +94,15 @@ public class TwoPlayerLocalActivity extends AppCompatActivity {
 
         craterList[0].setOppositeCrater(craterList[8]);
         craterList[8].setOppositeCrater(craterList[0]);
+        craterList[0].setOwner(secondPlayer);
+        craterList[8].setOwner(firstPlayer);
         for (int i = 1; i < 7; i++) {
             craterList[i].setOppositeCrater(craterList[16 - i]);
+            craterList[i].setOwner(firstPlayer);
         }
-        for (int i = 9; i < 15; i++)
-            craterList[i].setOppositeCrater(craterList[16-i]);
+        for (int i = 9; i < 15; i++) {
+            craterList[i].setOppositeCrater(craterList[16 - i]);
+            craterList[i].setOwner(secondPlayer);
+        }
     }
-
 }
