@@ -8,7 +8,14 @@ import android.widget.Button;
 /**
  * Created by andrei on 21/10/15.
  */
+/**
+ * TODO for this class:
+ *  -> implement what happens when it's game over (high prio)
+ *  -> separate logic from Button logic into two separate classes to ease readability (low prio)
+ *  -> JavaDOC the big logic methods explaining what's what (low prio)
+ */
 public class Crater extends Button {
+
 
     public static final int ACTION_DELAY = 1000;
     private Player owner;
@@ -16,9 +23,8 @@ public class Crater extends Button {
     private int stones;
     private boolean store;
 
-    public Crater(boolean store, Context context, AttributeSet attrs){
+    public Crater(Context context, AttributeSet attrs){
         super(context, attrs);
-        initialise(store);
     }
 
     public Crater(boolean store){
@@ -26,20 +32,21 @@ public class Crater extends Button {
         initialise(store);
     }
 
-    private void initialise(boolean store)
-    {
+    private void initialise(boolean store) {
         this.store = store;
         setStones(this.store ? 0 : 7);
     }
 
     /**
      * Method encapsulates the picking up of stones and setting the just now chosen
-     * crater's stones to zero.
+     * crater's stones to zero. After each move it also checks if the game is over
      */
-    public void makeMoveFromHere()
-    {
+    public void makeMoveFromHere() {
         placeAlong(this.stones);
         setStones(0);
+        if (checkGameOver(nextCrater)) {
+            // Game over
+        }
     }
 
     /**
@@ -91,7 +98,7 @@ public class Crater extends Button {
      * Adds 1 stone to the next crater and calls placeAlong()
      * It can call placeAlong(0) which would mean the player would get an extra turn
      * @param crater is the next crater on which the stone will be added
-     * @param remainingStones
+     * @param remainingStones signals how many stones are left to be placed
      */
     public void performRegularMove(Crater crater, int remainingStones){
         crater.setStones(crater.getStones() + 1);
@@ -103,18 +110,34 @@ public class Crater extends Button {
                 nextCrater.getOppositeCrater().getOwner() :
                 nextCrater.getOwner();
 
-        if (owner.isPlayingTurn())
-        {
+        if (owner.isPlayingTurn()) {
             owner.setPlayingTurnTo(false);
             otherPlayer.setPlayingTurnTo(true);
         }
-        else
-        {
+        else {
             otherPlayer.setPlayingTurnTo(false);
             owner.setPlayingTurnTo(true);
         }
     }
+    public boolean checkGameOver(Crater currentCrater){
+        boolean sideOne, sideTwo;
+        while (!currentCrater.isStore())
+            currentCrater = currentCrater.getNextCrater();
+        sideOne = checkSide(currentCrater.getNextCrater());
+        currentCrater = currentCrater.getNextCrater();
+        while (!currentCrater.isStore())
+            currentCrater = currentCrater.getNextCrater();
+        sideTwo = checkSide(currentCrater.getNextCrater());
+        return sideOne || sideTwo;
+    }
 
+    public boolean checkSide(Crater currentCrater){
+        while(!currentCrater.isStore()) {
+            if ( !currentCrater.isEmpty() ) return false;
+            currentCrater = currentCrater.getNextCrater();
+        }
+        return true;
+    }
     // Checks if the crater belongs to the active player
     public boolean belongsToActivePlayer(Crater crater) {
         return crater.getOwner().isPlayingTurn();
@@ -124,8 +147,7 @@ public class Crater extends Button {
         return (stones == 0);
     }
 
-    public boolean isStore()
-    {
+    public boolean isStore() {
         return store;
     }
 
@@ -147,7 +169,7 @@ public class Crater extends Button {
 
     public void setStones(int stones){
         this.stones = stones;
-        setText(Integer.toString(stones));
+        setText(String.format("%d", stones));
     }
 
     public void setNextCrater(Crater crater){
