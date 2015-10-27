@@ -16,7 +16,7 @@ public class Crater extends Button {
     private int stones;
     private boolean store;
 
-    public Crater(boolean store, Context context, AttributeSet attrs){
+    public Crater(Context context, AttributeSet attrs){
         super(context, attrs);
         initialise(store);
     }

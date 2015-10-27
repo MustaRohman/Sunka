@@ -14,7 +14,7 @@
         android:layout_centerHorizontal="true"
         android:orientation="horizontal" >
 
-        <Button
+        <toucan.sunka.Crater
             android:layout_width="wrap_content"
             android:layout_height="fill_parent" />
 
@@ -27,25 +27,25 @@
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
                 android:orientation="horizontal" >
-                <Button
+                <toucan.sunka.Crater
                     android:layout_width="@dimen/button_width"
                     android:layout_height="wrap_content" />
-                <Button
+                <toucan.sunka.Crater
                     android:layout_width="@dimen/button_width"
                     android:layout_height="wrap_content" />
-                <Button
+                <toucan.sunka.Crater
                     android:layout_width="@dimen/button_width"
                     android:layout_height="wrap_content" />
-                <Button
+                <toucan.sunka.Crater
                     android:layout_width="@dimen/button_width"
                     android:layout_height="wrap_content" />
-                <Button
+                <toucan.sunka.Crater
                     android:layout_width="@dimen/button_width"
                     android:layout_height="wrap_content" />
-                <Button
+                <toucan.sunka.Crater
                     android:layout_width="@dimen/button_width"
                     android:layout_height="wrap_content" />
-                <Button
+                <toucan.sunka.Crater
                     android:layout_width="@dimen/button_width"
                     android:layout_height="wrap_content" />
             </LinearLayout>
@@ -54,32 +54,32 @@
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
                 android:orientation="horizontal" >
-                <Button
+                <toucan.sunka.Crater
                     android:layout_width="@dimen/button_width"
                     android:layout_height="wrap_content" />
-                <Button
+                <toucan.sunka.Crater
                     android:layout_width="@dimen/button_width"
                     android:layout_height="wrap_content" />
-                <Button
+                <toucan.sunka.Crater
                     android:layout_width="@dimen/button_width"
                     android:layout_height="wrap_content" />
-                <Button
+                <toucan.sunka.Crater
                     android:layout_width="@dimen/button_width"
                     android:layout_height="wrap_content" />
-                <Button
+                <toucan.sunka.Crater
                     android:layout_width="@dimen/button_width"
                     android:layout_height="wrap_content" />
-                <Button
+                <toucan.sunka.Crater
                     android:layout_width="@dimen/button_width"
                     android:layout_height="wrap_content" />
-                <Button
+                <toucan.sunka.Crater
                     android:layout_width="@dimen/button_width"
                     android:layout_height="wrap_content" />
             </LinearLayout>
 
         </LinearLayout>
 
-        <Button
+        <toucan.sunka.Crater
             android:layout_width="wrap_content"
             android:layout_height="fill_parent" />
 
