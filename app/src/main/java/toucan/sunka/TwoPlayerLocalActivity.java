@@ -4,13 +4,26 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.TextView;
+
 
 public class TwoPlayerLocalActivity extends AppCompatActivity {
+
+    private Player firstPlayer;
+    private Player secondPlayer;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_two_player_local);
+
+        firstPlayer = getIntent().getParcelableExtra(MultiplayerDialogFragment.PLAYER_ONE_KEY);
+        secondPlayer = getIntent().getParcelableExtra(MultiplayerDialogFragment.PLAYER_TWO_KEY);
+
+        TextView firstPlayerLabel = (TextView) findViewById(R.id.player_one_view);
+        firstPlayerLabel.setText(firstPlayer.getPlayerName());
+        TextView secondPlayerLabel = (TextView) findViewById(R.id.player_two_view);
+        secondPlayerLabel.setText(secondPlayer.getPlayerName());
     }
 
     @Override
