@@ -3,6 +3,7 @@ package toucan.sunka;
 import android.content.Context;
 import android.util.AttributeSet;
 import android.util.Log;
+import android.view.View;
 import android.widget.Button;
 
 /**
@@ -19,6 +20,7 @@ public class Crater extends Button {
     public Crater(Context context, AttributeSet attrs){
         super(context, attrs);
         initialise(false);
+
     }
 
     public Crater(boolean store){
@@ -36,8 +38,7 @@ public class Crater extends Button {
      * Method encapsulates the picking up of stones and setting the just now chosen
      * crater's stones to zero.
      */
-    public void makeMoveFromHere()
-    {
+    public void makeMoveFromHere() {
         placeAlong(this.stones);
         setStones(0);
     }
@@ -161,4 +162,7 @@ public class Crater extends Button {
     public void setOwner(Player player){
         owner = player;
     }
+
+
+
 }
