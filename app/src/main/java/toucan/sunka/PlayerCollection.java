@@ -12,19 +12,15 @@ import java.util.Scanner;
 public class PlayerCollection {
 
     private ArrayList<Player> players;
-    private ArrayList<Player> playersToBeSaved;
 
     public PlayerCollection() {
         players = new ArrayList<Player>();
-        playersToBeSaved = new ArrayList<Player>();
     }
 
     // Pass "true" for toBeStored so the player is saved to file on next savePlayerInfoToFile
     // method call.
-    public void addPlayer(Player p, boolean toBeStored) {
+    public void addPlayer(Player p) {
         players.add(p);
-        if (toBeStored)
-            playersToBeSaved.add(p);
     }
 
     public ArrayList<Player> getAllPlayers() {
@@ -50,12 +46,12 @@ public class PlayerCollection {
     // Call this method as follows: savePlayerInfoToFile(context.getFilesDir())
     public void savePlayerInfoToFile(File directory) {
         try {
-            if (!playersToBeSaved.isEmpty()) {
+            if (!isClear()) {
                 File playerDatabase = new File(directory, "GameData\\PlayerDatabase.pd");
                 playerDatabase.getParentFile().mkdir();
                 playerDatabase.createNewFile();
 
-                FileOutputStream fOut = new FileOutputStream(playerDatabase, true);
+                FileOutputStream fOut = new FileOutputStream(playerDatabase, false);
                 fOut.write(putDataInFileFormat().getBytes());
 
                 fOut.close();
@@ -92,11 +88,9 @@ public class PlayerCollection {
     public String putDataInFileFormat() {
         String data = "";
 
-        for(Player p : playersToBeSaved) {
+        for(Player p : players) {
             data += p + "\n\n";
         }
-
-        playersToBeSaved.clear();
 
         return data;
     }
@@ -113,12 +107,16 @@ public class PlayerCollection {
             tempPlayer.setPlayerRank(Integer.parseInt(inData.next()));
             tempPlayer.setGamesWon(Integer.parseInt(inData.next()));
             tempPlayer.setGamesLost(Integer.parseInt(inData.next()));
-            addPlayer(tempPlayer, false);
+            addPlayer(tempPlayer);
         }
     }
 
     public void clearCollection() {
         players.clear();
+    }
+
+    public boolean isClear() {
+        return players.isEmpty();
     }
 
     public String toString() {
