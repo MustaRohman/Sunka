@@ -18,7 +18,7 @@ public class Crater extends Button {
 
     public Crater(Context context, AttributeSet attrs){
         super(context, attrs);
-        initialise(store);
+        initialise(false);
     }
 
     public Crater(boolean store){
@@ -26,7 +26,7 @@ public class Crater extends Button {
         initialise(store);
     }
 
-    private void initialise(boolean store)
+    public void initialise(boolean store)
     {
         this.store = store;
         setStones(this.store ? 0 : 7);

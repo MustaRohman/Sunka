@@ -16,7 +16,8 @@
 
         <toucan.sunka.Crater
             android:layout_width="wrap_content"
-            android:layout_height="fill_parent" />
+            android:layout_height="fill_parent"
+            android:id="@+id/player_two_store"/>
 
         <LinearLayout
             android:layout_width="wrap_content"
@@ -81,7 +82,8 @@
 
         <toucan.sunka.Crater
             android:layout_width="wrap_content"
-            android:layout_height="fill_parent" />
+            android:layout_height="fill_parent"
+            android:id="@+id/player_one_store"/>
 
     </LinearLayout>
 

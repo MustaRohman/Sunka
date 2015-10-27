@@ -6,11 +6,17 @@ import android.view.Menu;
 import android.view.MenuItem;
 
 public class TwoPlayerLocalActivity extends AppCompatActivity {
+    private Crater player_one_store;
+    private Crater player_two_store;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_two_player_local);
+        player_one_store = (Crater) findViewById(R.id.player_one_store);
+        player_one_store.initialise(true);
+        player_two_store = (Crater) findViewById(R.id.player_two_store);
+        player_two_store.initialise(true);
     }
 
     @Override
