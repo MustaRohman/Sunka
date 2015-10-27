@@ -50,15 +50,37 @@ public class PlayerCollectionTest {
         assertTrue(expected.equals(result));
     }
 
+    public void doFileWritingAndReading() {
+        pC.savePlayerInfoToFile(startLocation);
+        pC.loadPlayerInfoFromFile(startLocation);
+    }
+
     @Test
     public void testFileStoring2() {
         Player newP1 = new Player("Kate");
         Player newP2 = new Player("Lynn");
 
-        pC.addPlayer(newP1);
-        pC.addPlayer(newP2);
+        pC.addPlayer(newP1, true);
+        pC.addPlayer(newP2, true);
 
         String expected = pC.toString();
+
+        doFileWritingAndReading();
+        String result = pC.toString();
+
+        assertTrue(expected.equals(result));
+    }
+
+    @Test
+    public void testFileStoring3() {
+        Player newP1 = new Player("Rachel");
+        Player newP2 = new Player("Trevor");
+
+        pC.addPlayer(newP1, true);
+        pC.addPlayer(newP2, false);
+
+        String expected = pC.toString();
+        expected = expected.replace("*** Player 6 ***\n" + newP2.toString() + "\n", "");
 
         doFileWritingAndReading();
         String result = pC.toString();
