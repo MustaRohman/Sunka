@@ -15,8 +15,6 @@ public class PlayerCollection {
         players = new ArrayList<Player>();
     }
 
-    // Pass "true" for toBeStored so the player is saved to file on next savePlayerInfoToFile
-    // method call.
     public void addPlayer(Player p) {
         players.add(p);
     }
