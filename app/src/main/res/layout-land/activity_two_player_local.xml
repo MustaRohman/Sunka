@@ -8,7 +8,7 @@
 
 
     <LinearLayout
-        android:id="@+id/main_board"
+        android:id="@+id/linear_layout"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_centerVertical="true"
@@ -18,7 +18,7 @@
         <toucan.sunka.Crater
             android:layout_width="wrap_content"
             android:layout_height="fill_parent"
-            android:id="@+id/player_two_store"/>
+            android:id="@+id/store_left"/>
 
         <LinearLayout
             android:layout_width="wrap_content"
@@ -26,55 +26,72 @@
             android:orientation="vertical" >
 
             <LinearLayout
+                android:id="@+id/top_row"
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
                 android:orientation="horizontal" >
                 <toucan.sunka.Crater
+                    android:id="@+id/crater_seven"
+                    android:layout_width="@dimen/button_width"
+                    android:layout_height="wrap_content"
+                    android:onClick="onCraterClick" />
+                <toucan.sunka.Crater
+                    android:id="@+id/crater_six"
                     android:layout_width="@dimen/button_width"
                     android:layout_height="wrap_content" />
                 <toucan.sunka.Crater
+                    android:id="@+id/crater_five"
                     android:layout_width="@dimen/button_width"
                     android:layout_height="wrap_content" />
                 <toucan.sunka.Crater
+                    android:id="@+id/crater_four"
                     android:layout_width="@dimen/button_width"
                     android:layout_height="wrap_content" />
                 <toucan.sunka.Crater
+                    android:id="@+id/crater_three"
                     android:layout_width="@dimen/button_width"
                     android:layout_height="wrap_content" />
                 <toucan.sunka.Crater
+                    android:id="@+id/crater_two"
                     android:layout_width="@dimen/button_width"
                     android:layout_height="wrap_content" />
                 <toucan.sunka.Crater
-                    android:layout_width="@dimen/button_width"
-                    android:layout_height="wrap_content" />
-                <toucan.sunka.Crater
+                    android:id="@+id/crater_one"
                     android:layout_width="@dimen/button_width"
                     android:layout_height="wrap_content" />
             </LinearLayout>
 
             <LinearLayout
+                android:id="@+id/bottom_row"
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
                 android:orientation="horizontal" >
                 <toucan.sunka.Crater
+                    android:id="@+id/crater_nine"
                     android:layout_width="@dimen/button_width"
                     android:layout_height="wrap_content" />
                 <toucan.sunka.Crater
+                    android:id="@+id/crater_ten"
                     android:layout_width="@dimen/button_width"
                     android:layout_height="wrap_content" />
                 <toucan.sunka.Crater
+                    android:id="@+id/crater_eleven"
                     android:layout_width="@dimen/button_width"
                     android:layout_height="wrap_content" />
                 <toucan.sunka.Crater
+                    android:id="@+id/crater_twelve"
                     android:layout_width="@dimen/button_width"
                     android:layout_height="wrap_content" />
                 <toucan.sunka.Crater
+                    android:id="@+id/crater_thirteen"
                     android:layout_width="@dimen/button_width"
                     android:layout_height="wrap_content" />
                 <toucan.sunka.Crater
+                    android:id="@+id/crater_fourteen"
                     android:layout_width="@dimen/button_width"
                     android:layout_height="wrap_content" />
                 <toucan.sunka.Crater
+                    android:id="@+id/crater_fifteen"
                     android:layout_width="@dimen/button_width"
                     android:layout_height="wrap_content" />
             </LinearLayout>
@@ -84,7 +101,7 @@
         <toucan.sunka.Crater
             android:layout_width="wrap_content"
             android:layout_height="fill_parent"
-            android:id="@+id/player_one_store"/>
+            android:id="@+id/store_right"/>
 
     </LinearLayout>
 
@@ -94,7 +111,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:rotation="180.00"
-        android:layout_alignTop="@id/main_board"
+        android:layout_alignTop="@id/linear_layout"
         android:layout_alignParentTop="true"
         android:layout_centerInParent="true"
         android:text="Player Two"/>
@@ -103,7 +120,7 @@
         android:id="@+id/player_one_view"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignBottom="@id/main_board"
+        android:layout_alignBottom="@id/linear_layout"
         android:layout_alignParentBottom="true"
         android:layout_centerInParent="true"
         android:text="Player One" />
