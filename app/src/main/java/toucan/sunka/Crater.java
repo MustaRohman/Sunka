@@ -103,13 +103,11 @@ public class Crater extends Button {
                 nextCrater.getOppositeCrater().getOwner() :
                 nextCrater.getOwner();
 
-        if (owner.isPlayingTurn())
-        {
+        if (owner.isPlayingTurn()) {
             owner.setPlayingTurnTo(false);
             otherPlayer.setPlayingTurnTo(true);
         }
-        else
-        {
+        else {
             otherPlayer.setPlayingTurnTo(false);
             owner.setPlayingTurnTo(true);
         }
