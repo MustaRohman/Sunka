@@ -1,7 +1,5 @@
 package toucan.sunka;
 
-
-
 import android.app.Activity;
 import android.app.Dialog;
 import android.content.Context;
@@ -17,8 +15,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.EditText;
 
-import java.io.Serializable;
-
 /**
  * Created by mustarohman on 22/10/2015.
  */
@@ -27,12 +23,11 @@ public class MultiplayerDialogFragment extends DialogFragment {
     public static final String PLAYER_ONE_KEY = "PLAYER_ONE_KEY";
     public static final String PLAYER_TWO_KEY = "PLAYER_TWO_KEY";
 
-
-    @Override
     /**
      * Creates and returns an AlertDialog, which is inflated with dialog_multiplayer layout.
      * Sets the functionality of the negative and positive buttons of the dialog.
      */
+    @Override
     public Dialog onCreateDialog(final Bundle savedInstanceState) {
         // Use the Builder class for convenient dialog construction
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
@@ -50,29 +45,26 @@ public class MultiplayerDialogFragment extends DialogFragment {
                 Player player1 = MainScreen.collection.findPlayer(player1Name);
                 Player player2 = MainScreen.collection.findPlayer(player2Name);
 
-               if  (player1 == null){
-                   player1 = new Player(player1Name);
-                   MainScreen.collection.addPlayer(player1);
-            }
+                initiatePlayer(player1, player1Name);
+                initiatePlayer(player2, player2Name);
 
-                if  (player2 == null){
-                    player2 = new Player(player2Name);
-                    MainScreen.collection.addPlayer(player2);
-                }
                 Context context = getContext();
-                Intent twoPlayerIntent = new Intent(context, TwoPlayerLocalActivity.class);
-                twoPlayerIntent.putExtra(PLAYER_ONE_KEY, new Player(player1Name));
-                twoPlayerIntent.putExtra(PLAYER_TWO_KEY, new Player(player2Name));
-                context.startActivity(twoPlayerIntent);
-
+                Intent twoPlayerGame = new Intent(context, TwoPlayerLocalActivity.class);
+                twoPlayerGame.putExtra(PLAYER_ONE_KEY, new Player(player1Name));
+                twoPlayerGame.putExtra(PLAYER_TWO_KEY, new Player(player2Name));
+                context.startActivity(twoPlayerGame);
             }
         });
         builder.setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
-            public void onClick(DialogInterface dialog, int id) {
-
-            }
-        });
-
+            public void onClick(DialogInterface dialog, int id) { }});
         return builder.create();
     }
+
+    public void initiatePlayer(Player player, String name){
+        if (player == null) {
+            player = new Player(name);
+            MainScreen.collection.addPlayer(player);
+        }
+    }
+
 }

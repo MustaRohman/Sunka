@@ -9,24 +9,21 @@ import android.widget.TextView;
 
 public class TwoPlayerLocalActivity extends AppCompatActivity {
 
-    private Player player1;
-    private Player player2;
-
-
+    private Player firstPlayer;
+    private Player secondPlayer;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_two_player_local);
 
-        player1 = (Player) getIntent().getParcelableExtra(MultiplayerDialogFragment.PLAYER_ONE_KEY);
-        player2 = (Player) getIntent().getParcelableExtra(MultiplayerDialogFragment.PLAYER_TWO_KEY);
+        firstPlayer = getIntent().getParcelableExtra(MultiplayerDialogFragment.PLAYER_ONE_KEY);
+        secondPlayer = getIntent().getParcelableExtra(MultiplayerDialogFragment.PLAYER_TWO_KEY);
 
-        TextView player1label = (TextView) findViewById(R.id.player_one_view);
-        player1label.setText(player1.getPlayerName());
-        TextView player2label = (TextView) findViewById(R.id.player_two_view);
-        player2label.setText(player2.getPlayerName());
-
+        TextView firstPlayerLabel = (TextView) findViewById(R.id.player_one_view);
+        firstPlayerLabel.setText(firstPlayer.getPlayerName());
+        TextView secondPlayerLabel = (TextView) findViewById(R.id.player_two_view);
+        secondPlayerLabel.setText(secondPlayer.getPlayerName());
     }
 
     @Override
