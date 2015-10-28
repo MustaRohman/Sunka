@@ -17,6 +17,15 @@ public class TwoPlayerLocalActivity extends AppCompatActivity {
     private Crater playerOneStore;
     private Crater playerTwoStore;
     Crater[] craterList = new Crater[16];
+
+    public Player getFirstPlayer() {
+        return firstPlayer;
+    }
+
+    public Player getSecondPlayer() {
+        return secondPlayer;
+    }
+
     private Player firstPlayer;
     private Player secondPlayer;
     
