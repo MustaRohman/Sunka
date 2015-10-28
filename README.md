@@ -16,7 +16,7 @@
 # DEADLINES:
 -
 
-# Lectures #
+# Lectures/Tutorial #
 
 * Monday: 9-12
 
@@ -27,17 +27,23 @@
 * Thursday: 10-12
           1 - 2 (LGT)
 
-* Friday: 9-12
+* Friday: 1 - 2 (Group Tutorial)
        
-# Practice Labs #
+# Practice Labs Week 10 (Database System) #
 
-* Monday: Free
-* Tuesday: 2 - 4  ( Mert & Musta & Konstantin )
-* Wednesday: 9 - 11 ( Tsveto ) 
-* Thursday: 2 - 4 ( Andrei ) 
-* Thursday: 4 - 6 ( Konstantin )
-* Friday: 1 -3 ( Tsveto & Merto ) 3 - 5 ( Andrei & Musta ) 
+* Monday: 2 - 4 (Mert)
+* Tuesday: 
+* Wednesday: 
+* Thursday:  
+* Thursday: 
+* Friday: 
 
+# Practice Labs Week 11 (Object-Oriented Design)
+* Monday: 3 - 4 (Mert)
+* Tuesday: 
+* Wednesday: 
+* Thursday: 
+* Friday: 
 
 # MEET UPS #
 
