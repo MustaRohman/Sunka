@@ -53,7 +53,16 @@ public class Crater extends Button {
             setStones(0);
             if (checkGameOver(nextCrater)) {
                 // Game over
-                activity.createGameOverDialog();
+                Player winner = determineWinner();
+                Player loser = determineLoser();
+                try{
+                winner.setGamesWon(winner.getNumberOfGamesWon()+1);
+                loser.setGamesLost(loser.getNumberOfGamesLost()+1);
+                activity.createGameOverDialog();}
+                catch (NullPointerException n){
+                    
+                }
+
             }
         }
     }
@@ -193,6 +202,28 @@ public class Crater extends Button {
 
     public void setOwner(Player player){
         owner = player;
+    }
+    public Player determineWinner(){
+        Player p1 = getOwner();
+        Player p2 = getOppositeCrater().getOwner();
+        if(p1.getStore().getStones()>p2.getStore().getStones()){
+            return p1;
+        }
+        else if(p2.getStore().getStones()>p1.getStore().getStones()){
+            return p2;
+        }
+        return null;
+    }
+    public Player determineLoser(){
+        Player p1 = getOwner();
+        Player p2 = getOppositeCrater().getOwner();
+        if(p1.getStore().getStones()>p2.getStore().getStones()){
+            return p2;
+        }
+        else if(p2.getStore().getStones()>p1.getStore().getStones()){
+            return p1;
+        }
+        return null;
     }
 
 }
