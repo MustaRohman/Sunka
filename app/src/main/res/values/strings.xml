@@ -12,5 +12,6 @@
     <string name="play">Play</string>
     <string name="cancel">Cancel</string>
     <string name="title_activity_two_player_local">TwoPlayerLocalActivity</string>
+    <string name="leaderboard">Leaderboard</string>
 
 </resources>
