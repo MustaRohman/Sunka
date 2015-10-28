@@ -31,6 +31,7 @@
                 android:layout_height="wrap_content"
                 android:orientation="horizontal" >
                 <toucan.sunka.Crater
+                    android:onClick="onCraterClick"
                     android:id="@+id/crater15"
                     android:layout_width="@dimen/button_width"
                     android:layout_height="wrap_content" />

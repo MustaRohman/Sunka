@@ -98,11 +98,11 @@ public class TwoPlayerLocalActivity extends AppCompatActivity {
         secondPlayer.setStore(craterList[0]);
         craterList[8].setOwner(firstPlayer);
         firstPlayer.setStore(craterList[8]);
-        for (int i = 1; i < 7; i++) {
+        for (int i = 1; i < 8; i++) {
             craterList[i].setOppositeCrater(craterList[16 - i]);
             craterList[i].setOwner(firstPlayer);
         }
-        for (int i = 9; i < 15; i++) {
+        for (int i = 9; i < 16; i++) {
             craterList[i].setOppositeCrater(craterList[16 - i]);
             craterList[i].setOwner(secondPlayer);
         }
