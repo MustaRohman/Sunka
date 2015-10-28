@@ -1,7 +1,9 @@
 package toucan.sunka;
 
 import android.app.Dialog;
+import android.content.Context;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.app.DialogFragment;
@@ -28,13 +30,11 @@ public class GameOverDialog extends DialogFragment {
         builder.setNegativeButton(R.string.main_menu, new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
-
+                Context context = getContext();
+                Intent backToMainMenu = new Intent(context, MainScreen.class);
+                context.startActivity(backToMainMenu);
             }
         });
-
-
-
-
         return builder.create();
 
     }
