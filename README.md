@@ -27,14 +27,13 @@
 * Thursday: 10-12
           1 - 2 (LGT)
 
-* Friday: 1 - 2 (Group Tutorial)
+* Friday: 3:40 - 4 (Group Tutorial with Valeri Katerinchuk)
        
 # Practice Labs Week 10 (Database System) #
 
 * Monday: 2 - 4 (Mert) , 4-6 (Tsveto)
 * Tuesday: 
 * Wednesday: 
-* Thursday:  
 * Thursday: 
 * Friday: 
 
