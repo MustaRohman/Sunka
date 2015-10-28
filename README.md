@@ -55,7 +55,7 @@
     AI extends Player.
     
     The AI parameters:
-    * Stores its 6 crater choices in array.
+    * Stores its 6(*7?) crater choices in array.
     The AI algorithm:
     * in Crater class have a "public String viewFuture(ai)" if "ai" then use
       "makeMoveFromHere()" but don't make concrete changes; instead build a
@@ -63,10 +63,25 @@
       ** This should use a thread with no delay.
       ** Method name in Crater is debatable.
     * This would be a state.
-    * Generate 6 states.
+    * Generate 6(*7?) states.
     * Pick the one that gives you the highest store.
       ** Keep in mind that if a state finishes a game and the ai store is already 
          higher then this is a preferred state.
     * Make the move for it for real.
+
+    Harder AI
+    - Keep track of the score for both players
+    - Consider how to create extra turns for itself
+    (assume extra turns give you a higher % chance of winning)
+    - Consider creating steal opportunities for itself
+    (assume steals give you an increase % chance of winning)
+    - Consider opponents board and prevent extra turns or steals
+    (same evaluation of board state used for the AI's side can be 
+    used to determine the opposing board)
+    (or both sides could be determined at the same time)
+
+          --- If anyone feels like solving the game I wish them good luck.
+    It's a bitch to figure out how to do it without creating a huge tree and
+    analyzing the life out of it. ---
 
 Feel free to edit the readme with any information
