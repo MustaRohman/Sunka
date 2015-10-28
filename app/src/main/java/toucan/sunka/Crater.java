@@ -56,12 +56,10 @@ public class Crater extends Button {
                 Player winner = determineWinner();
                 Player loser = determineLoser();
                 try{
-                winner.setGamesWon(winner.getNumberOfGamesWon()+1);
-                loser.setGamesLost(loser.getNumberOfGamesLost()+1);
-                activity.createGameOverDialog();}
-                catch (NullPointerException n){
-                    
-                }
+                winner.setGamesWon(winner.getNumberOfGamesWon() + 1);
+                loser.setGamesLost(loser.getNumberOfGamesLost()+1);}
+                catch (NullPointerException n){}
+                activity.createGameOverDialog();
 
             }
         }
