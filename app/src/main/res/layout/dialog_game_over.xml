@@ -108,4 +108,12 @@
         android:layout_marginTop="@dimen/margin_bottom_gameOver"
         android:textSize="@dimen/text_size"/>
 
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content">
+
+
+
+    </LinearLayout>
+
 </LinearLayout>
