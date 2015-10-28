@@ -1,5 +1,6 @@
 package toucan.sunka;
 
+import android.app.Activity;
 import android.content.Context;
 import android.util.AttributeSet;
 import android.util.Log;
@@ -22,10 +23,13 @@ public class Crater extends Button {
     private Crater nextCrater, oppositeCrater;
     private int stones;
     private boolean store;
+    private TwoPlayerLocalActivity activity;
+
 
     public Crater(Context context, AttributeSet attrs){
         super(context, attrs);
         initialise(false);
+        activity = (TwoPlayerLocalActivity) getContext();
 
     }
 
@@ -49,9 +53,12 @@ public class Crater extends Button {
             setStones(0);
             if (checkGameOver(nextCrater)) {
                 // Game over
+                activity.createGameOverDialog();
             }
         }
     }
+
+
 
     /**
      * Method first checks if the next crater is not a store.
@@ -187,4 +194,5 @@ public class Crater extends Button {
     public void setOwner(Player player){
         owner = player;
     }
+
 }

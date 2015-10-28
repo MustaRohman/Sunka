@@ -1,5 +1,7 @@
 package toucan.sunka;
 
+import android.support.v4.app.DialogFragment;
+import android.support.v4.app.FragmentManager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
@@ -107,4 +109,10 @@ public class TwoPlayerLocalActivity extends AppCompatActivity {
             craterList[i].setOwner(secondPlayer);
         }
     }
+    public void createGameOverDialog(){
+        DialogFragment fragment = new GameOverDialog();
+        FragmentManager fm = getSupportFragmentManager();
+        fragment.show(fm,"gameOverDialog");
+    }
+
 }
