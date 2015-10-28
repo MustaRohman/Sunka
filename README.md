@@ -31,7 +31,7 @@
        
 # Practice Labs Week 10 (Database System) #
 
-* Monday: 2 - 4 (Mert)
+* Monday: 2 - 4 (Mert) , 4-6 (Tsveto)
 * Tuesday: 
 * Wednesday: 
 * Thursday:  
@@ -39,7 +39,7 @@
 * Friday: 
 
 # Practice Labs Week 11 (Object-Oriented Design)
-* Monday: 3 - 4 (Mert)
+* Monday: 3 - 4 (Mert and Tsveto)
 * Tuesday: 
 * Wednesday: 
 * Thursday: 
@@ -85,9 +85,5 @@
     (same evaluation of board state used for the AI's side can be 
     used to determine the opposing board)
     (or both sides could be determined at the same time)
-
-          --- If anyone feels like solving the game I wish them good luck.
-    It's a bitch to figure out how to do it without creating a huge tree and
-    analyzing the life out of it. ---
 
 Feel free to edit the readme with any information
