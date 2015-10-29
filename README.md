@@ -32,13 +32,13 @@
 # Practice Labs Week 10 (Database System) #
 
 * Monday: 2 - 4 (Mert) , 4-6 (Tsveto)
-* Tuesday: 
+* Tuesday: 9 - 11 (Konstantin)
 * Wednesday: 
 * Thursday: 
 * Friday: 
 
 # Practice Labs Week 11 (Object-Oriented Design)
-* Monday: 3 - 4 (Mert and Tsveto)
+* Monday: 3 - 4 (Mert and Tsveto), 4 - 5 (Konstantin)
 * Tuesday: 
 * Wednesday: 
 * Thursday: 
