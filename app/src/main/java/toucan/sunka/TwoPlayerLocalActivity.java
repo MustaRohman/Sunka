@@ -121,6 +121,11 @@ public class TwoPlayerLocalActivity extends AppCompatActivity {
     public void createGameOverDialog(){
         DialogFragment fragment = new GameOverDialog();
         FragmentManager fm = getSupportFragmentManager();
+
+        Bundle playerInfo = new Bundle();
+        playerInfo.putString(MultiplayerDialogFragment.PLAYER_ONE_KEY, firstPlayer.getPlayerName());
+        playerInfo.putString(MultiplayerDialogFragment.PLAYER_TWO_KEY, secondPlayer.getPlayerName());
+        fragment.setArguments(playerInfo);
         fragment.show(fm,"gameOverDialog");
     }
 

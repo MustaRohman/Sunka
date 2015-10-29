@@ -24,6 +24,8 @@ public class GameOverDialog extends DialogFragment {
     private TableLayout table;
     private TwoPlayerLocalActivity thisActivity;
     private LayoutInflater inflater;
+    private Bundle playerBundle;
+    private View layoutView;
     public static final String PLAYER_ONE_KEY = "PLAYER_ONE_KEY";
     public static final String PLAYER_TWO_KEY = "PLAYER_TWO_KEY";
 
@@ -33,7 +35,9 @@ public class GameOverDialog extends DialogFragment {
 
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
         inflater = getActivity().getLayoutInflater();
-        View layoutView = inflater.inflate(R.layout.dialog_game_over, null);
+        layoutView = inflater.inflate(R.layout.dialog_game_over, null);
+
+        initialisePlayerInfo();
 
         table = (TableLayout) layoutView.findViewById(R.id.leaderboard_table);
         addRow("2nd", "Player1", "0023");
@@ -66,11 +70,24 @@ public class GameOverDialog extends DialogFragment {
     }
 
 
+    private void initialisePlayerInfo(){
+        playerBundle = getArguments();
+        TextView playerOneText = (TextView) layoutView.findViewById(R.id.player_one_name_leaderboard);
+        playerOneText.setText(playerBundle.getString(PLAYER_ONE_KEY));
+
+        TextView playerTwoText = (TextView) layoutView.findViewById(R.id.player_two_name_leaderboard);
+        playerTwoText.setText(playerBundle.getString(PLAYER_TWO_KEY));
+
+
+//        Will also set the wins and stones for each player
+    }
+
     /**
      * Takes in the player's rank name and score and creates and adds a row in the table
      * representing the player info
      */
-    public void addRow(String rank, String name, String score){
+    private void addRow(String rank, String name, String score){
+
         View rowView = inflater.inflate(R.layout.leaderboard_row, null);
         TextView rankText = (TextView) rowView.findViewById(R.id.player_rank);
         rankText.setText(rank);
