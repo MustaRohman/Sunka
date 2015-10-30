@@ -6,12 +6,6 @@
 * Mert: 07775429535
 * Konstantin: 07845125471
 
-# Availability During Reading Week?
-* Monday - Musta, Mert
-* Tuesday - Mert, Musta
-* Wednesday - Mert, Musta
-* Thursday - Musta
-* Friday - Mert
 
 # DEADLINES:
 -
