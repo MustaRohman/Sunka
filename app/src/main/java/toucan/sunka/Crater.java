@@ -86,8 +86,8 @@ public class Crater extends Button {
      */
     public void performMove(Crater crater, int remainingStones){
         if ( remainingStones == 0 ) {
-            if ( crater.isEmpty() && belongsToActivePlayer(crater) ) {
-                Crater oppositeCrater = crater.getOppositeCrater();
+            Crater oppositeCrater = crater.getOppositeCrater();
+            if ( crater.isEmpty() && belongsToActivePlayer(crater) && !oppositeCrater.isEmpty() ) {
                 Crater ownerStore = owner.getStore();
                 ownerStore.setStones(oppositeCrater.getStones() + ownerStore.getStones() + 1);
                 oppositeCrater.setStones(0);
