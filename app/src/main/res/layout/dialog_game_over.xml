@@ -46,6 +46,7 @@
         android:layout_marginBottom="@dimen/margin_bottom_gameOver">
 
         <TextView
+            android:id="@+id/player_one_wins"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="2"
@@ -62,6 +63,7 @@
             android:gravity="center"/>
 
         <TextView
+            android:id="@+id/player_two_wins"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="1"
@@ -78,6 +80,7 @@
         android:layout_marginBottom="@dimen/margin_bottom_gameOver">
 
         <TextView
+            android:id="@+id/player_one_stones"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="32"
@@ -94,6 +97,7 @@
             android:gravity="center"/>
 
         <TextView
+            android:id="@+id/player_two_stones"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="24"

@@ -21,6 +21,14 @@ import org.w3c.dom.Text;
  */
 public class GameOverDialog extends DialogFragment {
 
+    public static final String PLAYER_ONE_WINS = "PLAYER_ONE_WINS";
+    public static final String PLAYER_TWO_WINS = "PLAYER_TWO_WINS";
+
+    public static final String PLAYER_ONE_STONES = "PLAYER_ONE_STONES";
+    public static final String PLAYER_TWO_STONES = "PLAYER_TWO_STONES";
+
+
+
     private TableLayout table;
     private TwoPlayerLocalActivity thisActivity;
     private LayoutInflater inflater;
@@ -72,14 +80,24 @@ public class GameOverDialog extends DialogFragment {
 
     private void initialisePlayerInfo(){
         playerBundle = getArguments();
-        TextView playerOneText = (TextView) layoutView.findViewById(R.id.player_one_name_leaderboard);
-        playerOneText.setText(playerBundle.getString(PLAYER_ONE_KEY));
 
-        TextView playerTwoText = (TextView) layoutView.findViewById(R.id.player_two_name_leaderboard);
-        playerTwoText.setText(playerBundle.getString(PLAYER_TWO_KEY));
+        //Sets player names
+        TextView p1NameText = (TextView) layoutView.findViewById(R.id.player_one_name_leaderboard);
+        p1NameText.setText(playerBundle.getString(PLAYER_ONE_KEY));
+
+        TextView p2NameText = (TextView) layoutView.findViewById(R.id.player_two_name_leaderboard);
+        p2NameText.setText(playerBundle.getString(PLAYER_TWO_KEY));
+
+        //Sets player stones
+        TextView p1StonesText = (TextView) layoutView.findViewById(R.id.player_one_stones);
+        p1StonesText.setText(playerBundle.getString(PLAYER_ONE_STONES));
+
+        TextView p2StonesText = (TextView) layoutView.findViewById(R.id.player_two_stones);
+        p2StonesText.setText(playerBundle.getString(PLAYER_TWO_STONES));
+
+        //Sets player wins
 
 
-//        Will also set the wins and stones for each player
     }
 
     /**
