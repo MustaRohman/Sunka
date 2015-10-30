@@ -1,10 +1,18 @@
 package toucan.sunka;
 
+import android.app.Activity;
 import android.content.Context;
+import android.os.AsyncTask;
+import android.os.Looper;
+import android.os.Message;
 import android.util.AttributeSet;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
+
+import java.security.MessageDigest;
+import java.util.logging.LogRecord;
+import android.os.Handler;
 
 /**
  * Created by andrei on 21/10/15.
@@ -17,16 +25,44 @@ import android.widget.Button;
  */
 public class Crater extends Button {
 
-    public static final int ACTION_DELAY = 0;
+    public static final int ACTION_DELAY = 1000;
     private Player owner;
     private Crater nextCrater, oppositeCrater;
-    private int stones;
+    protected int stones;
     private boolean store;
+    public Activity activity;
+
+    //headache below
+    private class setCraterStones extends AsyncTask<Object, Object, Void> {
+
+        protected Void doInBackground(Object... params){
+            try{
+                publishProgress(params[0],params[1],params[2]);
+            }
+            catch(IndexOutOfBoundsException e){
+                publishProgress(params[0],params[1]);
+            }
+            try{
+                Thread.sleep(ACTION_DELAY);
+            }
+            catch (InterruptedException e){}
+            return null;
+        }
+
+        protected void onProgressUpdate(Object... params){
+            Crater currentCrater = (Crater) params[0];
+            try {
+                ((Crater) params[2]).setText(Integer.toString(0));
+            }
+            catch (IndexOutOfBoundsException e){}
+            int stones = (int) params[1];
+            currentCrater.setText(Integer.toString(stones));
+        }
+    }
 
     public Crater(Context context, AttributeSet attrs){
         super(context, attrs);
         initialise(false);
-
     }
 
     public Crater(boolean store){
@@ -45,8 +81,9 @@ public class Crater extends Button {
      */
     public void makeMoveFromHere() {
         if (belongsToActivePlayer(this)) {
-            placeAlong(this.stones);
-            setStones(0);
+            int stones = getStones();
+            updateCrater(this, 0);
+            placeAlong(stones);
             if (checkGameOver(nextCrater)) {
                 // Game over
             }
@@ -62,17 +99,15 @@ public class Crater extends Button {
      * @param stones represents how many stones are left to be placed
      */
     public void placeAlong(int stones){
-        try {
             if (stones != 0)
-                if (!nextCrater.isStore()) performMove(nextCrater, stones - 1);
-                else if (belongsToActivePlayer(nextCrater))
+                if (!nextCrater.isStore()) {
+                    performMove(nextCrater, stones - 1);
+                } else if (belongsToActivePlayer(nextCrater)) {
                     performRegularMove(nextCrater, stones - 1);
-                else performMove(nextCrater.getNextCrater(), stones - 1);
-            Thread.sleep(ACTION_DELAY);
-        }
-        catch (InterruptedException e){
-            Log.d("Exception", String.format("Sleep thread interrupted, error: %s", e));
-        }
+                }
+                else {
+                    performMove(nextCrater.getNextCrater(), stones - 1);
+                }
     }
     /**
      * Method first checks if the remaining stones are 0 - if it's the last move
@@ -86,16 +121,19 @@ public class Crater extends Button {
      */
     public void performMove(Crater crater, int remainingStones){
         if ( remainingStones == 0 ) {
-            if ( crater.isEmpty() && belongsToActivePlayer(crater) ) {
+            if ( crater.isEmpty() && belongsToActivePlayer(crater) && crater.getOppositeCrater().getStones() != 0 ) {
                 Crater oppositeCrater = crater.getOppositeCrater();
                 Crater ownerStore = owner.getStore();
-                ownerStore.setStones(oppositeCrater.getStones() + ownerStore.getStones() + 1);
-                oppositeCrater.setStones(0);
+                updateCrater(ownerStore, oppositeCrater.getStones() + ownerStore.getStones() + 1, oppositeCrater);
             }
-            else crater.setStones(crater.getStones() + 1);
+            else {
+                updateCrater(crater, crater.getStones() + 1);
+            }
             changeTurn();
         }
-        else performRegularMove(crater, remainingStones); //recursive call
+        else {
+            performRegularMove(crater, remainingStones); //recursive call
+        }
     }
 
     /**
@@ -105,7 +143,7 @@ public class Crater extends Button {
      * @param remainingStones signals how many stones are left to be placed
      */
     public void performRegularMove(Crater crater, int remainingStones){
-        crater.setStones(crater.getStones() + 1);
+        updateCrater(crater, crater.getStones() + 1);
         crater.placeAlong(remainingStones);
     }
 
@@ -142,6 +180,18 @@ public class Crater extends Button {
         }
         return true;
     }
+
+    public void updateCrater(Crater crater, int stones){
+        crater.stones = stones;
+        new setCraterStones().execute(crater,stones);
+    }
+
+    public void updateCrater(Crater store, int stones, Crater oppositeCrater) {
+        new setCraterStones().execute(store, stones , oppositeCrater);
+        store.stones = stones;
+        oppositeCrater.stones = 0;
+    }
+
     // Checks if the crater belongs to the active player
     public boolean belongsToActivePlayer(Crater crater) {
         return crater.getOwner().isPlayingTurn();
@@ -171,10 +221,12 @@ public class Crater extends Button {
         return stones;
     }
 
-    public void setStones(int stones){
+    public void setStones(final int stones) {
         this.stones = stones;
-        setText(String.format("%d", stones));
+        setText(Integer.toString(stones));
     }
+
+    public void setActivity(Activity activity) { this.activity = activity; }
 
     public void setNextCrater(Crater crater){
         nextCrater = crater;
