@@ -37,10 +37,10 @@ public class Crater extends Button {
 
         protected Void doInBackground(Object... params){
             try{
-                publishProgress(params[0],params[1],params[2]);
+                publishProgress(params[0], params[1], params[2]);
             }
             catch(IndexOutOfBoundsException e){
-                publishProgress(params[0],params[1]);
+                publishProgress(params[0], params[1]);
             }
             try{
                 Thread.sleep(ACTION_DELAY);
@@ -52,11 +52,11 @@ public class Crater extends Button {
         protected void onProgressUpdate(Object... params){
             Crater currentCrater = (Crater) params[0];
             try {
-                ((Crater) params[2]).setText(Integer.toString(0));
+                ((Crater) params[2]).setText(String.format("%d", 0));
             }
             catch (IndexOutOfBoundsException e){}
             int stones = (int) params[1];
-            currentCrater.setText(Integer.toString(stones));
+            currentCrater.setText(String.format("%d", stones));
         }
     }
 
@@ -223,7 +223,7 @@ public class Crater extends Button {
 
     public void setStones(final int stones) {
         this.stones = stones;
-        setText(Integer.toString(stones));
+        setText(String.format("%d", stones));
     }
 
     public void setActivity(Activity activity) { this.activity = activity; }

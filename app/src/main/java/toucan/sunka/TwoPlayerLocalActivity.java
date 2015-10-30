@@ -1,7 +1,6 @@
 package toucan.sunka;
 
 import android.app.Activity;
-import android.os.Looper;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
@@ -18,7 +17,7 @@ import java.util.logging.LogRecord;
 public class TwoPlayerLocalActivity extends AppCompatActivity {
     private Crater playerOneStore;
     private Crater playerTwoStore;
-    static Crater[] craterList = new Crater[16];
+    Crater[] craterList = new Crater[16];
     private Player firstPlayer;
     private Player secondPlayer;
 
