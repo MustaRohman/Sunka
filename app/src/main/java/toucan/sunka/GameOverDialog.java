@@ -88,6 +88,13 @@ public class GameOverDialog extends DialogFragment {
         TextView p2NameText = (TextView) layoutView.findViewById(R.id.player_two_name_leaderboard);
         p2NameText.setText(playerBundle.getString(PLAYER_TWO_KEY));
 
+        //Sets player wins
+        TextView p1WinsText = (TextView) layoutView.findViewById(R.id.player_one_wins);
+        p1WinsText.setText(playerBundle.getString(PLAYER_ONE_WINS));
+
+        TextView p2WinsText = (TextView) layoutView.findViewById(R.id.player_two_wins);
+        p2WinsText.setText(playerBundle.getString(PLAYER_TWO_WINS));
+
         //Sets player stones
         TextView p1StonesText = (TextView) layoutView.findViewById(R.id.player_one_stones);
         p1StonesText.setText(playerBundle.getString(PLAYER_ONE_STONES));
@@ -95,7 +102,6 @@ public class GameOverDialog extends DialogFragment {
         TextView p2StonesText = (TextView) layoutView.findViewById(R.id.player_two_stones);
         p2StonesText.setText(playerBundle.getString(PLAYER_TWO_STONES));
 
-        //Sets player wins
 
 
     }
