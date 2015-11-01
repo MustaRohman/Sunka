@@ -29,5 +29,13 @@ public class PlayerCollection {
     public void sortByGamesWon() {
         if (!players.isEmpty())
             Collections.sort(players, Player.PlayerScoreComparator);
+
+        for (int i = 0; i < players.size(); i++){
+            players.get(i).setPlayerRank(i + 1);
+        }
+    }
+
+    public Player getPlayerAtPosition(int pos){
+      return players.get(pos);
     }
 }

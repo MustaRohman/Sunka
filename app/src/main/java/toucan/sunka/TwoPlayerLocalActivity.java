@@ -123,6 +123,7 @@ public class TwoPlayerLocalActivity extends AppCompatActivity {
         FragmentManager fm = getSupportFragmentManager();
 
         Bundle playerInfo = new Bundle();
+
         playerInfo.putString(MultiplayerDialogFragment.PLAYER_ONE_KEY, firstPlayer.getPlayerName());
         playerInfo.putString(MultiplayerDialogFragment.PLAYER_TWO_KEY, secondPlayer.getPlayerName());
         playerInfo.putString(GameOverDialog.PLAYER_ONE_STONES, String.valueOf(firstPlayer.getStore().getStones()));
@@ -140,8 +141,19 @@ public class TwoPlayerLocalActivity extends AppCompatActivity {
      * @param view
      */
     public void onClickGameOverTest(View view) {
+
         firstPlayer.setGamesWon(3);
         secondPlayer.setGamesWon(7);
+
+        Player testPlayer1 = new Player("John");
+        testPlayer1.setGamesWon(4);
+
+        Player testPlayer2 = new Player("Manny");
+        testPlayer2.setGamesWon(5);
+
+        MainScreen.collection.addPlayer(testPlayer1);
+        MainScreen.collection.addPlayer(testPlayer2);
+        MainScreen.collection.sortByGamesWon();
         createGameOverDialog();
     }
 }

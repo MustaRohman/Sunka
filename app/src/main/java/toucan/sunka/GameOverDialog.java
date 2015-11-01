@@ -47,9 +47,7 @@ public class GameOverDialog extends DialogFragment {
 
         initialisePlayerInfo();
 
-        table = (TableLayout) layoutView.findViewById(R.id.leaderboard_table);
-        addRow("2nd", "Player1", "0023");
-        addRow("3nd", "Player2", "0020");
+        addLeaderboard();
 
         builder.setView(layoutView);
         thisActivity = (TwoPlayerLocalActivity) this.getActivity();
@@ -106,21 +104,36 @@ public class GameOverDialog extends DialogFragment {
 
     }
 
+    private void addLeaderboard(){
+
+        table = (TableLayout) layoutView.findViewById(R.id.leaderboard_table);
+        Player player1st = MainScreen.collection.getPlayerAtPosition(0);
+        Player player2nd = MainScreen.collection.getPlayerAtPosition(1);
+        Player player3rd = MainScreen.collection.getPlayerAtPosition(2);
+
+        addRow(player1st.getPlayerRank(), player1st.getPlayerName(),
+                player1st.getNumberOfGamesWon());
+        addRow(player2nd.getPlayerRank(), player2nd.getPlayerName(),
+                player2nd.getNumberOfGamesWon());
+        addRow(player3rd.getPlayerRank(), player3rd.getPlayerName(),
+                player3rd.getNumberOfGamesWon());
+    }
+
     /**
      * Takes in the player's rank name and score and creates and adds a row in the table
      * representing the player info
      */
-    private void addRow(String rank, String name, String score){
+    private void addRow(int rank, String name, int score){
 
         View rowView = inflater.inflate(R.layout.leaderboard_row, null);
         TextView rankText = (TextView) rowView.findViewById(R.id.player_rank);
-        rankText.setText(rank);
+        rankText.setText(String.valueOf(rank));
 
         TextView nameText = (TextView) rowView.findViewById(R.id.player_name);
         nameText.setText(name);
 
         TextView scoreText = (TextView) rowView.findViewById(R.id.player_score);
-        scoreText.setText(rank);
+        scoreText.setText(String.valueOf(score));
 
         table.addView(rowView);
 
