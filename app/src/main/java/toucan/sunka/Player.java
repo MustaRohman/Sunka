@@ -1,8 +1,12 @@
 package toucan.sunka;
 
+import android.os.Parcel;
+import android.os.Parcelable;
+
+import java.io.Serializable;
 import java.util.Comparator;
 
-public class Player {
+public class Player implements Parcelable{
 
     private String playerName;
     private int gamesWon;
@@ -77,6 +81,29 @@ public class Player {
             int score2 = p2.getNumberOfGamesWon();
 
             return score2 - score1;
+        }
+    };
+    public Player(Parcel input) {
+        playerName = input.readString();
+
+    }
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeString(playerName);
+
+    }
+    public static final Parcelable.Creator<Player> CREATOR = new Parcelable.Creator<Player>(){
+        public Player createFromParcel(Parcel input){
+            return new Player(input);
+        }
+        public Player[] newArray(int size){
+            return new Player[size];
         }
     };
 

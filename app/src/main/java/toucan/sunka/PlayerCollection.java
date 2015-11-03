@@ -1,5 +1,3 @@
-// Redundant comment.
-
 package toucan.sunka;
 
 import java.io.File;
@@ -26,12 +24,9 @@ public class PlayerCollection {
     }
 
     public Player findPlayer(String n) {
-        for(Player player : players) {
-            if (player.getPlayerName().equals(n)) {
+        for(Player player : players) 
+            if (player.getPlayerName().equals(n)) 
                 return player;
-            }
-        }
-
         return null;
     }
 
