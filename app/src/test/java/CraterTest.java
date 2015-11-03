@@ -171,8 +171,6 @@ public class CraterTest{
                 0, 7, 7,
                 7};
         assertArrayEquals(expected, result);
-        assertTrue(player1.isPlayingTurn());
-        assertFalse(player2.isPlayingTurn());
     }
 
     @Test
@@ -193,8 +191,6 @@ public class CraterTest{
                 7, 7, 7,
                 7};
         assertArrayEquals(expected, result);
-        assertFalse(player1.isPlayingTurn());
-        assertTrue(player2.isPlayingTurn());
     }
 
     @Test

@@ -65,7 +65,6 @@ public class Crater extends Button {
          *               instance of setCraterStones and executing it.
          */
         protected Void doInBackground(Object... params){
-            updatePlayers();
             switch (params.length) {
                 case 4:
                     switchPlayers();
@@ -109,22 +108,7 @@ public class Crater extends Button {
             activePlayer.setPlayingTurnTo(false);
             inactivePlayer.setPlayingTurnTo(true);
         }
-        public Player getActivePlayer(){
-            if (nextCrater.getOwner().isPlayingTurn())
-                return nextCrater.getOwner();
-            return nextCrater.getOppositeCrater().getOwner();
-        }
 
-        public Player getInactivePlayer(){
-            if (nextCrater.getOwner().isPlayingTurn())
-                return nextCrater.getOppositeCrater().getOwner();
-            return nextCrater.getOwner();
-        }
-
-        public void updatePlayers(){
-            activePlayer = getActivePlayer();
-            inactivePlayer = getInactivePlayer();
-        }
     }
 
     /**
@@ -228,9 +212,10 @@ public class Crater extends Button {
      * @param oppositeCrater represents the crater from which the stones will be stolen
      */
     public void updateCrater(Crater store, int stones, boolean steal, Crater oppositeCrater) {
+        updatePlayers();
         store.stones = stones;
         oppositeCrater.stones = 0;
-        new setCraterStones().execute(store, stones , steal, oppositeCrater);
+        new setCraterStones().execute(store, stones, steal, oppositeCrater);
     }
 
     /**
@@ -241,6 +226,7 @@ public class Crater extends Button {
      * @param lastMove signals that this is the last move
      */
     public void updateCrater(Crater crater, int stones, boolean lastMove){
+        updatePlayers();
         crater.stones = stones;
         new setCraterStones().execute(crater, stones, lastMove);
     }
@@ -252,6 +238,7 @@ public class Crater extends Button {
      * @param stones represents new number of stones to be set for the new crater
      */
     public void updateCrater(Crater crater, int stones){
+        updatePlayers();
         crater.stones = stones;
         new setCraterStones().execute(crater,stones);
     }
@@ -261,6 +248,22 @@ public class Crater extends Button {
         return crater.getOwner().isPlayingTurn();
     }
 
+    public Player getActivePlayer(){
+        if (nextCrater.getOwner().isPlayingTurn())
+            return nextCrater.getOwner();
+        return nextCrater.getOppositeCrater().getOwner();
+    }
+
+    public Player getInactivePlayer(){
+        if (nextCrater.getOwner().isPlayingTurn())
+            return nextCrater.getOppositeCrater().getOwner();
+        return nextCrater.getOwner();
+    }
+
+    public void updatePlayers(){
+        activePlayer = getActivePlayer();
+        inactivePlayer = getInactivePlayer();
+    }
 
     public boolean isEmpty(){
         return (stones == 0);
