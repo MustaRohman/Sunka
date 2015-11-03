@@ -14,7 +14,6 @@ import android.widget.Button;
  * TODO for this class:
     -> who presses first
     -> game over
- *  -> JavaDOC the big logic methods explaining what's what (low prio)
  */
 public class Crater extends Button {
 
@@ -92,7 +91,8 @@ public class Crater extends Button {
          * have it's setText cast on with the second parameter, the number of stones.
          * The third parameter is only sent in case of a steal, and it sets its text 0 in the same
          * thread.
-         * @param params
+         * @param params contains the crater that needs to be updated, the stones, and an optional
+         *               parameter, the oppositeCrater when the steal is made
          */
         protected void onProgressUpdate(Object... params){
             Crater currentCrater = (Crater) params[0];
