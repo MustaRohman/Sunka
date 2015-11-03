@@ -42,7 +42,6 @@ public class TwoPlayerLocalActivity extends AppCompatActivity {
 
     public void onCraterClick(View view){
         Crater crater = (Crater) view;
-        crater.setActivity(this);
         crater.makeMoveFromHere();
     }
 
