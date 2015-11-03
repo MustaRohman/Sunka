@@ -124,6 +124,23 @@ public class TwoPlayerLocalActivity extends AppCompatActivity {
 
         Bundle playerInfo = new Bundle();
 
+        int p1Stones = firstPlayer.getStore().getStones();
+        int p2Stones = secondPlayer.getStore().getStones();
+
+
+        //Initialises victorPlayer with the victor of the current game
+        if (p1Stones > p2Stones){
+            firstPlayer.setGamesWon(firstPlayer.getNumberOfGamesWon() + 1);
+        } else {
+            Log.d("createGameOverDialog", String.valueOf(secondPlayer.getNumberOfGamesWon()));
+            secondPlayer.setGamesWon(secondPlayer.getNumberOfGamesWon() + 1);
+            Log.d("createGameOverDialog", String.valueOf(secondPlayer.getNumberOfGamesWon()));
+        }
+
+        MainScreen.collection.sortByGamesWon();
+        Log.d("createGameOverDialog", String.valueOf(secondPlayer.getPlayerRank()));
+
+
         playerInfo.putString(MultiplayerDialogFragment.PLAYER_ONE_KEY, firstPlayer.getPlayerName());
         playerInfo.putString(MultiplayerDialogFragment.PLAYER_TWO_KEY, secondPlayer.getPlayerName());
         playerInfo.putString(GameOverDialog.PLAYER_ONE_STONES, String.valueOf(firstPlayer.getStore().getStones()));
@@ -142,18 +159,31 @@ public class TwoPlayerLocalActivity extends AppCompatActivity {
      */
     public void onClickGameOverTest(View view) {
 
-        firstPlayer.setGamesWon(3);
-        secondPlayer.setGamesWon(7);
+        firstPlayer.setGamesWon(0);
+        secondPlayer.setGamesWon(8);
 
         Player testPlayer1 = new Player("John");
-        testPlayer1.setGamesWon(4);
+        testPlayer1.setGamesWon(1);
 
         Player testPlayer2 = new Player("Manny");
-        testPlayer2.setGamesWon(5);
+        testPlayer2.setGamesWon(1);
+
+        Player testPlayer3 = new Player("Hazel");
+        testPlayer3.setGamesWon(3);
 
         MainScreen.collection.addPlayer(testPlayer1);
         MainScreen.collection.addPlayer(testPlayer2);
+        MainScreen.collection.addPlayer(testPlayer3);
         MainScreen.collection.sortByGamesWon();
+
+        for (int i = 0; i < MainScreen.collection.size(); i++){
+            Player p = MainScreen.collection.getPlayerAtPosition(i);
+            Log.d("onClickGameOverTest", p.getPlayerName() + " " + p.getPlayerRank() + " " + p.getNumberOfGamesWon());
+        }
+
+        Player bestPlayer = MainScreen.collection.getPlayerAtPosition(0);
+        Log.d("onClickGameOverTest", "Rank 1 is " + bestPlayer.getPlayerName() + " Wins: " + bestPlayer.getNumberOfGamesWon());
+        Log.d("onClickGameOverTest", secondPlayer.getNumberOfGamesWon() + " " + secondPlayer.getPlayerRank());
         createGameOverDialog();
     }
 }

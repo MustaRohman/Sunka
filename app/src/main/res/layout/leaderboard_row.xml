@@ -9,21 +9,25 @@
         android:layout_height="wrap_content"
         android:text="3rd"
         android:padding="7dip"
-        android:textSize="@dimen/leaderboard_size"/>
+        android:textSize="@dimen/leaderboard_size"
+        android:gravity="center"/>
     <TextView
         android:id="@+id/player_name"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Name"
         android:padding="7dip"
-        android:textSize="@dimen/leaderboard_size"/>
+        android:textSize="@dimen/leaderboard_size"
+        android:gravity="center"/>
+
     <TextView
         android:id="@+id/player_score"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="012"
         android:padding="7dip"
-        android:textSize="@dimen/leaderboard_size"/>
+        android:textSize="@dimen/leaderboard_size"
+        android:gravity="center"/>
 
 
 </TableRow>

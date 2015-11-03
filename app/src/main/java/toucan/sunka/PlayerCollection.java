@@ -38,4 +38,8 @@ public class PlayerCollection {
     public Player getPlayerAtPosition(int pos){
       return players.get(pos);
     }
+
+    public int size(){
+        return players.size();
+    }
 }
