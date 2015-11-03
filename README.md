@@ -6,17 +6,11 @@
 * Mert: 07775429535
 * Konstantin: 07845125471
 
-# Availability During Reading Week?
-* Monday - Musta, Mert
-* Tuesday - Mert, Musta
-* Wednesday - Mert, Musta
-* Thursday - Musta
-* Friday - Mert
 
 # DEADLINES:
 -
 
-# Lectures #
+# Lectures/Tutorial #
 
 * Monday: 9-12
 
@@ -27,17 +21,22 @@
 * Thursday: 10-12
           1 - 2 (LGT)
 
-* Friday: 9-12
+* Friday: 3:40 - 4 (Group Tutorial with Valeri Katerinchuk)
        
-# Practice Labs #
+# Practice Labs Week 10 (Database System) #
 
-* Monday: Free
-* Tuesday: 2 - 4  ( Mert & Musta & Konstantin )
-* Wednesday: 9 - 11 ( Tsveto ) 
-* Thursday: 2 - 4 ( Andrei ) 
-* Thursday: 4 - 6 ( Konstantin )
-* Friday: 1 -3 ( Tsveto & Merto ) 3 - 5 ( Andrei & Musta ) 
+* Monday: 2 - 4 (Mert) , 4-6 (Tsveto, Musta)
+* Tuesday: 9 - 11 (Konstantin)
+* Wednesday: 
+* Thursday: 
+* Friday: 
 
+# Practice Labs Week 11 (Object-Oriented Design)
+* Monday: 3 - 4 (Mert and Tsveto), 4 - 5 (Konstantin), 5 - 6 (Musta)
+* Tuesday: 
+* Wednesday: 
+* Thursday: 
+* Friday: 
 
 # MEET UPS #
 
@@ -79,9 +78,5 @@
     (same evaluation of board state used for the AI's side can be 
     used to determine the opposing board)
     (or both sides could be determined at the same time)
-
-          --- If anyone feels like solving the game I wish them good luck.
-    It's a bitch to figure out how to do it without creating a huge tree and
-    analyzing the life out of it. ---
 
 Feel free to edit the readme with any information

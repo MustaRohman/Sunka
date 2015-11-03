@@ -1,18 +1,13 @@
 package toucan.sunka;
 
-import android.app.Activity;
 import android.content.Context;
 import android.os.AsyncTask;
-import android.os.Looper;
-import android.os.Message;
 import android.util.AttributeSet;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 
-import java.security.MessageDigest;
-import java.util.logging.LogRecord;
-import android.os.Handler;
+
 
 /**
  * Created by andrei on 21/10/15.
@@ -30,7 +25,6 @@ public class Crater extends Button {
     private Crater nextCrater, oppositeCrater;
     protected int stones;
     private boolean store;
-    public Activity activity;
 
     public Crater(Context context, AttributeSet attrs){
         super(context, attrs);
@@ -298,8 +292,6 @@ public class Crater extends Button {
         this.stones = stones;
         setText(String.format("%d", stones));
     }
-
-    public void setActivity(Activity activity) { this.activity = activity; }
 
     public void setNextCrater(Crater crater){
         nextCrater = crater;
