@@ -40,7 +40,7 @@ public class PlayerCollection {
     public void savePlayerInfoToFile(File directory) {
         try {
             if (!isClear()) {
-                File playerDatabase = new File(directory, "GameData\\PlayerDatabase.pd");
+                File playerDatabase = new File(directory, "GameData/PlayerDatabase.pd");
                 playerDatabase.getParentFile().mkdir();
                 playerDatabase.createNewFile();
 
