@@ -1,3 +1,5 @@
+// Redundant comment.
+
 package toucan.sunka;
 
 import java.io.File;
