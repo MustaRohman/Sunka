@@ -19,8 +19,8 @@ import android.os.Handler;
  */
 /**
  * TODO for this class:
- *  -> implement what happens when it's game over (high prio)
- *  -> separate logic from Button logic into two separate classes to ease readability (low prio)
+    -> who presses first
+    -> game over
  *  -> JavaDOC the big logic methods explaining what's what (low prio)
  */
 public class Crater extends Button {
@@ -47,13 +47,38 @@ public class Crater extends Button {
         setStones(this.store ? 0 : 7);
     }
 
-    //headache below
+    /**
+     * Async task used to set the delay between each move. A new instance is called by
+     * calling new setCraterStones().execute(...params). It can have between 2 and 4 parameters,
+     * depending on the type of move that needs to be executed. The class starts with
+     * doInBackground.
+     *
+     * The < Object, Object, Void > parameters for the AsyncTask represent the types of parameters
+     * needed. The first Object refers to the type of parameters needed for doInBackground, the
+     * second one is the type of parameters for onProgressUpdate and Void is what doInBackground
+     * returns
+     */
     private class setCraterStones extends AsyncTask<Object, Object, Void> {
+
+        /**
+         * Due to android limitations :( no method from the crater class can be called
+         * in the doInBackground since Crater extends Button. The only backend task done done here
+         * is switchPlayers().
+         *
+         * Depending on the number of parameters, the method calls publishProgress with either all 4
+         * parameters - when a steal is triggered - or two parameters - the execution of a normal
+         * move.
+         *
+         * It also adds the delay for the animation.
+         * @param params is an array that contains all the parameters sent when creating a new
+         *               instance of setCraterStones and executing it.
+         */
         protected Void doInBackground(Object... params){
+            updatePlayers();
             switch (params.length) {
                 case 4:
                     switchPlayers();
-                    publishProgress(params[0],params[1],params[2],params[3]); //steal
+                    publishProgress(params[0], params[1], params[3]); //steal
                     break;
                 case 3:
                     switchPlayers();
@@ -70,16 +95,43 @@ public class Crater extends Button {
             return null;
         }
 
+        /**
+         * This method gets 2 or 3 parameters. The first parameter is a crater which will
+         * have it's setText cast on with the second parameter, the number of stones.
+         * The third parameter is only sent in case of a steal, and it sets its text 0 in the same
+         * thread.
+         * @param params
+         */
         protected void onProgressUpdate(Object... params){
             Crater currentCrater = (Crater) params[0];
             int stones = (int) params[1];
             currentCrater.setText(String.format("%d", stones));
-            if (params.length == 4) ((Crater) params[3]).setText(String.format("%d", 0));
+            if (params.length == 3) ((Crater) params[2]).setText(String.format("%d", 0));
         }
 
+        /**
+         * Method that switches players rounds, activePlayer and inactivePlayer being updated
+         * before all new moves.
+         */
         protected void switchPlayers() {
             activePlayer.setPlayingTurnTo(false);
             inactivePlayer.setPlayingTurnTo(true);
+        }
+        public Player getActivePlayer(){
+            if (nextCrater.getOwner().isPlayingTurn())
+                return nextCrater.getOwner();
+            return nextCrater.getOppositeCrater().getOwner();
+        }
+
+        public Player getInactivePlayer(){
+            if (nextCrater.getOwner().isPlayingTurn())
+                return nextCrater.getOppositeCrater().getOwner();
+            return nextCrater.getOwner();
+        }
+
+        public void updatePlayers(){
+            activePlayer = getActivePlayer();
+            inactivePlayer = getInactivePlayer();
         }
     }
 
@@ -172,23 +224,44 @@ public class Crater extends Button {
         return true;
     }
 
-    public void updateCrater(Crater crater, int stones){
-        updatePlayers();
-        crater.stones = stones;
-        new setCraterStones().execute(crater,stones);
-    }
-
-    public void updateCrater(Crater crater, int stones, boolean lastMove){
-        updatePlayers();
-        crater.stones = stones;
-        new setCraterStones().execute(crater,stones, lastMove);
-    }
-
+    /**
+     * Method sets the stones of the crater to the stones parameter. It also calls a new
+     * AsyncTask with four parameters, signaling a new move that results in a steal.
+     * @param store represents the store where the stones will be moved
+     * @param stones represents the last stone and the oppositeCrater's stones that need to be
+     *               put in the active player's store
+     * @param steal is a boolean put to signal that this is a steal move. Should there be 3 params,
+     *              it would've been harder to differentiate between this method and the one that
+     *              signals last move
+     * @param oppositeCrater represents the crater from which the stones will be stolen
+     */
     public void updateCrater(Crater store, int stones, boolean steal, Crater oppositeCrater) {
-        updatePlayers();
         store.stones = stones;
         oppositeCrater.stones = 0;
         new setCraterStones().execute(store, stones , steal, oppositeCrater);
+    }
+
+    /**
+     * Method sets the stones of the crater to the stones parameter. It also calls a new
+     * AsyncTask with three parameters, signaling that this is the last move.
+     * @param crater represents the crater where the stones will be moved
+     * @param stones represents new number of stones to be set for the new crater
+     * @param lastMove signals that this is the last move
+     */
+    public void updateCrater(Crater crater, int stones, boolean lastMove){
+        crater.stones = stones;
+        new setCraterStones().execute(crater, stones, lastMove);
+    }
+
+    /**
+     * Method sets the stones of the crater to the stones parameter. It also calls a new
+     * AsyncTask with two parameters, making a normal move.
+     * @param crater represents the crater where the stones will be moved
+     * @param stones represents new number of stones to be set for the new crater
+     */
+    public void updateCrater(Crater crater, int stones){
+        crater.stones = stones;
+        new setCraterStones().execute(crater,stones);
     }
 
     // Checks if the crater belongs to the active player
@@ -196,22 +269,6 @@ public class Crater extends Button {
         return crater.getOwner().isPlayingTurn();
     }
 
-    public Player getActivePlayer(){
-        if (this.getOwner().isPlayingTurn())
-            return this.getOwner();
-        return this.getOppositeCrater().getOwner();
-    }
-
-    public Player getInactivePlayer(){
-        if (this.getOwner().isPlayingTurn())
-            return this.getOppositeCrater().getOwner();
-        return this.getOwner();
-    }
-
-    public void updatePlayers(){
-        activePlayer = getActivePlayer();
-        inactivePlayer = getInactivePlayer();
-    }
 
     public boolean isEmpty(){
         return (stones == 0);
