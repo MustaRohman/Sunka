@@ -70,9 +70,4 @@ public class PlayerCollectionTest {
 
         assertTrue(expected.equals(result));
     }
-
-    public void doFileWritingAndReading() {
-        pC.savePlayerInfoToFile(startLocation);
-        pC.loadPlayerInfoFromFile(startLocation);
-    }
 }
