@@ -58,7 +58,7 @@ public class PlayerCollection {
     // Call this method as follows: loadPlayerInfoFromFile(context.getFilesDir())
     public void loadPlayerInfoFromFile(File directory) {
         try {
-            File playerDatabase = new File(directory, "GameData\\PlayerDatabase.pd");
+            File playerDatabase = new File(directory, "GameData/PlayerDatabase.pd");
             playerDatabase.getParentFile().mkdir();
             playerDatabase.createNewFile();
             FileInputStream fIn = new FileInputStream(playerDatabase);
