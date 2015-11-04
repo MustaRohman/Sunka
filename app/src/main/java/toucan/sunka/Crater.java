@@ -19,6 +19,7 @@ public class Crater extends Button {
 
     public static final int ACTION_DELAY = 1000;
     private Player owner, activePlayer, inactivePlayer;
+    private boolean hasEnded = true;
     private Crater nextCrater, oppositeCrater;
     protected int stones;
     private boolean store;
@@ -105,6 +106,7 @@ public class Crater extends Button {
          * before all new moves.
          */
         protected void switchPlayers() {
+            hasEnded = true;
             activePlayer.setPlayingTurnTo(false);
             inactivePlayer.setPlayingTurnTo(true);
         }
@@ -116,7 +118,9 @@ public class Crater extends Button {
      * crater's stones to zero. After each move it also checks if the game is over
      */
     public void makeMoveFromHere() {
-        if (belongsToActivePlayer(this)) {
+        if (belongsToActivePlayer(this) && hasEnded) {
+            disableActivesEnableInactiveCrater();
+            hasEnded = false;
             int stones = getStones();
             updateCrater(this, 0);
             placeAlong(stones);
@@ -241,6 +245,38 @@ public class Crater extends Button {
         updatePlayers();
         crater.stones = stones;
         new setCraterStones().execute(crater,stones);
+    }
+
+    public Crater[] getActivePlayerCraters(){
+        Crater[] craterList = new Crater[7];
+        Crater startStore = owner.getStore().getOppositeCrater();
+        Crater currentCrater = startStore.getNextCrater();
+        int i = 0;
+        while(!currentCrater.getNextCrater().isStore()) {
+            craterList[i++] = currentCrater;
+            currentCrater = currentCrater.nextCrater;
+        }
+        craterList[i]=currentCrater;
+        return craterList;
+    }
+
+    public boolean getsFreeMove() {
+        int stones = this.stones;
+        Crater currentCrater = this;
+        while(stones != 0) {
+            currentCrater = currentCrater.getNextCrater();
+            stones--;
+        }
+        return currentCrater.isStore();
+    }
+
+    public void disableActivesEnableInactiveCrater(){
+        if (!getsFreeMove()) {
+            for (Crater crater : getActivePlayerCraters()) {
+                crater.setEnabled(false);
+                crater.getOppositeCrater().setEnabled(true);
+            }
+        }
     }
 
     // Checks if the crater belongs to the active player
