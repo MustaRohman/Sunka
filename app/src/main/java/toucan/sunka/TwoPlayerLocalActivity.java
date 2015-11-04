@@ -15,6 +15,7 @@ public class TwoPlayerLocalActivity extends AppCompatActivity {
     Crater[] craterList = new Crater[16];
     private Player firstPlayer;
     private Player secondPlayer;
+    private boolean firstMove = true;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -23,9 +24,6 @@ public class TwoPlayerLocalActivity extends AppCompatActivity {
 
         firstPlayer = getIntent().getParcelableExtra(MultiplayerDialogFragment.PLAYER_ONE_KEY);
         secondPlayer = getIntent().getParcelableExtra(MultiplayerDialogFragment.PLAYER_TWO_KEY);
-
-        firstPlayer.setPlayingTurnTo(false);
-        secondPlayer.setPlayingTurnTo(true);
 
         initializeCraters();
 
@@ -37,6 +35,17 @@ public class TwoPlayerLocalActivity extends AppCompatActivity {
 
     public void onCraterClick(View view){
         Crater crater = (Crater) view;
+        if (firstMove){
+            if (crater.getOwner() == firstPlayer) {
+                firstPlayer.setPlayingTurnTo(true);
+                secondPlayer.setPlayingTurnTo(false);
+            }
+            else {
+                firstPlayer.setPlayingTurnTo(false);
+                secondPlayer.setPlayingTurnTo(true);
+            }
+            firstMove = false;
+        }
         crater.makeMoveFromHere();
     }
 

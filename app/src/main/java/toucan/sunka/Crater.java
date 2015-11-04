@@ -271,12 +271,11 @@ public class Crater extends Button {
     }
 
     public void disableActivesEnableInactiveCrater(){
-        if (!getsFreeMove()) {
+        if (!getsFreeMove())
             for (Crater crater : getActivePlayerCraters()) {
                 crater.setEnabled(false);
                 crater.getOppositeCrater().setEnabled(true);
             }
-        }
     }
 
     // Checks if the crater belongs to the active player
