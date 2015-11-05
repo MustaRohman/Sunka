@@ -96,8 +96,6 @@ public class CraterTest{
                 7, 7, 7,
                 7};
         assertArrayEquals(expected, result);
-        assertTrue(player2.isPlayingTurn());
-        assertFalse(player1.isPlayingTurn());
     }
     @Test
     public void testPlaceAlong2(){
@@ -118,8 +116,6 @@ public class CraterTest{
                 0, 8, 8,
                 8};
         assertArrayEquals(expected, result);
-        assertTrue(player2.isPlayingTurn());
-        assertFalse(player1.isPlayingTurn());
     }
     @Test
     public void testPlaceAlong3(){
@@ -136,8 +132,6 @@ public class CraterTest{
                 7, 7, 7,
                 0};
         assertArrayEquals(expected, result);
-        assertTrue(player2.isPlayingTurn());
-        assertFalse(player1.isPlayingTurn());
     }
     @Test
     public void testPlaceAlong4()
@@ -155,8 +149,6 @@ public class CraterTest{
                 7, 7, 7,
                 0};
         assertArrayEquals(expected, result);
-        assertTrue(player1.isPlayingTurn());
-        assertFalse(player2.isPlayingTurn());
     }
 
     @Test
@@ -179,8 +171,6 @@ public class CraterTest{
                 0, 7, 7,
                 7};
         assertArrayEquals(expected, result);
-        assertTrue(player1.isPlayingTurn());
-        assertFalse(player2.isPlayingTurn());
     }
 
     @Test
@@ -201,8 +191,6 @@ public class CraterTest{
                 7, 7, 7,
                 7};
         assertArrayEquals(expected, result);
-        assertFalse(player1.isPlayingTurn());
-        assertTrue(player2.isPlayingTurn());
     }
 
     @Test
