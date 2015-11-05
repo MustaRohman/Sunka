@@ -16,7 +16,7 @@ import android.widget.Button;
  */
 public class Crater extends Button {
 
-    public static final int ACTION_DELAY = 400;
+    public static final int ACTION_DELAY = 300; // Miliseconds
     private Player owner, activePlayer, inactivePlayer;
     private Crater nextCrater, oppositeCrater;
     protected int stones;
@@ -95,7 +95,7 @@ public class Crater extends Button {
         protected void onProgressUpdate(Object... params){
             Crater currentCrater = (Crater) params[0];
             int stones = (int) params[1];
-            currentCrater.setText(String.format("%d", stones));
+            currentCrater.setText(String.format("%d",stones));
             if (params.length == 3) ((Crater) params[2]).setText(String.format("%d", 0));
         }
 
@@ -240,7 +240,7 @@ public class Crater extends Button {
     }
 
     public Crater[] getActivePlayerCraters(){
-        Crater[] craterList = new Crater[7];
+        Crater[] craterList = new Crater[8];
         Crater startStore = owner.getStore().getOppositeCrater();
         Crater currentCrater = startStore.getNextCrater();
         int i = 0;
@@ -249,6 +249,7 @@ public class Crater extends Button {
             currentCrater = currentCrater.nextCrater;
         }
         craterList[i]=currentCrater;
+        craterList[i+1] = owner.getStore();
         return craterList;
     }
 
