@@ -10,9 +10,12 @@ import java.util.Scanner;
 public class PlayerCollection {
 
     private ArrayList<Player> players;
+    public String path;
 
     public PlayerCollection() {
         players = new ArrayList<Player>();
+        path = System.getProperty("os-name").contains("Windows") ? "GameData\\PlayerDatabase.pd" :
+                "GameData/PlayerDatabase.pd";
     }
 
     public void addPlayer(Player p) {
@@ -58,6 +61,8 @@ public class PlayerCollection {
     // Call this method as follows: loadPlayerInfoFromFile(context.getFilesDir())
     public void loadPlayerInfoFromFile(File directory) {
         try {
+            path = System.getProperty("os-name").contains("Windows") ? "GameData\\PlayerDatabase.pd" :
+                     "GameData/PlayerDatabase.pd";
             File playerDatabase = new File(directory, "GameData/PlayerDatabase.pd");
             playerDatabase.getParentFile().mkdir();
             playerDatabase.createNewFile();
