@@ -12,12 +12,11 @@ import android.widget.Button;
  */
 /**
  * TODO for this class:
-    -> who presses first
     -> game over
  */
 public class Crater extends Button {
 
-    public static final int ACTION_DELAY = 300;
+    public static final int ACTION_DELAY = 400;
     private Player owner, activePlayer, inactivePlayer;
     private Crater nextCrater, oppositeCrater;
     protected int stones;
@@ -137,14 +136,10 @@ public class Crater extends Button {
      */
     public void placeAlong(int stones){
             if (stones != 0)
-                if (!nextCrater.isStore()) {
+                if (!nextCrater.isStore())
                     performMove(nextCrater, stones - 1);
-                } else if (belongsToActivePlayer(nextCrater)) {
-                    performRegularMove(nextCrater, stones - 1);
-                }
-                else {
-                    performMove(nextCrater.getNextCrater(), stones - 1);
-                }
+                else if (belongsToActivePlayer(nextCrater)) performRegularMove(nextCrater, stones - 1);
+                else performMove(nextCrater.getNextCrater(), stones - 1);
     }
     /**
      * Method first checks if the remaining stones are 0 - if it's the last move
@@ -259,9 +254,11 @@ public class Crater extends Button {
 
     public boolean getsFreeMove() {
         int stones = this.stones;
+        Crater otherPlayerStore = this.getOwner().getStore().getOppositeCrater();
         Crater currentCrater = this;
         while(stones != 0) {
-            currentCrater = currentCrater.getNextCrater();
+            if(currentCrater.getNextCrater() != otherPlayerStore) currentCrater = currentCrater.getNextCrater();
+            else currentCrater = currentCrater.getNextCrater().getNextCrater();
             stones--;
         }
         return currentCrater.isStore();
