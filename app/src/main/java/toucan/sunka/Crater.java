@@ -131,10 +131,12 @@ public class Crater extends Button {
         if (owner.isPlayingTurn()) {
             owner.setPlayingTurnTo(false);
             otherPlayer.setPlayingTurnTo(true);
+            activity.turnNotification(otherPlayer);
         }
         else {
             otherPlayer.setPlayingTurnTo(false);
             owner.setPlayingTurnTo(true);
+            activity.turnNotification(owner);
         }
     }
     public boolean checkGameOver(Crater currentCrater){

@@ -1,5 +1,6 @@
 package toucan.sunka;
 
+import android.graphics.Color;
 import android.support.v4.app.DialogFragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v7.app.AppCompatActivity;
@@ -28,6 +29,9 @@ public class TwoPlayerLocalActivity extends AppCompatActivity {
 
     private Player firstPlayer;
     private Player secondPlayer;
+
+    private TextView firstPlayerLabel;
+    private TextView secondPlayerLabel;
     
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -42,9 +46,9 @@ public class TwoPlayerLocalActivity extends AppCompatActivity {
 
         initializeCraters();
 
-        TextView firstPlayerLabel = (TextView) findViewById(R.id.player_one_view);
+        firstPlayerLabel = (TextView) findViewById(R.id.player_one_view);
         firstPlayerLabel.setText(firstPlayer.getPlayerName());
-        TextView secondPlayerLabel = (TextView) findViewById(R.id.player_two_view);
+        secondPlayerLabel = (TextView) findViewById(R.id.player_two_view);
         secondPlayerLabel.setText(secondPlayer.getPlayerName());
     }
 
@@ -185,5 +189,15 @@ public class TwoPlayerLocalActivity extends AppCompatActivity {
         Log.d("onClickGameOverTest", "Rank 1 is " + bestPlayer.getPlayerName() + " Wins: " + bestPlayer.getNumberOfGamesWon());
         Log.d("onClickGameOverTest", secondPlayer.getNumberOfGamesWon() + " " + secondPlayer.getPlayerRank());
         createGameOverDialog();
+    }
+    public void turnNotification(Player p){
+        if(firstPlayer.equals(p)){
+            firstPlayerLabel.setBackgroundColor(Color.GREEN);
+            secondPlayerLabel.setBackgroundColor(Color.TRANSPARENT);
+        }
+        else{
+            secondPlayerLabel.setBackgroundColor(Color.GREEN);
+            firstPlayerLabel.setBackgroundColor(Color.TRANSPARENT);
+        }
     }
 }
