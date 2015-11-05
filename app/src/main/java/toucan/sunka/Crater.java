@@ -17,9 +17,8 @@ import android.widget.Button;
  */
 public class Crater extends Button {
 
-    public static final int ACTION_DELAY = 1000;
+    public static final int ACTION_DELAY = 300;
     private Player owner, activePlayer, inactivePlayer;
-    private boolean hasEnded = true;
     private Crater nextCrater, oppositeCrater;
     protected int stones;
     private boolean store;
@@ -106,7 +105,6 @@ public class Crater extends Button {
          * before all new moves.
          */
         protected void switchPlayers() {
-            hasEnded = true;
             activePlayer.setPlayingTurnTo(false);
             inactivePlayer.setPlayingTurnTo(true);
         }
@@ -118,9 +116,8 @@ public class Crater extends Button {
      * crater's stones to zero. After each move it also checks if the game is over
      */
     public void makeMoveFromHere() {
-        if (belongsToActivePlayer(this) && hasEnded) {
+        if (belongsToActivePlayer(this) && this.stones != 0 ) {
             disableActivesEnableInactiveCrater();
-            hasEnded = false;
             int stones = getStones();
             updateCrater(this, 0);
             placeAlong(stones);
