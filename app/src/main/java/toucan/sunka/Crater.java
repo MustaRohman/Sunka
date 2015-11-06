@@ -101,8 +101,10 @@ public class Crater extends Button {
          * before all new moves.
          */
         protected void switchPlayers() {
-            activePlayer.setPlayingTurnTo(false);
-            inactivePlayer.setPlayingTurnTo(true);
+            if(!checkSide(inactivePlayer)) {
+                activePlayer.setPlayingTurnTo(false);
+                inactivePlayer.setPlayingTurnTo(true);
+            }
         }
 
     }
