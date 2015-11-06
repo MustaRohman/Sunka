@@ -23,7 +23,7 @@ public class PlayerCollectionTest {
     @After
     public void clearUp() {
         try {
-            File playerDatabase = new File(System.getProperty("user.dir") + "\\GameData\\PlayerDatabase.pd");
+            File playerDatabase = new File(System.getProperty("user.dir"), pC.path);
             playerDatabase.delete(); // First the file
             playerDatabase = playerDatabase.getParentFile();
             playerDatabase.delete(); // Second the empty directory

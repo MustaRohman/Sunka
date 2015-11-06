@@ -14,7 +14,7 @@ public class PlayerCollection {
 
     public PlayerCollection() {
         players = new ArrayList<Player>();
-        path = System.getProperty("os-name").contains("Windows") ? "GameData\\PlayerDatabase.pd" :
+        path = System.getProperty("os.name").contains("Windows") ? "GameData\\PlayerDatabase.pd" :
                 "GameData/PlayerDatabase.pd";
     }
 
@@ -43,7 +43,7 @@ public class PlayerCollection {
     public void savePlayerInfoToFile(File directory) {
         try {
             if (!isClear()) {
-                File playerDatabase = new File(directory, "GameData/PlayerDatabase.pd");
+                File playerDatabase = new File(directory, path);
                 playerDatabase.getParentFile().mkdir();
                 playerDatabase.createNewFile();
 
@@ -61,9 +61,7 @@ public class PlayerCollection {
     // Call this method as follows: loadPlayerInfoFromFile(context.getFilesDir())
     public void loadPlayerInfoFromFile(File directory) {
         try {
-            path = System.getProperty("os-name").contains("Windows") ? "GameData\\PlayerDatabase.pd" :
-                     "GameData/PlayerDatabase.pd";
-            File playerDatabase = new File(directory, "GameData/PlayerDatabase.pd");
+            File playerDatabase = new File(directory, path);
             playerDatabase.getParentFile().mkdir();
             playerDatabase.createNewFile();
             FileInputStream fIn = new FileInputStream(playerDatabase);
