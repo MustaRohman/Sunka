@@ -10,15 +10,12 @@ import android.widget.Button;
 /**
  * Created by andrei on 21/10/15.
  */
-/**
- * TODO for this class:
-    -> game over
- */
 public class Crater extends Button {
 
     public static final int ACTION_DELAY = 300; // Miliseconds
     private Player owner, activePlayer, inactivePlayer;
     private Crater nextCrater, oppositeCrater;
+    protected boolean sideOne, sideTwo;
     protected int stones;
     private boolean store;
 
@@ -66,7 +63,7 @@ public class Crater extends Button {
         protected Void doInBackground(Object... params){
             switch (params.length) {
                 case 4:
-                    switchPlayers();
+                    if ((boolean) params[2]) switchPlayers();
                     publishProgress(params[0], params[1], params[3]); //steal
                     break;
                 case 3:
@@ -116,12 +113,13 @@ public class Crater extends Button {
      */
     public void makeMoveFromHere() {
         if (belongsToActivePlayer(this) && this.stones != 0 ) {
-            disableActivesEnableInactiveCrater();
+            if (!checkSide(this.getOppositeCrater().getOwner()))
+                disableActivesEnableInactiveCrater();
             int stones = getStones();
             updateCrater(this, 0);
             placeAlong(stones);
-            if (checkGameOver(nextCrater)) {
-                // Game over
+            if (checkGameOver()) {
+                // Create Intent here!!!
             }
         }
     }
@@ -176,19 +174,31 @@ public class Crater extends Button {
         crater.placeAlong(remainingStones);
     }
 
-    public boolean checkGameOver(Crater currentCrater){
-        boolean sideOne, sideTwo;
-        while (!currentCrater.isStore())
-            currentCrater = currentCrater.getNextCrater();
-        sideOne = checkSide(currentCrater.getNextCrater());
-        currentCrater = currentCrater.getNextCrater();
-        while (!currentCrater.isStore())
-            currentCrater = currentCrater.getNextCrater();
-        sideTwo = checkSide(currentCrater.getNextCrater());
-        return sideOne || sideTwo;
+    /**
+     * Method checks if both sides of the table are empty
+     * @return value is true if the game is over, false otherwise
+     */
+    public boolean checkGameOver(){
+        updateGameStatus();
+        return sideOne && sideTwo;
     }
 
-    public boolean checkSide(Crater currentCrater){
+    /**
+     * Updates active & inactive players, also checks if the game is over
+     */
+    public void updateGameStatus(){
+        updatePlayers();
+        sideOne = checkSide(activePlayer);
+        sideTwo = checkSide(inactivePlayer);
+    }
+
+    /**
+     * Checks to see if a player has his side of the table empty
+     * @param player is the player whose side is to be checked
+     * @return is true if the player has no remaining moves to do
+     */
+    public boolean checkSide(Player player){
+        Crater currentCrater = player.getStore().getOppositeCrater().getNextCrater();
         while(!currentCrater.isStore()) {
             if ( !currentCrater.isEmpty() ) return false;
             currentCrater = currentCrater.getNextCrater();
@@ -199,6 +209,7 @@ public class Crater extends Button {
     /**
      * Method sets the stones of the crater to the stones parameter. It also calls a new
      * AsyncTask with four parameters, signaling a new move that results in a steal.
+     * If the other player has no moves left, it doesn't change the turns
      * @param store represents the store where the stones will be moved
      * @param stones represents the last stone and the oppositeCrater's stones that need to be
      *               put in the active player's store
@@ -208,23 +219,27 @@ public class Crater extends Button {
      * @param oppositeCrater represents the crater from which the stones will be stolen
      */
     public void updateCrater(Crater store, int stones, boolean steal, Crater oppositeCrater) {
-        updatePlayers();
+        updateGameStatus();
         store.stones = stones;
         oppositeCrater.stones = 0;
+        steal = !checkSide(oppositeCrater.getOwner());
         new setCraterStones().execute(store, stones, steal, oppositeCrater);
     }
 
     /**
      * Method sets the stones of the crater to the stones parameter. It also calls a new
      * AsyncTask with three parameters, signaling that this is the last move.
+     * If the other player has no moves left to do, it does not change the turn
      * @param crater represents the crater where the stones will be moved
      * @param stones represents new number of stones to be set for the new crater
      * @param lastMove signals that this is the last move
      */
     public void updateCrater(Crater crater, int stones, boolean lastMove){
-        updatePlayers();
+        updateGameStatus();
         crater.stones = stones;
-        new setCraterStones().execute(crater, stones, lastMove);
+        if (!checkSide(crater.getOppositeCrater().getOwner()))
+            new setCraterStones().execute(crater, stones, lastMove);
+        else new setCraterStones().execute(crater,stones);
     }
 
     /**
@@ -234,11 +249,16 @@ public class Crater extends Button {
      * @param stones represents new number of stones to be set for the new crater
      */
     public void updateCrater(Crater crater, int stones){
-        updatePlayers();
+        updateGameStatus();
         crater.stones = stones;
         new setCraterStones().execute(crater,stones);
     }
 
+    /**
+     * Gets an array of the craters owned by the active player
+     * @return value is an array of length 8, containing either first eight (store included)
+     *         Craters, or the last 8, depending on the active player
+     */
     public Crater[] getActivePlayerCraters(){
         Crater[] craterList = new Crater[8];
         Crater startStore = owner.getStore().getOppositeCrater();
@@ -253,6 +273,10 @@ public class Crater extends Button {
         return craterList;
     }
 
+    /**
+     * Checks if the move that is about to happen will award an extra move
+     * @return value is true if the move will generate an extra move
+     */
     public boolean getsFreeMove() {
         int stones = this.stones;
         Crater otherPlayerStore = this.getOwner().getStore().getOppositeCrater();
@@ -265,6 +289,9 @@ public class Crater extends Button {
         return currentCrater.isStore();
     }
 
+    /**
+     * Iterates through getActivePlayerCraters and disables them
+     */
     public void disableActivesEnableInactiveCrater(){
         if (!getsFreeMove())
             for (Crater crater : getActivePlayerCraters()) {
@@ -273,7 +300,6 @@ public class Crater extends Button {
             }
     }
 
-    // Checks if the crater belongs to the active player
     public boolean belongsToActivePlayer(Crater crater) {
         return crater.getOwner().isPlayingTurn();
     }
