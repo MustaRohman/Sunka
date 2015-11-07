@@ -112,5 +112,27 @@ public class TwoPlayerLocalActivity extends AppCompatActivity {
             craterList[i].setOppositeCrater(craterList[16 - i]);
             craterList[i].setOwner(secondPlayer);
         }
+        for (Crater crater : craterList )
+            crater.setStones(0);
+        craterList[6].setStones(1);
+        craterList[9].setStones(1);
+        craterList[10].setStones(1);
     }
 }
+
+/*
+Good test for one side empty functionality - All other stones are 0
+craterList[7].setStones(1)
+craterList[12].setStones(2)
+craterList[12].makeMoveFromHere
+craterList[14].makeMoveFromHere
+craterList[13].makeMoveFromHere
+craterList[14].makeMoveFromHere
+craterList[15].makeMoveFromHere
+craterList[1].makeMoveFromHere SHOULD BE POSSIBLE
+
+One more that checks steal
+craterList[6].setStones(1)
+craterList[9].setStones(1)
+craterList[10].setStones(1)
+ */

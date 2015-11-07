@@ -112,7 +112,7 @@ public class Crater extends Button {
      * crater's stones to zero. After each move it also checks if the game is over
      */
     public void makeMoveFromHere() {
-        if (belongsToActivePlayer(this) && this.stones != 0 ) {
+        if (belongsToActivePlayer(this) && this.stones != 0) {
             if (!checkSide(this.getOppositeCrater().getOwner()))
                 disableActivesEnableInactiveCrater();
             int stones = getStones();
@@ -133,11 +133,20 @@ public class Crater extends Button {
      * @param stones represents how many stones are left to be placed
      */
     public void placeAlong(int stones){
-            if (stones != 0)
-                if (!nextCrater.isStore())
-                    performMove(nextCrater, stones - 1);
-                else if (belongsToActivePlayer(nextCrater)) performRegularMove(nextCrater, stones - 1);
-                else performMove(nextCrater.getNextCrater(), stones - 1);
+        if (stones != 0)
+            if (!nextCrater.isStore())
+                performMove(nextCrater, stones - 1);
+            else if (belongsToActivePlayer(nextCrater)) performRegularMove(nextCrater, stones - 1);
+            else performMove(nextCrater.getNextCrater(), stones - 1);
+        else {
+            updateGameStatus();
+            if (checkSide(activePlayer)){
+                activePlayer.setPlayingTurnTo(false);
+                inactivePlayer.setPlayingTurnTo(true);
+                updateGameStatus();
+                disableActivesEnableInactiveCrater();
+            }
+        }
     }
     /**
      * Method first checks if the remaining stones are 0 - if it's the last move
@@ -234,12 +243,24 @@ public class Crater extends Button {
      * @param stones represents new number of stones to be set for the new crater
      * @param lastMove signals that this is the last move
      */
+    private boolean gotMoveWhileIdle = false;
     public void updateCrater(Crater crater, int stones, boolean lastMove){
         updateGameStatus();
-        crater.stones = stones;
-        if (!checkSide(crater.getOppositeCrater().getOwner()))
+        if (checkSide(inactivePlayer)) {
+            crater.stones = stones;
+            if (!checkSide(inactivePlayer))
+                gotMoveWhileIdle = true;
+        }
+        else crater.stones = stones;
+        if (checkSide(inactivePlayer) && belongsToActivePlayer(crater))
+            new setCraterStones().execute(crater, stones);
+        else {
             new setCraterStones().execute(crater, stones, lastMove);
-        else new setCraterStones().execute(crater,stones);
+            if (gotMoveWhileIdle) {
+                updateGameStatus();
+                disableActivesEnableInactiveCrater();
+            }
+        }
     }
 
     /**
