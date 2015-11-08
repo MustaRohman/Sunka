@@ -5,6 +5,8 @@ import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.animation.TranslateAnimation;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
@@ -113,4 +115,38 @@ public class TwoPlayerLocalActivity extends AppCompatActivity {
             craterList[i].setOwner(secondPlayer);
         }
     }
+
+    public void onStoneClick(View view) {
+
+        ImageView stone = (ImageView) view;
+        Crater crater = (Crater) findViewById(R.id.crater2);
+        int left = stone.getLeft();
+
+
+        TranslateAnimation move = new TranslateAnimation(getLeftInParent(stone), getLeftInParent(crater),
+                getTopInParent(stone), getTopInParent(crater));
+        move.setDuration(1000);
+        move.setFillAfter(true);
+
+        stone.startAnimation(move);
+
+    }
+
+    private int getLeftInParent(View view) {
+        if (view.getParent() == view.getRootView())
+            return view.getLeft();
+        else
+            return view.getLeft() + getLeftInParent((View) view.getParent());
+    }
+
+    private int getTopInParent(View view) {
+        if (view.getParent() == view.getRootView())
+            return view.getTop();
+        else
+            return view.getTop() + getTopInParent((View) view.getParent());
+    }
+
+
+
+
 }
