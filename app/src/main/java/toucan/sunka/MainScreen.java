@@ -12,6 +12,7 @@ import android.widget.Button;
 public class MainScreen extends FragmentActivity{
 
     Button multiPlayerLocal;
+    Button multiPlayer;
 
     public static PlayerCollection collection; // needs to be saved in phone memory
 
@@ -21,6 +22,11 @@ public class MainScreen extends FragmentActivity{
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main_screen);
 
+        initButtons();
+        collection = new PlayerCollection();
+    }
+
+    public void initButtons(){
         multiPlayerLocal = (Button) findViewById(R.id.two_player_local);
         multiPlayerLocal.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -28,14 +34,14 @@ public class MainScreen extends FragmentActivity{
                 createMultiplayerDialog();
             }
         });
-        collection = new PlayerCollection();
 
+        multiPlayer = (Button) findViewById (R.id.two_player_online);
+        multiPlayer.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v){
 
-    }
-
-    //Method only for testing
-    public int randomMethod(){
-        return 5;
+            }
+        });
     }
 
     @Override
