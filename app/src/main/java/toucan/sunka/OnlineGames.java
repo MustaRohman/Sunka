@@ -1,11 +1,14 @@
 package toucan.sunka;
 
+import android.app.Activity;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
 
+import com.github.nkzawa.emitter.Emitter;
 import com.github.nkzawa.socketio.client.IO;
 import com.github.nkzawa.socketio.client.Socket;
 
@@ -13,23 +16,57 @@ import java.net.URISyntaxException;
 
 public class OnlineGames extends AppCompatActivity {
 
+    public static String SERVER_ADDRESS = "http://192.168.0.10:3000";
+    public String REQUEST = "req";
+    private Player player;
+    final Activity activity = this;
+
     private Socket mSocket;
+
     {
         try {
-            mSocket = IO.socket("http://192.168.0.10:3000/connection");
+            mSocket = IO.socket(SERVER_ADDRESS);
             Log.d("INFO", "Socket connection established!");
         } catch (URISyntaxException e) {
             Log.d("INFO", "Unable to connect!!!");
         }
     }
 
+    private Emitter.Listener parseServerList = new Emitter.Listener() {
+        @Override
+        public void call(final Object... args) {
+            activity.runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    Log.d("INFO", "Received data: " + args[0].toString());
+                    int i = 0;
+                    while (args[0].toString().charAt(i) != )
+                }
+            });
+        }
+    };
+
+    private void populateServerList (String[] serverList){
+
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_online_games);
+        mSocket.on("serverList", parseServerList);
         mSocket.connect();
+        player = new Player("TestPlayer");
         Log.d("INFO", "CONNECTED");
+    }
+
+    public void populateList(View view){
+        mSocket.emit(REQUEST, "getServers");
+    }
+
+    public void createServer(View view){
+        String message = String.format("createSever %s", player.getPlayerName());
+        mSocket.emit(REQUEST, message);
     }
 
     @Override
