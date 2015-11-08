@@ -12,5 +12,9 @@
     <string name="play">Play</string>
     <string name="cancel">Cancel</string>
     <string name="title_activity_two_player_local">TwoPlayerLocalActivity</string>
+    <string name="title_activity_online_games">OnlineGames</string>
+
+    <string name="hello_world">Hello world!</string>
+    <string name="title_activity_two_player_online">TwoPlayerOnline</string>
 
 </resources>
