@@ -3,12 +3,6 @@ var http = require('http').Server(app)
 var io = require('socket.io')(http);
 var INFO = "INFO"
 
-app.get('/', function(req, res){
-  Log(INFO, "Received query with parameters: " + req.query.id)
-
-  res.send('<h1>Test</h1>')
-})
-
 io.on('connection', function(socket){
   Log(INFO, "User connected!")
   socket.on('disconnect', function(){
