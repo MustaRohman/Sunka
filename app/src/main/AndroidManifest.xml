@@ -18,7 +18,7 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".TwoPlayerLocalActivity"
+            android:name=".TwoPlayerLocal"
             android:label="@string/title_activity_two_player_local"
             android:screenOrientation="landscape">
         </activity>

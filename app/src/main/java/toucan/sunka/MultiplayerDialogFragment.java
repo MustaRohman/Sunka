@@ -1,18 +1,13 @@
 package toucan.sunka;
 
-import android.app.Activity;
 import android.app.Dialog;
 import android.content.Context;
 import android.content.Intent;
-import android.os.Parcelable;
 import android.support.v4.app.DialogFragment;
 import android.content.DialogInterface;
-import android.os.Build;
 import android.os.Bundle;
 import android.support.v7.app.AlertDialog;
-import android.support.v7.app.AppCompatActivity;
 import android.view.LayoutInflater;
-import android.view.View;
 import android.widget.EditText;
 
 /**
@@ -49,7 +44,7 @@ public class MultiplayerDialogFragment extends DialogFragment {
                 initiatePlayer(player2, player2Name);
 
                 Context context = getContext();
-                Intent twoPlayerGame = new Intent(context, TwoPlayerLocalActivity.class);
+                Intent twoPlayerGame = new Intent(context, TwoPlayerLocal.class);
                 twoPlayerGame.putExtra(PLAYER_ONE_KEY, new Player(player1Name));
                 twoPlayerGame.putExtra(PLAYER_TWO_KEY, new Player(player2Name));
                 context.startActivity(twoPlayerGame);
