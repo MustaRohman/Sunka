@@ -1,5 +1,7 @@
 package toucan.sunka;
 
+import android.content.Context;
+import android.content.Intent;
 import android.support.v4.app.DialogFragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentActivity;
@@ -36,10 +38,12 @@ public class MainScreen extends FragmentActivity{
         });
 
         multiPlayer = (Button) findViewById (R.id.two_player_online);
+        final FragmentActivity activity = this;
         multiPlayer.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v){
-
+                Intent OnlineGames = new Intent(activity, OnlineGames.class);
+                activity.startActivity(OnlineGames);
             }
         });
     }

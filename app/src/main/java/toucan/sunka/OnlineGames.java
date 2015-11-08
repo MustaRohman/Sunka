@@ -2,15 +2,42 @@ package toucan.sunka;
 
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 
+import com.github.nkzawa.socketio.client.IO;
+import com.github.nkzawa.socketio.client.Socket;
+
+import java.net.URISyntaxException;
+
 public class OnlineGames extends AppCompatActivity {
+
+    private Socket mSocket;
+    {
+        try {
+            mSocket = IO.socket("http://192.168.0.10:3000/connection");
+            Log.d("INFO", "Socket connection established!");
+        } catch (URISyntaxException e) {
+            Log.d("INFO", "Unable to connect!!!");
+        }
+    }
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_online_games);
+        mSocket.connect();
+        Log.d("INFO", "CONNECTED");
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+
+        mSocket.disconnect();
+        mSocket.off();
     }
 
     @Override
