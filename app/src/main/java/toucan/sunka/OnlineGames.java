@@ -39,10 +39,19 @@ public class OnlineGames extends AppCompatActivity {
                 @Override
                 public void run() {
                     Log.d("INFO", "Received data: " + args[0].toString());
-                    int i = 0;
+                    int i = 0, j=0;
+                    String [] serverList = new String[30];
+                    String server = "";
                     while (args[0].toString().charAt(i) != '-'){
-
+                        char currentChar = args[0].toString().charAt(i++);
+                        if (currentChar != ':')
+                            server += currentChar;
+                        else {
+                            serverList[j++] = server;
+                            server = "";
+                        }
                     }
+                    populateServerList(serverList);
                 }
             });
         }
