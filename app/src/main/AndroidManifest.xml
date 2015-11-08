@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="toucan.sunka" >
+
     <uses-permission android:name="android.permission.INTERNET" />
 
     <application
@@ -20,7 +21,15 @@
         <activity
             android:name=".TwoPlayerLocalActivity"
             android:label="@string/title_activity_two_player_local"
-            android:screenOrientation="landscape">
+            android:screenOrientation="landscape" >
+        </activity>
+        <activity
+            android:name=".OnlineGames"
+            android:label="@string/title_activity_online_games" >
+        </activity>
+        <activity
+            android:name=".TwoPlayerOnline"
+            android:label="@string/title_activity_two_player_online" >
         </activity>
     </application>
 
