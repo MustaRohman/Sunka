@@ -40,7 +40,9 @@ public class OnlineGames extends AppCompatActivity {
                 public void run() {
                     Log.d("INFO", "Received data: " + args[0].toString());
                     int i = 0;
-                    while (args[0].toString().charAt(i) != )
+                    while (args[0].toString().charAt(i) != '-'){
+
+                    }
                 }
             });
         }
