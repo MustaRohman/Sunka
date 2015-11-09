@@ -29,4 +29,17 @@
         android:layout_alignLeft="@+id/populateList"
         android:layout_alignStart="@+id/populateList"/>
 
+    <ListView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/server_list"
+        android:layout_alignTop="@+id/populateList"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:layout_marginLeft="61dp"
+        android:layout_marginStart="61dp"
+        android:layout_toLeftOf="@+id/populateList"
+        android:layout_toStartOf="@+id/populateList"
+        android:layout_alignParentBottom="true"/>
+
 </RelativeLayout>

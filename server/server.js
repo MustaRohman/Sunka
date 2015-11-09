@@ -1,42 +1,42 @@
-var app = require('express')()
-var http = require('http').Server(app)
-var io = require('socket.io')(http);
-var INFO = "INFO", ERROR = "ERROR", REC = "RECEIVED", BRD = "BROADCAST"
-var serverList = ['player1', 'player2']
+  var app = require('express')()
+  var http = require('http').Server(app)
+  var io = require('socket.io')(http);
+  var INFO = "INFO", ERROR = "ERROR", REC = "RECEIVED", BRD = "BROADCAST"
+  var serverList = ['player1', 'player2']
 
-io.on('connection', function(socket){
-  Log(INFO, "User connected!")
-  socket.on('req', function(msg){
-    Log(REC, "Request received, code: " + msg)
-    parseRequest(msg);
+  io.on('connection', function(socket){
+    Log(INFO, "User connected!")
+    socket.on('req', function(msg){
+      Log(REC, "Request received, code: " + msg)
+      parseRequest(msg);
+    })
+    socket.on('disconnect', function(){
+      Log(INFO, "User disconnected!")
+    })
   })
-  socket.on('disconnect', function(){
-    Log(INFO, "User disconnected!")
+
+  http.listen(3000, function(){
+    Log(INFO, "Listening on port 3000")
   })
-})
 
-http.listen(3000, function(){
-  Log(INFO, "Listening on port 3000")
-})
-
-function parseRequest(request) {
-  switch (request) {
-    case "getServers":
-      var message = parseServerList()
-      io.emit('serverList', message)
-      Log(BRD, "Sent broadcast to socket req, broadcast message: " + message)
-      break
+  function parseRequest(request) {
+    switch (request) {
+      case "getServers":
+        var message = parseServerList()
+        io.emit('serverList', message)
+        Log(BRD, "Sent broadcast to socket req, broadcast message: " + message)
+        break
+    }
   }
-}
 
-function parseServerList() {
-  var message = ""
-  for ( x in serverList ) {
-    message += serverList[x] + ":"
+  function parseServerList() {
+    var message = ""
+    for ( x in serverList ) {
+      message += serverList[x] + ":"
+    }
+    return message.substring(0, message.length - 1) + "-"
   }
-  return message.substring(0, message.length - 1)
-}
 
-function Log(type, message) {
-  console.log('[' + type + '] ' + message )
-}
+  function Log(type, message) {
+    console.log('[' + type + '] ' + message )
+  }
