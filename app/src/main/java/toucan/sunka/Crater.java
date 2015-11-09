@@ -13,7 +13,7 @@ import android.widget.Button;
  */
 public class Crater extends Button {
 
-    public static final int ACTION_DELAY = 300; // Milliseconds
+    public static final int ACTION_DELAY = 0; // Milliseconds
     private Player owner, activePlayer, inactivePlayer;
     private Crater nextCrater, oppositeCrater;
     protected boolean sideOne, sideTwo;
@@ -146,11 +146,15 @@ public class Crater extends Button {
         if (checkSide(inactivePlayer) && belongsToActivePlayer(crater))
             new setCraterStones().execute(crater, stones);
         else {
+            if (inactivePlayer.isIdle())
+                disableActivesEnableInactiveCrater();
             new setCraterStones().execute(crater, stones, lastMove);
             if (inactivePlayer.isIdle()) {
                 inactivePlayer.setIdle(false);
-                updateGameStatus();
-                disableActivesEnableInactiveCrater();
+                for (Crater c : getPlayerCraters(activePlayer)){
+                    c.setEnabled(true);
+                    c.getOppositeCrater().setEnabled(false);
+                }
             }
         }
     }
@@ -205,11 +209,14 @@ public class Crater extends Button {
             else performMove(nextCrater.getNextCrater(), stones - 1);
         else {
             updateGameStatus();
-            if (checkSide(activePlayer)) {
+            if (checkSide(activePlayer, this.getOppositeCrater())) {
+                for (Crater crater : getPlayerCraters(activePlayer)){
+                    crater.setEnabled(true);
+                    crater.getOppositeCrater().setEnabled(false);
+                }
                 activePlayer.setPlayingTurnTo(false);
                 inactivePlayer.setPlayingTurnTo(true);
                 updateGameStatus();
-                disableActivesEnableInactiveCrater();
             }
         }
     }
@@ -300,17 +307,17 @@ public class Crater extends Button {
      * @return value is an array of length 8, containing either first eight (store included)
      * Craters, or the last 8, depending on the active player
      */
-    public Crater[] getActivePlayerCraters() {
+
+    public Crater[] getPlayerCraters(Player player) {
         Crater[] craterList = new Crater[8];
-        Crater startStore = owner.getStore().getOppositeCrater();
-        Crater currentCrater = startStore.getNextCrater();
+        Crater currentCrater = player.getStore().getNextCrater();
         int i = 0;
-        while (!currentCrater.getNextCrater().isStore()) {
+        while ( !currentCrater.getNextCrater().isStore() ) {
             craterList[i++] = currentCrater;
-            currentCrater = currentCrater.nextCrater;
+            currentCrater = currentCrater.getNextCrater();
         }
         craterList[i] = currentCrater;
-        craterList[i + 1] = owner.getStore();
+        craterList[i + 1] = player.getStore();
         return craterList;
     }
 
@@ -344,10 +351,11 @@ public class Crater extends Button {
      * Iterates through getActivePlayerCraters and disables them
      */
     public void disableActivesEnableInactiveCrater() {
+        updateGameStatus();
         if (!getsFreeMove())
-            for (Crater crater : getActivePlayerCraters()) {
-                crater.setEnabled(false);
-                crater.getOppositeCrater().setEnabled(true);
+            for (Crater crater : getPlayerCraters(activePlayer)) {
+                crater.setEnabled(true);
+                crater.getOppositeCrater().setEnabled(false);
             }
     }
 
