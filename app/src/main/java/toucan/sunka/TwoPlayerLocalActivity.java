@@ -114,9 +114,9 @@ public class TwoPlayerLocalActivity extends AppCompatActivity {
         }
         for (Crater crater : craterList )
             crater.setStones(0);
-        craterList[6].setStones(7);
+        craterList[7].setStones(1);
         craterList[9].setStones(1);
-        craterList[11].setStones(1);
+        craterList[15].setStones(4);
     }
 }
 

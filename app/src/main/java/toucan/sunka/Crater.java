@@ -3,6 +3,7 @@ package toucan.sunka;
 import android.content.Context;
 import android.os.AsyncTask;
 import android.util.AttributeSet;
+import android.util.Log;
 import android.widget.Button;
 
 
@@ -64,7 +65,7 @@ public class Crater extends Button {
         protected Void doInBackground(Object... params) {
             switch (params.length) {
                 case 4:
-                    if (!(boolean) params[2]) switchPlayers();
+                    if ((boolean) params[2]) switchPlayers();
                     publishProgress(params[0], params[1], params[3]); //steal
                     break;
                 case 3:
@@ -126,11 +127,8 @@ public class Crater extends Button {
         store.stones = stones;
         oppositeCrater.stones = 0;
         steal = !checkSide(oppositeCrater.getOwner(), oppositeCrater);
+        Log.d("Info", Boolean.toString(steal));
         new setCraterStones().execute(store, stones, steal, oppositeCrater);
-        if (steal) {
-            updateGameStatus();
-            disableActivesEnableInactiveCrater();
-        }
     }
 
     /**
@@ -142,20 +140,15 @@ public class Crater extends Button {
      * @param stones represents new number of stones to be set for the new crater
      * @param lastMove signals that this is the last move
      */
-    private boolean gotMoveWhileIdle = false;
-
     public void updateCrater(Crater crater, int stones, boolean lastMove) {
         updateGameStatus();
-        if (checkSide(inactivePlayer)) {
-            crater.stones = stones;
-            if (!checkSide(inactivePlayer))
-                gotMoveWhileIdle = true;
-        } else crater.stones = stones;
+        crater.stones = stones;
         if (checkSide(inactivePlayer) && belongsToActivePlayer(crater))
             new setCraterStones().execute(crater, stones);
         else {
             new setCraterStones().execute(crater, stones, lastMove);
-            if (gotMoveWhileIdle) {
+            if (inactivePlayer.isIdle()) {
+                inactivePlayer.setIdle(false);
                 updateGameStatus();
                 disableActivesEnableInactiveCrater();
             }
@@ -171,6 +164,8 @@ public class Crater extends Button {
      */
     public void updateCrater(Crater crater, int stones) {
         updateGameStatus();
+        if (checkSide(inactivePlayer))
+            inactivePlayer.setIdle(true);
         crater.stones = stones;
         new setCraterStones().execute(crater, stones);
     }
@@ -182,7 +177,7 @@ public class Crater extends Button {
     public void makeMoveFromHere() {
         if (belongsToActivePlayer(this) && this.stones != 0) {
             if (getsSteal() && checkSide(this.getOppositeCrater().getOwner(), lastCraterAfterMove().getOppositeCrater()));
-            else if (!checkSide(this.getOppositeCrater().getOwner()))
+            else if (!checkSide(this.getOppositeCrater().getOwner()) || !lastCraterAfterMove().owner.isPlayingTurn())
                 disableActivesEnableInactiveCrater();
             int stones = getStones();
             updateCrater(this, 0);
