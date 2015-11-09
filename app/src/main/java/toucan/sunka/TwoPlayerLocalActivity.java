@@ -119,12 +119,16 @@ public class TwoPlayerLocalActivity extends AppCompatActivity {
     public void onStoneClick(View view) {
 
         ImageView stone = (ImageView) view;
-        Crater crater = (Crater) findViewById(R.id.crater2);
-        int left = stone.getLeft();
+        Crater crater = (Crater) findViewById(R.id.crater3);
+
+        int moveXCenter = (getLeftInParent(crater) - getLeftInParent(stone)) +
+                (crater.getRight() - crater.getLeft())/4;
+        int moveY = getTopInParent(crater) - getTopInParent(stone) +
+                (crater.getBottom() - crater.getTop())/4;
 
 
-        TranslateAnimation move = new TranslateAnimation(getLeftInParent(stone), getLeftInParent(crater),
-                getTopInParent(stone), getTopInParent(crater));
+        TranslateAnimation move = new TranslateAnimation(0, moveXCenter,
+                0, moveY);
         move.setDuration(1000);
         move.setFillAfter(true);
 
@@ -144,6 +148,13 @@ public class TwoPlayerLocalActivity extends AppCompatActivity {
             return view.getTop();
         else
             return view.getTop() + getTopInParent((View) view.getParent());
+    }
+
+    private int getRightInParent(View view) {
+        if (view.getParent() == view.getRootView())
+            return view.getRight();
+        else
+            return view.getRight() + getRightInParent((View) view.getParent());
     }
 
 
