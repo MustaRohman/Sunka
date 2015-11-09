@@ -19,7 +19,7 @@
         <activity
             android:name=".TwoPlayerLocalActivity"
             android:label="@string/title_activity_two_player_local"
-            android:screenOrientation="landscape">
+            android:screenOrientation="landscape" >
         </activity>
     </application>
 

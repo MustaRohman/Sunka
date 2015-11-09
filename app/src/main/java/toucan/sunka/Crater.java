@@ -1,18 +1,17 @@
 package toucan.sunka;
 
+import android.app.Activity;
 import android.content.Context;
 import android.os.AsyncTask;
 import android.util.AttributeSet;
 import android.widget.Button;
-
-
 
 /**
  * Created by andrei on 21/10/15.
  */
 /**
  * TODO for this class:
-    -> game over
+    -> game over comments
  */
 public class Crater extends Button {
 
@@ -21,10 +20,13 @@ public class Crater extends Button {
     private Crater nextCrater, oppositeCrater;
     protected int stones;
     private boolean store;
+    private TwoPlayerLocalActivity activity;
 
     public Crater(Context context, AttributeSet attrs){
         super(context, attrs);
         initialise(false);
+        activity = (TwoPlayerLocalActivity) getContext();
+
     }
 
     public Crater(boolean store){
@@ -122,6 +124,14 @@ public class Crater extends Button {
             placeAlong(stones);
             if (checkGameOver(nextCrater)) {
                 // Game over
+                Player winner = determineWinner();
+                Player loser = determineLoser();
+                try{
+                winner.setGamesWon(winner.getNumberOfGamesWon() + 1);
+                loser.setGamesLost(loser.getNumberOfGamesLost()+1);}
+                catch (NullPointerException n){}
+                activity.createGameOverDialog();
+
             }
         }
     }
@@ -335,4 +345,27 @@ public class Crater extends Button {
     public void setOwner(Player player){
         owner = player;
     }
+    public Player determineWinner(){
+        Player p1 = getOwner();
+        Player p2 = getOppositeCrater().getOwner();
+        if(p1.getStore().getStones()>p2.getStore().getStones()){
+            return p1;
+        }
+        else if(p2.getStore().getStones()>p1.getStore().getStones()){
+            return p2;
+        }
+        return null;
+    }
+    public Player determineLoser(){
+        Player p1 = getOwner();
+        Player p2 = getOppositeCrater().getOwner();
+        if(p1.getStore().getStones()>p2.getStore().getStones()){
+            return p2;
+        }
+        else if(p2.getStore().getStones()>p1.getStore().getStones()){
+            return p1;
+        }
+        return null;
+    }
+
 }

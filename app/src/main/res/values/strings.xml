@@ -12,5 +12,10 @@
     <string name="play">Play</string>
     <string name="cancel">Cancel</string>
     <string name="title_activity_two_player_local">TwoPlayerLocalActivity</string>
+    <string name="leaderboard">Leaderboard</string>
+    <string name="title_activity_game_over">GameOver</string>
+    <string name="hello_world">Hello world!</string>
+    <string name="play_again">Play Again</string>
+    <string name="main_menu">Main Menu</string>
 
 </resources>
