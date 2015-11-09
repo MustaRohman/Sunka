@@ -171,7 +171,7 @@
         android:background="@drawable/stone"
         android:layout_width="40dp"
         android:layout_height="40dp"
-        android:id="@+id/imageView"
+        android:id="@+id/stone_imageView"
         android:layout_above="@+id/player_one_view"
         android:layout_centerInParent="true"
         android:onClick="onStoneClick"/>

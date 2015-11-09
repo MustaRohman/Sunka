@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.animation.Animation;
 import android.view.animation.TranslateAnimation;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -18,6 +19,7 @@ public class TwoPlayerLocalActivity extends AppCompatActivity {
     private Player firstPlayer;
     private Player secondPlayer;
     private boolean firstMove = true;
+    public ImageView stoneImage;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -26,6 +28,8 @@ public class TwoPlayerLocalActivity extends AppCompatActivity {
 
         firstPlayer = getIntent().getParcelableExtra(MultiplayerDialogFragment.PLAYER_ONE_KEY);
         secondPlayer = getIntent().getParcelableExtra(MultiplayerDialogFragment.PLAYER_TWO_KEY);
+
+        stoneImage = (ImageView) findViewById(R.id.stone_imageView);
 
         initializeCraters();
 
@@ -118,22 +122,46 @@ public class TwoPlayerLocalActivity extends AppCompatActivity {
 
     public void onStoneClick(View view) {
 
-        ImageView stone = (ImageView) view;
-        Crater crater = (Crater) findViewById(R.id.crater3);
+        Crater crater = craterList[3];
 
-        int moveXCenter = (getLeftInParent(crater) - getLeftInParent(stone)) +
-                (crater.getRight() - crater.getLeft())/4;
-        int moveY = getTopInParent(crater) - getTopInParent(stone) +
-                (crater.getBottom() - crater.getTop())/4;
+        moveAnimation(3, 3);
+    }
 
+    private void moveAnimation(final int craterNum, final int count){
 
-        TranslateAnimation move = new TranslateAnimation(0, moveXCenter,
-                0, moveY);
-        move.setDuration(1000);
-        move.setFillAfter(true);
+        if (count > 0) {
 
-        stone.startAnimation(move);
+            final int theCrater = craterNum;
 
+            final Crater crater = craterList[craterNum];
+            int moveXCenter = (getLeftInParent(crater) - getLeftInParent(stoneImage)) +
+                    (crater.getRight() - crater.getLeft()) / 4;
+            int moveY = getTopInParent(crater) - getTopInParent(stoneImage) +
+                    (crater.getBottom() - crater.getTop()) / 4;
+
+            TranslateAnimation move = new TranslateAnimation(0, moveXCenter,
+                    0, moveY);
+            move.setDuration(1000);
+            move.setFillAfter(true);
+            move.setAnimationListener(new Animation.AnimationListener() {
+                @Override
+                public void onAnimationStart(Animation animation) {
+
+                }
+
+                @Override
+                public void onAnimationEnd(Animation animation) {
+                    moveAnimation(theCrater + 1, count - 1);
+                }
+
+                @Override
+                public void onAnimationRepeat(Animation animation) {
+
+                }
+            });
+            stoneImage.startAnimation(move);
+
+        }
     }
 
     private int getLeftInParent(View view) {
