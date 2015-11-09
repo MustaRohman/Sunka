@@ -20,7 +20,7 @@ import java.util.List;
 
 public class OnlineGames extends AppCompatActivity {
 
-    public static String SERVER_ADDRESS = "http://192.168.0.10:3000";
+    public static String SERVER_ADDRESS = "http://10.40.208.74:3000";
     public String REQUEST = "req";
     private Player player;
     final Activity activity = this;
@@ -36,79 +36,46 @@ public class OnlineGames extends AppCompatActivity {
         }
     }
 
-    private class socketOn extends AsyncTask<String, String[], String[]> {
-        protected void onPreExecute(){
-
-        }
-        protected String[] doInBackground(String... params) {
-            mSocket.on("serverList", parseServerList);
-            return serverList;
-        }
-
-        protected void onProgressUpdate(String[]... params){
-            synchronized (REQUEST_KEY) {
-                try {
-                    REQUEST_KEY.wait();
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
-                }
-                ArrayAdapter<String> serverListAdapter = new ArrayAdapter<>(activity, android.R.layout.simple_list_item_1, serverList);
-                ListView serverListView = (ListView) findViewById(R.id.server_list);
-                serverListAdapter.notifyDataSetChanged();
-                serverListView.setAdapter(serverListAdapter);
-            }
-
-        }
-
-
-
-
-        private Emitter.Listener parseServerList = new Emitter.Listener() {
-            @Override
-            public void call(final Object... args) {
-                new Thread(new Runnable() {
-                    @Override
-                    public void run() {
-                        synchronized (REQUEST_KEY) {
-                            Log.d("INFO", "Received data: " + ((String) args[0]));
-                            int i = 0, j = 0;
-                            String[] servList = new String[30];
-                            String server = "";
-                            while (((String) args[0]).charAt(i) != '-') {
-                                char currentChar = ((String) args[0]).charAt(i++);
-                                if (currentChar != ':')
-                                    server += currentChar;
-                                else {
-                                    servList[j++] = server;
-                                    server = "";
-                                }
+    private Emitter.Listener parseServerList = new Emitter.Listener() {
+        @Override
+        public void call(final Object... args) {
+            activity.runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    synchronized (REQUEST_KEY) {
+                        Log.d("INFO", "Received data: " + ((String) args[0]));
+                        int i = 0, j = 0;
+                        String[] servList = new String[30];
+                        String server = "";
+                        while (((String) args[0]).charAt(i) != '-') {
+                            char currentChar = ((String) args[0]).charAt(i++);
+                            if (currentChar != ':')
+                                server += currentChar;
+                            else {
+                                servList[j++] = server;
+                                server = "";
                             }
-                            servList[j] = server;
-                            setServerList(servList);
-                            publishProgress();
                         }
+                        servList[j] = server;
+                        ArrayAdapter<String> serverListAdapter = new ArrayAdapter<>(activity, android.R.layout.simple_list_item_1, serverList);
+                        ListView serverListView = (ListView) findViewById(R.id.server_list);
+                        serverListAdapter.notifyDataSetChanged();
+                        serverListView.setAdapter(serverListAdapter);
                     }
-                }).start();
-            }
-        };
-    }
-
-    public void setServerList(String[] serverList){
-        this.serverList = serverList;
-    }
+                }
+            });
+        }
+    };
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_online_games);
+        mSocket.emit(REQUEST, "getServers");
+        mSocket.on("serverList", parseServerList);
         mSocket.connect();
         player = new Player("TestPlayer");
         Log.d("INFO", "CONNECTED");
-    }
-
-    public void populateList(View view){
-        mSocket.emit(REQUEST, "getServers");
-        new socketOn().execute("serverList");
     }
 
     public void createServer(View view){
@@ -119,7 +86,6 @@ public class OnlineGames extends AppCompatActivity {
     @Override
     protected void onDestroy() {
         super.onDestroy();
-
         mSocket.disconnect();
         mSocket.off();
     }
