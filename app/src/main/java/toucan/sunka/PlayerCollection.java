@@ -13,7 +13,7 @@ public class PlayerCollection {
     public String path;
 
     public PlayerCollection() {
-        players = new ArrayList<Player>();
+        players = new ArrayList<>();
         path = System.getProperty("os.name").contains("Windows") ? "GameData\\PlayerDatabase.pd" :
                 "GameData/PlayerDatabase.pd";
     }
@@ -49,7 +49,7 @@ public class PlayerCollection {
     public int size(){
         return players.size();
         }
-    }
+
 
     // Call this method as follows: savePlayerInfoToFile(context.getFilesDir())
     public void savePlayerInfoToFile(File directory) {
