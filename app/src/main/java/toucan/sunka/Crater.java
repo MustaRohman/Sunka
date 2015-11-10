@@ -327,7 +327,7 @@ public class Crater extends Button {
             currentCrater = currentCrater.getNextCrater();
         }
         craterList[i] = currentCrater;
-        craterList[i + 1] = player.getStore();
+        craterList[i + 1] = player.getStore().getOppositeCrater();
         return craterList;
     }
 
