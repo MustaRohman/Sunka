@@ -35,6 +35,7 @@ public class Crater extends Button {
     public void initialise(boolean store) {
         this.store = store;
         setStones(this.store ? 0 : 7);
+        TwoPlayerLocalActivity.updateCraterImage(this, stones);
     }
 
     /**

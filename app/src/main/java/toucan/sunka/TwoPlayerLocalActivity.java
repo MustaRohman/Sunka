@@ -2,6 +2,7 @@ package toucan.sunka;
 
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -11,6 +12,14 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+/*
+Things to do in this class:
+- Add animation to updateCraterImage method to create a smoother transition
+- Work on the store crater images showing different stones
+- Store does not update properly
+- Labels to show number of stones in each crater
+- Crater
+ */
 
 public class TwoPlayerLocalActivity extends AppCompatActivity {
     private Crater playerOneStore;
@@ -53,9 +62,42 @@ public class TwoPlayerLocalActivity extends AppCompatActivity {
             firstMove = false;
         }
 
-        //Write moveAnimation logic
+        updateCraterImage(crater, 0);
+
+        moveAnimation(crater, crater.getStones(), crater.getActivePlayer());
 
         crater.makeMoveFromHere();
+
+
+
+    }
+
+    public static void updateCraterImage(Crater crater, int stones){
+
+        switch (stones){
+            case 0:crater.setBackgroundResource(R.drawable.button_enabled);
+                break;
+            case 1:crater.setBackgroundResource(R.drawable.crater_1stone);
+                break;
+            case 2:crater.setBackgroundResource(R.drawable.crater_2stone);
+                break;
+            case 3:crater.setBackgroundResource(R.drawable.crater_3stone);
+                break;
+            case 4:crater.setBackgroundResource(R.drawable.crater_4stone);
+                break;
+            case 5:crater.setBackgroundResource(R.drawable.crater_5stone);
+                break;
+            case 6:crater.setBackgroundResource(R.drawable.crater_6stone);
+                break;
+            case 7:crater.setBackgroundResource(R.drawable.crater_7stone);
+                break;
+            case 8:crater.setBackgroundResource(R.drawable.crater_8stone);
+                break;
+            case 9:crater.setBackgroundResource(R.drawable.crater_9stone);
+                break;
+            default:crater.setBackgroundResource(R.drawable.crater_9stone);
+                break;
+        }
     }
 
     @Override
@@ -125,51 +167,67 @@ public class TwoPlayerLocalActivity extends AppCompatActivity {
 
     public void onStoneClick(View view) {
 
-        Crater crater = craterList[3];
+        Crater crater = craterList[9];
 
-        moveAnimation(3, 15, firstPlayer);
+        moveAnimation(crater, 15, firstPlayer);
     }
 
-    private void moveAnimation(final int craterNum, final int count, final Player player){
+    private void moveAnimation(final Crater crater, final int count, final Player player){
+
+        stoneImage.setVisibility(View.INVISIBLE);
+        Log.d("moveAnimation", "stoneImage has been set as Invisible");
 
         if (count > 0) {
 
-            if (!craterList[craterNum].equals(player.getStore().getOppositeCrater())) {
+            stoneImage.setVisibility(View.VISIBLE);
+            Log.d("moveAnimation", "stoneImage has been set as Visible");
 
-                Crater crater = craterList[craterNum];
-                int moveXCenter = (getLeftInParent(crater) - getLeftInParent(stoneImage)) +
-                        (crater.getRight() - crater.getLeft()) / 4;
-                int moveY = getTopInParent(crater) - getTopInParent(stoneImage) +
-                        (crater.getBottom() - crater.getTop()) / 4;
+            int moveXCenter = (getLeftInParent(crater) - getLeftInParent(stoneImage)) +
+                    (crater.getRight() - crater.getLeft()) / 4;
+            int moveY = getTopInParent(crater) - getTopInParent(stoneImage) +
+                    (crater.getBottom() - crater.getTop()) / 4;
 
-                TranslateAnimation move = new TranslateAnimation(0, moveXCenter,
-                        0, moveY);
-                move.setDuration(1000);
-                move.setFillAfter(true);
-                move.setAnimationListener(new Animation.AnimationListener() {
-                    @Override
-                    public void onAnimationStart(Animation animation) {
+            TranslateAnimation move = new TranslateAnimation(0, moveXCenter,
+                    0, moveY);
+            move.setDuration(700);
+            move.setFillAfter(false);
+            move.setAnimationListener(new Animation.AnimationListener() {
+                @Override
+                public void onAnimationStart(Animation animation) {
 
+                }
+
+                @Override
+                public void onAnimationEnd(Animation animation) {
+
+                    stoneImage.setVisibility(View.INVISIBLE);
+                    Log.d("moveAnimation", "stoneImage has been set as Invisible");
+
+                    Crater nextCrater;
+
+                    //Checks if next crater is opponent's store
+                    if (crater.getNextCrater().equals(player.getStore().getOppositeCrater())) {
+                        nextCrater = crater.getNextCrater().getNextCrater();
+                    } else {
+                        nextCrater = crater.getNextCrater();
                     }
 
-                    @Override
-                    public void onAnimationEnd(Animation animation) {
-                        int craterIndex = 0;
-                        if (!(craterNum == 15)) {
-                            craterIndex = craterNum + 1;
-                        }
-                        moveAnimation(craterIndex, count - 1, player);
-                    }
+                    updateCraterImage(crater, crater.getStones());
 
-                    @Override
-                    public void onAnimationRepeat(Animation animation) {
+                    moveAnimation(nextCrater, count - 1, player);
 
-                    }
-                });
-                stoneImage.startAnimation(move);
-            }
+                }
+
+                @Override
+                public void onAnimationRepeat(Animation animation) {
+
+                }
+            });
+
+            stoneImage.startAnimation(move);
 
         }
+
     }
 
     private int getLeftInParent(View view) {
