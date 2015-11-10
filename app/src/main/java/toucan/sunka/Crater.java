@@ -97,7 +97,11 @@ public class Crater extends Button {
             Crater currentCrater = (Crater) params[0];
             int stones = (int) params[1];
             currentCrater.setText(String.format("%d",stones));
-            if (params.length == 3) ((Crater) params[2]).setText(String.format("%d", 0));
+            if (params.length == 3) {
+                Crater oppositeCrater = ((Crater) params[2]);
+                oppositeCrater.setText(String.format("%d", 0));
+                TwoPlayerLocalActivity.updateCraterImage(oppositeCrater, 0);
+            }
         }
 
         /**

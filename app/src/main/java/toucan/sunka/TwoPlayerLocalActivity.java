@@ -15,10 +15,7 @@ import android.widget.TextView;
 /*
 Things to do in this class:
 - Add animation to updateCraterImage method to create a smoother transition
-- Work on the store crater images showing different stones
-- Store does not update properly
 - Labels to show number of stones in each crater
-- Crater
  */
 
 public class TwoPlayerLocalActivity extends AppCompatActivity {
@@ -64,7 +61,7 @@ public class TwoPlayerLocalActivity extends AppCompatActivity {
 
         updateCraterImage(crater, 0);
 
-        moveAnimation(crater, crater.getStones(), crater.getActivePlayer());
+        moveAnimation(crater.getNextCrater(), crater.getStones(), crater.getActivePlayer());
 
         crater.makeMoveFromHere();
 
