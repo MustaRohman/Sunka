@@ -52,6 +52,9 @@ public class TwoPlayerLocalActivity extends AppCompatActivity {
             }
             firstMove = false;
         }
+
+        //Write moveAnimation logic
+
         crater.makeMoveFromHere();
     }
 
@@ -124,42 +127,47 @@ public class TwoPlayerLocalActivity extends AppCompatActivity {
 
         Crater crater = craterList[3];
 
-        moveAnimation(3, 3);
+        moveAnimation(3, 15, firstPlayer);
     }
 
-    private void moveAnimation(final int craterNum, final int count){
+    private void moveAnimation(final int craterNum, final int count, final Player player){
 
         if (count > 0) {
 
-            final int theCrater = craterNum;
+            if (!craterList[craterNum].equals(player.getStore().getOppositeCrater())) {
 
-            final Crater crater = craterList[craterNum];
-            int moveXCenter = (getLeftInParent(crater) - getLeftInParent(stoneImage)) +
-                    (crater.getRight() - crater.getLeft()) / 4;
-            int moveY = getTopInParent(crater) - getTopInParent(stoneImage) +
-                    (crater.getBottom() - crater.getTop()) / 4;
+                Crater crater = craterList[craterNum];
+                int moveXCenter = (getLeftInParent(crater) - getLeftInParent(stoneImage)) +
+                        (crater.getRight() - crater.getLeft()) / 4;
+                int moveY = getTopInParent(crater) - getTopInParent(stoneImage) +
+                        (crater.getBottom() - crater.getTop()) / 4;
 
-            TranslateAnimation move = new TranslateAnimation(0, moveXCenter,
-                    0, moveY);
-            move.setDuration(1000);
-            move.setFillAfter(true);
-            move.setAnimationListener(new Animation.AnimationListener() {
-                @Override
-                public void onAnimationStart(Animation animation) {
+                TranslateAnimation move = new TranslateAnimation(0, moveXCenter,
+                        0, moveY);
+                move.setDuration(1000);
+                move.setFillAfter(true);
+                move.setAnimationListener(new Animation.AnimationListener() {
+                    @Override
+                    public void onAnimationStart(Animation animation) {
 
-                }
+                    }
 
-                @Override
-                public void onAnimationEnd(Animation animation) {
-                    moveAnimation(theCrater + 1, count - 1);
-                }
+                    @Override
+                    public void onAnimationEnd(Animation animation) {
+                        int craterIndex = 0;
+                        if (!(craterNum == 15)) {
+                            craterIndex = craterNum + 1;
+                        }
+                        moveAnimation(craterIndex, count - 1, player);
+                    }
 
-                @Override
-                public void onAnimationRepeat(Animation animation) {
+                    @Override
+                    public void onAnimationRepeat(Animation animation) {
 
-                }
-            });
-            stoneImage.startAnimation(move);
+                    }
+                });
+                stoneImage.startAnimation(move);
+            }
 
         }
     }
