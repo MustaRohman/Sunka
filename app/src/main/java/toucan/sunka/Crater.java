@@ -199,7 +199,6 @@ public class Crater extends Button {
                 loser.setGamesLost(loser.getNumberOfGamesLost()+1);}
                 catch (NullPointerException n){}
                 activity.createGameOverDialog();
-
             }
         }
     }
