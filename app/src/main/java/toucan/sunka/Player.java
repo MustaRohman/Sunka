@@ -14,6 +14,7 @@ public class Player implements Parcelable{
     private Crater store;
     private int playerRank;
     private boolean playingTurn;
+    private String[] serverList;
 
     public Player(String pN)
     {
@@ -24,6 +25,13 @@ public class Player implements Parcelable{
         playingTurn = false;
     }
 
+    public void setServerList( String[] serverList) {
+        this.serverList = serverList;
+    }
+
+    public String[] getServerList(){
+        return serverList;
+    }
 
     public void setGamesWon(int gW)
     {

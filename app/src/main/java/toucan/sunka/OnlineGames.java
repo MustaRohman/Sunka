@@ -16,16 +16,17 @@ import com.github.nkzawa.socketio.client.IO;
 import com.github.nkzawa.socketio.client.Socket;
 
 import java.net.URISyntaxException;
-import java.util.List;
 
 public class OnlineGames extends AppCompatActivity {
 
-    public static String SERVER_ADDRESS = "http://10.40.208.74:3000";
-    public String REQUEST = "req";
-    private Player player;
+    public static String SERVER_ADDRESS = "http://192.168.0.10:3000";
+    public String REQUEST =  "req";
+    final private Player player = new Player("test");
     final Activity activity = this;
-    private String[] serverList = {""};
-    final private String REQUEST_KEY = "REQUEST_KEY";
+    protected ArrayAdapter<String> serverListAdapter;
+    protected String[] servList = new String[30];
+
+
     private Socket mSocket;
     {
         try {
@@ -36,45 +37,115 @@ public class OnlineGames extends AppCompatActivity {
         }
     }
 
+    private class populateList extends AsyncTask<Object, ArrayAdapter<String>, Void> {
+        private ListView serverListView;
+
+        protected void onPreExecute() {
+            Log.d("GUI THREAD", "Gui thread started");
+            serverListView = (ListView) findViewById(R.id.server_list);
+            Log.d("GUI THREAD", "Gui thread ended");
+        }
+
+        protected Void doInBackground(Object... params) {
+        Log.d("BACKEND THREAD", "Backend thread started");
+            while(servList[0] == null){
+                Log.d("BACKEND THREAD","Server request not received yet. Retrying again in .1s");
+                try {
+                    Thread.sleep(300);
+                    if (servList[0] != null){
+                        Log.d("BACKEND THREAD", "server 1: "+servList[0] + " server 2: " + servList[1]);
+                        String[] test = {servList[0], servList[1]};
+                        publishProgress(new ArrayAdapter<String>(activity, android.R.layout.simple_list_item_1, test));
+                    }
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+            }
+            Log.d("BACKEND THREAD", "Backend thread ended");
+            return null;
+        }
+
+        protected void onProgressUpdate(ArrayAdapter<String>... params){
+            Log.d("GUI THREAD"," received adaptor ");
+            serverListView.setAdapter(params[0]);
+            Log.d("GUI THREAD", "Gui thread ended");
+
+        }
+    }
+
     private Emitter.Listener parseServerList = new Emitter.Listener() {
         @Override
         public void call(final Object... args) {
             activity.runOnUiThread(new Runnable() {
                 @Override
                 public void run() {
-                    synchronized (REQUEST_KEY) {
-                        Log.d("INFO", "Received data: " + ((String) args[0]));
-                        int i = 0, j = 0;
-                        String[] servList = new String[30];
-                        String server = "";
-                        while (((String) args[0]).charAt(i) != '-') {
-                            char currentChar = ((String) args[0]).charAt(i++);
-                            if (currentChar != ':')
-                                server += currentChar;
-                            else {
-                                servList[j++] = server;
-                                server = "";
-                            }
+                    int i = 0, j = 0;
+                    String server = "";
+                    while (((String) args[0]).charAt(i) != '-') {
+                        char currentChar = ((String) args[0]).charAt(i++);
+                        if (currentChar != ':')
+                            server += currentChar;
+                        else {
+                            servList[j++] = server;
+                            server = "";
                         }
-                        servList[j] = server;
-                        ArrayAdapter<String> serverListAdapter = new ArrayAdapter<>(activity, android.R.layout.simple_list_item_1, serverList);
-                        ListView serverListView = (ListView) findViewById(R.id.server_list);
-                        serverListAdapter.notifyDataSetChanged();
-                        serverListView.setAdapter(serverListAdapter);
                     }
+                    servList[j] = server;
+                    Log.d("LISTENER TRIGGERED", "Server List variable set to " + servList[0] + " " + servList[1]);
                 }
             });
         }
     };
 
+    public void setListAdapter(ArrayAdapter<String> serverList){
+        this.serverListAdapter = serverList;
+    }
+//
+//    public void waitServerList(){
+//        new Thread(new Runnable() {
+//            @Override
+//            public void run() {
+//                try {
+//                    while (!checkServerList()){
+//                        Thread.sleep(100);
+//                        Log.d("INFO", "Message timed out. Retrying in 1 second");
+//                    }
+//                } catch (InterruptedException e) {
+//                    e.printStackTrace();
+//                }
+//                Log.d("INFO", "Started creating the list, servers: " + serverList[0] + " " + serverList[1]);
+//                serverListAdapter = new ArrayAdapter<String>(activity, android.R.layout.simple_list_item_1, serverList);
+//            }
+//        }).start();
+//    }
+
+
+    public final boolean checkServerList() throws InterruptedException {
+        return serverListAdapter == null;
+    }
+
+    public void refreshServerList(View view){
+        mSocket.emit(REQUEST, "getServers");
+        new populateList().execute();
+//        new populateList().execute();
+//        while(serverList == null ){
+//            Thread.sleep(100);
+//            Log.d("INFO","Server list not found yet, retrying again in 0.1s");
+//        }
+//        Log.d("INFO","Server list found!");
+//        ArrayAdapter<String> serverAdapter = new ArrayAdapter<>(activity, android.R.layout.simple_list_item_1, serverList);
+//        ListView serverList = (ListView) findViewById(R.id.server_list);
+//        serverList.setAdapter(serverAdapter);
+
+    }
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_online_games);
-        mSocket.emit(REQUEST, "getServers");
         mSocket.on("serverList", parseServerList);
+//        new populateList().execute();
         mSocket.connect();
-        player = new Player("TestPlayer");
         Log.d("INFO", "CONNECTED");
     }
 
