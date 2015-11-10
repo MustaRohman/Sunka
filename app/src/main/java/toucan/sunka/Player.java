@@ -6,7 +6,7 @@ import android.os.Parcelable;
 import java.io.Serializable;
 import java.util.Comparator;
 
-public class Player implements Parcelable{
+public class Player implements Parcelable {
 
     private String playerName;
     private int gamesWon;
@@ -16,18 +16,15 @@ public class Player implements Parcelable{
     private boolean playingTurn;
     private boolean wasIdle;
 
-    public Player(String pN)
-    {
+    public Player(String pN) {
         playerName = pN;
         gamesWon = 0;
         gamesLost = 0;
-        playerRank = 0;
+        playerRank = -1;
         playingTurn = false;
     }
 
-
-    public void setGamesWon(int gW)
-    {
+    public void setGamesWon(int gW) {
         gamesWon = gW;
     }
 
@@ -36,13 +33,11 @@ public class Player implements Parcelable{
         playingTurn = b;
     }
 
-    public void setGamesLost(int gL)
-    {
+    public void setGamesLost(int gL) {
         gamesLost = gL;
     }
 
-    public void setPlayerRank(int pR)
-    {
+    public void setPlayerRank(int pR) {
         playerRank = pR;
     }
 
@@ -120,4 +115,11 @@ public class Player implements Parcelable{
             return new Player[size];
         }
     };
+
+    public String toString() {
+        return playerName + "\n" +
+                playerRank + "\n" +
+                gamesWon + "\n" +
+                gamesLost;
+    }
 }

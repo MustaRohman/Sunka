@@ -1,28 +1,33 @@
 package toucan.sunka;
 
+import android.app.Activity;
 import android.content.Context;
 import android.os.AsyncTask;
 import android.util.AttributeSet;
 import android.util.Log;
 import android.widget.Button;
 
-
-
 /**
  * Created by andrei on 21/10/15.
  */
+/**
+ * TODO for this class:
+    -> game over
+ */
 public class Crater extends Button {
 
-    public static final int ACTION_DELAY = 0; // Milliseconds
+    public static final int ACTION_DELAY = 300; // Miliseconds
     private Player owner, activePlayer, inactivePlayer;
     private Crater nextCrater, oppositeCrater;
     protected boolean sideOne, sideTwo;
     protected int stones;
     private boolean store;
+    private TwoPlayerLocalActivity activity;
 
-    public Crater(Context context, AttributeSet attrs) {
+    public Crater(Context context, AttributeSet attrs){
         super(context, attrs);
         initialise(false);
+        activity = (TwoPlayerLocalActivity) getContext();
     }
 
     public Crater(boolean store) {
@@ -40,7 +45,7 @@ public class Crater extends Button {
      * calling new setCraterStones().execute(...params). It can have between 2 and 4 parameters,
      * depending on the type of move that needs to be executed. The class starts with
      * doInBackground.
-     * <p/>
+     *
      * The < Object, Object, Void > parameters for the AsyncTask represent the types of parameters
      * needed. The first Object refers to the type of parameters needed for doInBackground, the
      * second one is the type of parameters for onProgressUpdate and Void is what doInBackground
@@ -52,13 +57,12 @@ public class Crater extends Button {
          * Due to android limitations :( no method from the crater class can be called
          * in the doInBackground since Crater extends Button. The only backend task done done here
          * is switchPlayers().
-         * <p/>
+         *
          * Depending on the number of parameters, the method calls publishProgress with either all 4
          * parameters - when a steal is triggered - or two parameters - the execution of a normal
          * move.
-         * <p/>
-         * It also adds the delay for the animation.
          *
+         * It also adds the delay for the animation.
          * @param params is an array that contains all the parameters sent when creating a new
          *               instance of setCraterStones and executing it.
          */
@@ -187,7 +191,15 @@ public class Crater extends Button {
             updateCrater(this, 0);
             placeAlong(stones);
             if (checkGameOver()) {
-                // Create Intent here!!!
+                // Game over
+                Player winner = determineWinner();
+                Player loser = determineLoser();
+                try{
+                winner.setGamesWon(winner.getNumberOfGamesWon() + 1);
+                loser.setGamesLost(loser.getNumberOfGamesLost()+1);}
+                catch (NullPointerException n){}
+                activity.createGameOverDialog();
+
             }
         }
     }
@@ -220,7 +232,6 @@ public class Crater extends Button {
             }
         }
     }
-
     /**
      * Method first checks if the remaining stones are 0 - if it's the last move
      * if it is, it changes turn and it checks if it can perform a steal and does so.
@@ -419,5 +430,27 @@ public class Crater extends Button {
 
     public void setOwner(Player player) {
         owner = player;
+    }
+    public Player determineWinner(){
+        Player p1 = getOwner();
+        Player p2 = getOppositeCrater().getOwner();
+        if(p1.getStore().getStones()>p2.getStore().getStones()){
+            return p1;
+        }
+        else if(p2.getStore().getStones()>p1.getStore().getStones()){
+            return p2;
+        }
+        return null;
+    }
+    public Player determineLoser(){
+        Player p1 = getOwner();
+        Player p2 = getOppositeCrater().getOwner();
+        if(p1.getStore().getStones()>p2.getStore().getStones()){
+            return p2;
+        }
+        else if(p2.getStore().getStones()>p1.getStore().getStones()){
+            return p1;
+        }
+        return null;
     }
 }
