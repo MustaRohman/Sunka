@@ -21,6 +21,10 @@
             android:label="@string/title_activity_two_player_local"
             android:screenOrientation="landscape" >
         </activity>
+        <activity
+            android:name=".StatisticsActivity"
+            android:label="@string/title_activity_statistics" >
+        </activity>
     </application>
 
 </manifest>
