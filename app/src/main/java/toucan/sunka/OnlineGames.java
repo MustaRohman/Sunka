@@ -97,46 +97,10 @@ public class OnlineGames extends AppCompatActivity {
         }
     };
 
-    public void setListAdapter(ArrayAdapter<String> serverList){
-        this.serverListAdapter = serverList;
-    }
-//
-//    public void waitServerList(){
-//        new Thread(new Runnable() {
-//            @Override
-//            public void run() {
-//                try {
-//                    while (!checkServerList()){
-//                        Thread.sleep(100);
-//                        Log.d("INFO", "Message timed out. Retrying in 1 second");
-//                    }
-//                } catch (InterruptedException e) {
-//                    e.printStackTrace();
-//                }
-//                Log.d("INFO", "Started creating the list, servers: " + serverList[0] + " " + serverList[1]);
-//                serverListAdapter = new ArrayAdapter<String>(activity, android.R.layout.simple_list_item_1, serverList);
-//            }
-//        }).start();
-//    }
-
-
-    public final boolean checkServerList() throws InterruptedException {
-        return serverListAdapter == null;
-    }
 
     public void refreshServerList(View view){
         mSocket.emit(REQUEST, "getServers");
         new populateList().execute();
-//        new populateList().execute();
-//        while(serverList == null ){
-//            Thread.sleep(100);
-//            Log.d("INFO","Server list not found yet, retrying again in 0.1s");
-//        }
-//        Log.d("INFO","Server list found!");
-//        ArrayAdapter<String> serverAdapter = new ArrayAdapter<>(activity, android.R.layout.simple_list_item_1, serverList);
-//        ListView serverList = (ListView) findViewById(R.id.server_list);
-//        serverList.setAdapter(serverAdapter);
-
     }
 
     @Override
@@ -144,7 +108,6 @@ public class OnlineGames extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_online_games);
         mSocket.on("serverList", parseServerList);
-//        new populateList().execute();
         mSocket.connect();
         Log.d("INFO", "CONNECTED");
     }

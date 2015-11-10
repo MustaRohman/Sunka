@@ -2,7 +2,7 @@
   var http = require('http').Server(app)
   var io = require('socket.io')(http);
   var INFO = "INFO", ERROR = "ERROR", REC = "RECEIVED", BRD = "BROADCAST"
-  var serverList = ['player1', 'player2']
+  var serverList = ['server1', 'server2']
 
   io.on('connection', function(socket){
     Log(INFO, "User connected!")
