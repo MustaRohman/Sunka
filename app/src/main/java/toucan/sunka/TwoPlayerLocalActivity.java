@@ -16,6 +16,7 @@ import android.widget.TextView;
 Things to do in this class:
 - Add animation to updateCraterImage method to create a smoother transition
 - Labels to show number of stones in each crater
+- Create Store craters
  */
 
 public class TwoPlayerLocalActivity extends AppCompatActivity {
