@@ -129,6 +129,11 @@ public class TwoPlayerLocalActivity extends AppCompatActivity {
             craterList[i].setOppositeCrater(craterList[16 - i]);
             craterList[i].setOwner(secondPlayer);
         }
+//        for (Crater crater : craterList )
+//            crater.setStones(0);
+//        craterList[7].setStones(1);
+//        craterList[9].setStones(1);
+//        craterList[15].setStones(4);
     }
     public void createGameOverDialog(){
         DialogFragment fragment = new GameOverDialog();
@@ -163,41 +168,6 @@ public class TwoPlayerLocalActivity extends AppCompatActivity {
         fragment.setArguments(playerInfo);
         fragment.show(fm,"gameOverDialog");
     }
-
-
-    /**
-     * ONCLICK METHOD FOR TESTING PURPOSES
-     * @param view
-     */
-//    public void onClickGameOverTest(View view) {
-//
-//        firstPlayer.setGamesWon(0);
-//        secondPlayer.setGamesWon(8);
-//
-//        Player testPlayer1 = new Player("John");
-//        testPlayer1.setGamesWon(1);
-//
-//        Player testPlayer2 = new Player("Manny");
-//        testPlayer2.setGamesWon(1);
-//
-//        Player testPlayer3 = new Player("Hazel");
-//        testPlayer3.setGamesWon(3);
-//
-//        MainScreen.collection.addPlayer(testPlayer1);
-//        MainScreen.collection.addPlayer(testPlayer2);
-//        MainScreen.collection.addPlayer(testPlayer3);
-//        MainScreen.collection.sortByGamesWon();
-//
-//        for (int i = 0; i < MainScreen.collection.size(); i++){
-//            Player p = MainScreen.collection.getPlayerAtPosition(i);
-//            Log.d("onClickGameOverTest", p.getPlayerName() + " " + p.getPlayerRank() + " " + p.getNumberOfGamesWon());
-//        }
-//
-//        Player bestPlayer = MainScreen.collection.getPlayerAtPosition(0);
-//        Log.d("onClickGameOverTest", "Rank 1 is " + bestPlayer.getPlayerName() + " Wins: " + bestPlayer.getNumberOfGamesWon());
-//        Log.d("onClickGameOverTest", secondPlayer.getNumberOfGamesWon() + " " + secondPlayer.getPlayerRank());
-//        createGameOverDialog();
-//    }
     public void turnNotification(Player p){
         if(firstPlayer.equals(p)){
             firstPlayerLabel.setBackgroundColor(Color.GREEN);
@@ -209,3 +179,20 @@ public class TwoPlayerLocalActivity extends AppCompatActivity {
         }
     }
 }
+
+/*
+Good test for one side empty functionality - All other stones are 0
+craterList[7].setStones(1)
+craterList[12].setStones(2)
+craterList[12].makeMoveFromHere
+craterList[14].makeMoveFromHere
+craterList[13].makeMoveFromHere
+craterList[14].makeMoveFromHere
+craterList[15].makeMoveFromHere
+craterList[1].makeMoveFromHere SHOULD BE POSSIBLE
+
+One more that checks steal
+craterList[6].setStones(1)
+craterList[9].setStones(1)
+craterList[10].setStones(1)
+ */

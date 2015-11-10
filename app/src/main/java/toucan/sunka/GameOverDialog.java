@@ -124,13 +124,20 @@ public class GameOverDialog extends DialogFragment {
         table = (TableLayout) layoutView.findViewById(R.id.leaderboard_table);
         Player player1st = MainScreen.collection.getPlayerAtPosition(0);
         Player player2nd = MainScreen.collection.getPlayerAtPosition(1);
-        Player player3rd = MainScreen.collection.getPlayerAtPosition(2);
+        Player player3rd;
+        try {
+            player3rd = MainScreen.collection.getPlayerAtPosition(2);
+        }
+        catch(IndexOutOfBoundsException iOBE)
+        {
+            player3rd = null;
+        }
 
         addRow(player1st.getPlayerRank(), player1st.getPlayerName(),
                 player1st.getNumberOfGamesWon(), table, inflater);
         addRow(player2nd.getPlayerRank(), player2nd.getPlayerName(),
                 player2nd.getNumberOfGamesWon(), table, inflater);
-        addRow(player3rd.getPlayerRank(), player3rd.getPlayerName(),
+        if (player3rd != null) addRow(player3rd.getPlayerRank(), player3rd.getPlayerName(),
                 player3rd.getNumberOfGamesWon(), table, inflater);
 
 
