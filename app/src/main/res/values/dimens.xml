@@ -9,5 +9,7 @@
     <dimen name="button_width">45dp</dimen>
     <dimen name="button_width_2">95dp</dimen>
     <dimen name="button_height_2">130dp</dimen>
+    <dimen name="crater_text_size">20sp</dimen>
+    <dimen name="store_text_size">25sp</dimen>
 
 </resources>

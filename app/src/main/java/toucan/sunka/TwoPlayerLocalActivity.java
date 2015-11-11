@@ -3,6 +3,7 @@ package toucan.sunka;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.Gravity;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -15,8 +16,6 @@ import android.widget.TextView;
 /*
 Things to do in this class:
 - Add animation to updateCraterImage method to create a smoother transition
-- Labels to show number of stones in each crater
-- Create Store craters
 - Disabled buttons
 - When its player 2's turn, have stone animation start from his side
  */
@@ -73,68 +72,6 @@ public class TwoPlayerLocalActivity extends AppCompatActivity {
 
 
 
-    }
-
-    public static void updateCraterImage(Crater crater, int stones){
-
-        switch (stones){
-            case 0:crater.setBackgroundResource(R.drawable.button_enabled);
-                break;
-            case 1:crater.setBackgroundResource(R.drawable.crater_1stone);
-                break;
-            case 2:crater.setBackgroundResource(R.drawable.crater_2stone);
-                break;
-            case 3:crater.setBackgroundResource(R.drawable.crater_3stone);
-                break;
-            case 4:crater.setBackgroundResource(R.drawable.crater_4stone);
-                break;
-            case 5:crater.setBackgroundResource(R.drawable.crater_5stone);
-                break;
-            case 6:crater.setBackgroundResource(R.drawable.crater_6stone);
-                break;
-            case 7:crater.setBackgroundResource(R.drawable.crater_7stone);
-                break;
-            case 8:crater.setBackgroundResource(R.drawable.crater_8stone);
-                break;
-            case 9:crater.setBackgroundResource(R.drawable.crater_9stone);
-                break;
-            case 10:crater.setBackgroundResource(R.drawable.crater_10stone);
-                break;
-            case 11:crater.setBackgroundResource(R.drawable.crater_11stone);
-                break;
-            default:crater.setBackgroundResource(R.drawable.crater_11stone);
-                break;
-        }
-    }
-
-    public static void updateStoreImage(Crater crater, int stones){
-        switch (stones){
-            case 1:crater.setBackgroundResource(R.drawable.store_1stone);
-                break;
-            case 2:crater.setBackgroundResource(R.drawable.store_2stone);
-                break;
-            case 3:crater.setBackgroundResource(R.drawable.store_3stone);
-                break;
-            case 4:crater.setBackgroundResource(R.drawable.store_4stone);
-                break;
-            case 5:crater.setBackgroundResource(R.drawable.store_5stone);
-                break;
-            case 6:crater.setBackgroundResource(R.drawable.store_6stone);
-                break;
-            case 7:crater.setBackgroundResource(R.drawable.store_7stone);
-                break;
-            case 8:crater.setBackgroundResource(R.drawable.store_8stone);
-                break;
-            case 9:crater.setBackgroundResource(R.drawable.store_9stone);
-                break;
-            case 10:crater.setBackgroundResource(R.drawable.store_10stone);
-                break;
-            case 11:crater.setBackgroundResource(R.drawable.store_11stone);
-                break;
-            case 12:crater.setBackgroundResource(R.drawable.store_12stone);
-                break;
-            default:crater.setBackgroundResource(R.drawable.store_12stone);
-        }
     }
 
     @Override
@@ -195,18 +132,16 @@ public class TwoPlayerLocalActivity extends AppCompatActivity {
         for (int i = 1; i < 8; i++) {
             craterList[i].setOppositeCrater(craterList[16 - i]);
             craterList[i].setOwner(firstPlayer);
+            craterList[i].setGravity(Gravity.BOTTOM);
         }
         for (int i = 9; i < 16; i++) {
             craterList[i].setOppositeCrater(craterList[16 - i]);
             craterList[i].setOwner(secondPlayer);
+            craterList[i].setGravity(Gravity.TOP);
+
         }
-    }
 
-    public void onStoneClick(View view) {
 
-        Crater crater = craterList[9];
-
-        moveAnimation(crater, 15, firstPlayer);
     }
 
     private void moveAnimation(final Crater crater, final int count, final Player player){
@@ -249,7 +184,11 @@ public class TwoPlayerLocalActivity extends AppCompatActivity {
                         nextCrater = crater.getNextCrater();
                     }
 
-                    updateCraterImage(crater, crater.getStones());
+                    if (crater.isStore()) {
+                        updateStoreImage(crater, crater.getStones());
+                    } else {
+                        updateCraterImage(crater, crater.getStones());
+                    }
 
                     moveAnimation(nextCrater, count - 1, player);
 
@@ -281,11 +220,69 @@ public class TwoPlayerLocalActivity extends AppCompatActivity {
             return view.getTop() + getTopInParent((View) view.getParent());
     }
 
-    private int getRightInParent(View view) {
-        if (view.getParent() == view.getRootView())
-            return view.getRight();
-        else
-            return view.getRight() + getRightInParent((View) view.getParent());
+
+    public static void updateCraterImage(Crater crater, int stones){
+
+        switch (stones){
+            case 0:crater.setBackgroundResource(R.drawable.button_enabled);
+                break;
+            case 1:crater.setBackgroundResource(R.drawable.crater_1stone);
+                break;
+            case 2:crater.setBackgroundResource(R.drawable.crater_2stone);
+                break;
+            case 3:crater.setBackgroundResource(R.drawable.crater_3stone);
+                break;
+            case 4:crater.setBackgroundResource(R.drawable.crater_4stone);
+                break;
+            case 5:crater.setBackgroundResource(R.drawable.crater_5stone);
+                break;
+            case 6:crater.setBackgroundResource(R.drawable.crater_6stone);
+                break;
+            case 7:crater.setBackgroundResource(R.drawable.crater_7stone);
+                break;
+            case 8:crater.setBackgroundResource(R.drawable.crater_8stone);
+                break;
+            case 9:crater.setBackgroundResource(R.drawable.crater_9stone);
+                break;
+            case 10:crater.setBackgroundResource(R.drawable.crater_10stone);
+                break;
+            case 11:crater.setBackgroundResource(R.drawable.crater_11stone);
+                break;
+            default:crater.setBackgroundResource(R.drawable.crater_11stone);
+                break;
+        }
+    }
+
+    public static void updateStoreImage(Crater crater, int stones){
+        switch (stones){
+            case 0:crater.setBackgroundResource(R.drawable.store2);
+                break;
+            case 1:crater.setBackgroundResource(R.drawable.store_1stone);
+                break;
+            case 2:crater.setBackgroundResource(R.drawable.store_2stone);
+                break;
+            case 3:crater.setBackgroundResource(R.drawable.store_3stone);
+                break;
+            case 4:crater.setBackgroundResource(R.drawable.store_4stone);
+                break;
+            case 5:crater.setBackgroundResource(R.drawable.store_5stone);
+                break;
+            case 6:crater.setBackgroundResource(R.drawable.store_6stone);
+                break;
+            case 7:crater.setBackgroundResource(R.drawable.store_7stone);
+                break;
+            case 8:crater.setBackgroundResource(R.drawable.store_8stone);
+                break;
+            case 9:crater.setBackgroundResource(R.drawable.store_9stone);
+                break;
+            case 10:crater.setBackgroundResource(R.drawable.store_10stone);
+                break;
+            case 11:crater.setBackgroundResource(R.drawable.store_11stone);
+                break;
+            case 12:crater.setBackgroundResource(R.drawable.store_12stone);
+                break;
+            default:crater.setBackgroundResource(R.drawable.store_12stone);
+        }
     }
 
 

@@ -3,6 +3,7 @@ package toucan.sunka;
 import android.content.Context;
 import android.os.AsyncTask;
 import android.util.AttributeSet;
+import android.view.Gravity;
 import android.widget.Button;
 
 
@@ -38,6 +39,7 @@ public class Crater extends Button {
 
         if (store){
             TwoPlayerLocalActivity.updateStoreImage(this,0);
+            setGravity(Gravity.BOTTOM);
         } else {
             TwoPlayerLocalActivity.updateCraterImage(this, stones);
         }
@@ -106,7 +108,7 @@ public class Crater extends Button {
                 Crater oppositeCrater = ((Crater) params[2]);
                 oppositeCrater.setText(String.format("%d", 0));
                 Crater store = currentCrater.owner.getStore();
-                TwoPlayerLocalActivity.updateCraterImage(store, store.getStones());
+                TwoPlayerLocalActivity.updateStoreImage(store, store.getStones());
                 TwoPlayerLocalActivity.updateCraterImage(oppositeCrater, 0);
             }
         }
