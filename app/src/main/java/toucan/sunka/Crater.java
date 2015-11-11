@@ -349,4 +349,41 @@ public class Crater extends Button {
     public void setOwner(Player player){
         owner = player;
     }
+
+    public void setActiveImage(boolean active){
+
+        if (active){
+            TwoPlayerLocalActivity.updateCraterImage(this, stones);
+        } else {
+            switch (stones){
+                case 0:setBackgroundResource(R.drawable.button_disabled);
+                    break;
+                case 1:setBackgroundResource(R.drawable.crater_1stone_disabled);
+                    break;
+                case 2:setBackgroundResource(R.drawable.crater_2stone_disabled);
+                    break;
+                case 3:setBackgroundResource(R.drawable.crater_3stone_disabled);
+                    break;
+                case 4:setBackgroundResource(R.drawable.crater_4stone_disabled);
+                    break;
+                case 5:setBackgroundResource(R.drawable.crater_5stone_disabled);
+                    break;
+                case 6:setBackgroundResource(R.drawable.crater_6stone_disabled);
+                    break;
+                case 7:setBackgroundResource(R.drawable.crater_7stone_disabled);
+                    break;
+                case 8:setBackgroundResource(R.drawable.crater_8stone_disabled);
+                    break;
+                case 9:setBackgroundResource(R.drawable.crater_9stone_disabled);
+                    break;
+                case 10:setBackgroundResource(R.drawable.crater_10stone_disabled);
+                    break;
+                case 11:setBackgroundResource(R.drawable.crater_11stone_disabled);
+                    break;
+                default:setBackgroundResource(R.drawable.crater_11stone_disabled);
+                    break;
+            }
+        }
+
+    }
 }
