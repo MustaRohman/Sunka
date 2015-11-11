@@ -37,8 +37,6 @@ public class TwoPlayerLocalActivity extends AppCompatActivity {
         firstPlayer = getIntent().getParcelableExtra(MultiplayerDialogFragment.PLAYER_ONE_KEY);
         secondPlayer = getIntent().getParcelableExtra(MultiplayerDialogFragment.PLAYER_TWO_KEY);
 
-        stoneImage = (ImageView) findViewById(R.id.stone_imageView);
-
         initializeCraters();
 
         TextView firstPlayerLabel = (TextView) findViewById(R.id.player_one_view);
@@ -69,7 +67,6 @@ public class TwoPlayerLocalActivity extends AppCompatActivity {
         moveAnimation(crater.getNextCrater(), crater.getStones(), crater.getActivePlayer());
 
         crater.makeMoveFromHere();
-
 
 
     }
@@ -146,6 +143,12 @@ public class TwoPlayerLocalActivity extends AppCompatActivity {
 
     private void moveAnimation(final Crater crater, final int count, final Player player){
 
+        if (crater.getActivePlayer().equals(firstPlayer)){
+            stoneImage = (ImageView) findViewById(R.id.store_imageView_p1);
+        } else {
+            stoneImage = (ImageView) findViewById(R.id.store_imageView_p2);
+        }
+
         stoneImage.setVisibility(View.INVISIBLE);
         Log.d("moveAnimation", "stoneImage has been set as Invisible");
 
@@ -161,7 +164,7 @@ public class TwoPlayerLocalActivity extends AppCompatActivity {
 
             TranslateAnimation move = new TranslateAnimation(0, moveXCenter,
                     0, moveY);
-            move.setDuration(700);
+            move.setDuration(500);
             move.setFillAfter(false);
             move.setAnimationListener(new Animation.AnimationListener() {
                 @Override

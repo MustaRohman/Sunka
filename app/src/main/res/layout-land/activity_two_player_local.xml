@@ -217,8 +217,18 @@
         android:background="@drawable/stone"
         android:layout_width="40dp"
         android:layout_height="40dp"
-        android:id="@+id/stone_imageView"
+        android:id="@+id/store_imageView_p1"
         android:layout_above="@+id/player_one_view"
+        android:layout_centerInParent="true"
+        android:onClick="onStoneClick"
+        android:visibility="invisible"/>
+
+    <ImageView
+        android:background="@drawable/stone"
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        android:id="@+id/store_imageView_p2"
+        android:layout_below="@+id/player_two_view"
         android:layout_centerInParent="true"
         android:onClick="onStoneClick"
         android:visibility="invisible"/>
