@@ -29,7 +29,7 @@ public class StatisticsDialog extends DialogFragment {
     @Override
     public Dialog onCreateDialog(final Bundle savedInstanceState) {
         inflater = getActivity().getLayoutInflater();
-        layoutView = inflater.inflate(R.layout.dialog_game_over,null);
+        layoutView = inflater.inflate(R.layout.dialog_statistics,null);
         createTable();
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
 
