@@ -35,7 +35,12 @@ public class Crater extends Button {
     public void initialise(boolean store) {
         this.store = store;
         setStones(this.store ? 0 : 7);
-        TwoPlayerLocalActivity.updateCraterImage(this, stones);
+
+        if (store){
+            TwoPlayerLocalActivity.updateStoreImage(this,0);
+        } else {
+            TwoPlayerLocalActivity.updateCraterImage(this, stones);
+        }
     }
 
     /**
@@ -100,6 +105,8 @@ public class Crater extends Button {
             if (params.length == 3) {
                 Crater oppositeCrater = ((Crater) params[2]);
                 oppositeCrater.setText(String.format("%d", 0));
+                Crater store = currentCrater.owner.getStore();
+                TwoPlayerLocalActivity.updateCraterImage(store, store.getStones());
                 TwoPlayerLocalActivity.updateCraterImage(oppositeCrater, 0);
             }
         }

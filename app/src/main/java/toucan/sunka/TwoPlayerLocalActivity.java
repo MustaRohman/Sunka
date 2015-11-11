@@ -17,6 +17,8 @@ Things to do in this class:
 - Add animation to updateCraterImage method to create a smoother transition
 - Labels to show number of stones in each crater
 - Create Store craters
+- Disabled buttons
+- When its player 2's turn, have stone animation start from his side
  */
 
 public class TwoPlayerLocalActivity extends AppCompatActivity {
@@ -60,6 +62,9 @@ public class TwoPlayerLocalActivity extends AppCompatActivity {
             firstMove = false;
         }
 
+        Crater storeTemp = firstPlayer.getStore();
+        Log.d("onCraterClick", "width: " + storeTemp.getWidth() +  " height: " + storeTemp.getHeight());
+
         updateCraterImage(crater, 0);
 
         moveAnimation(crater.getNextCrater(), crater.getStones(), crater.getActivePlayer());
@@ -93,8 +98,42 @@ public class TwoPlayerLocalActivity extends AppCompatActivity {
                 break;
             case 9:crater.setBackgroundResource(R.drawable.crater_9stone);
                 break;
-            default:crater.setBackgroundResource(R.drawable.crater_9stone);
+            case 10:crater.setBackgroundResource(R.drawable.crater_10stone);
                 break;
+            case 11:crater.setBackgroundResource(R.drawable.crater_11stone);
+                break;
+            default:crater.setBackgroundResource(R.drawable.crater_11stone);
+                break;
+        }
+    }
+
+    public static void updateStoreImage(Crater crater, int stones){
+        switch (stones){
+            case 1:crater.setBackgroundResource(R.drawable.store_1stone);
+                break;
+            case 2:crater.setBackgroundResource(R.drawable.store_2stone);
+                break;
+            case 3:crater.setBackgroundResource(R.drawable.store_3stone);
+                break;
+            case 4:crater.setBackgroundResource(R.drawable.store_4stone);
+                break;
+            case 5:crater.setBackgroundResource(R.drawable.store_5stone);
+                break;
+            case 6:crater.setBackgroundResource(R.drawable.store_6stone);
+                break;
+            case 7:crater.setBackgroundResource(R.drawable.store_7stone);
+                break;
+            case 8:crater.setBackgroundResource(R.drawable.store_8stone);
+                break;
+            case 9:crater.setBackgroundResource(R.drawable.store_9stone);
+                break;
+            case 10:crater.setBackgroundResource(R.drawable.store_10stone);
+                break;
+            case 11:crater.setBackgroundResource(R.drawable.store_11stone);
+                break;
+            case 12:crater.setBackgroundResource(R.drawable.store_12stone);
+                break;
+            default:crater.setBackgroundResource(R.drawable.store_12stone);
         }
     }
 
