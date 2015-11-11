@@ -1,5 +1,8 @@
 package toucan.sunka;
 
+import android.content.Context;
+import android.content.Intent;
+import android.os.Parcelable;
 import android.support.v4.app.DialogFragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentActivity;
@@ -12,6 +15,7 @@ import android.widget.Button;
 public class MainScreen extends FragmentActivity{
 
     Button multiPlayerLocal;
+    Button statistics;
 
     public static PlayerCollection collection; // needs to be saved in phone memory
 
@@ -28,7 +32,14 @@ public class MainScreen extends FragmentActivity{
                 createMultiplayerDialog();
             }
         });
-        collection = new PlayerCollection();
+        if (collection == null) collection = new PlayerCollection();
+        statistics = (Button) findViewById(R.id.statistics);
+        statistics.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                createStatisticsDialog();
+            }
+        });
 
 
     }
@@ -70,5 +81,10 @@ public class MainScreen extends FragmentActivity{
         FragmentManager fm = getSupportFragmentManager();
         fragment.show(fm,"multiplayerDialog");
 
+    }
+    public void createStatisticsDialog(){
+        StatisticsDialog fragment = new StatisticsDialog();
+        FragmentManager fm = getSupportFragmentManager();
+        fragment.show(fm,"statisticsDialog");
     }
 }

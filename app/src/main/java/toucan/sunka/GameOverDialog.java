@@ -24,8 +24,10 @@ public class GameOverDialog extends DialogFragment {
     public static final String PLAYER_ONE_STONES = "PLAYER_ONE_STONES";
     public static final String PLAYER_TWO_STONES = "PLAYER_TWO_STONES";
 
-
+    private Player playerOne;
+    private Player playerTwo;
     Player victorPlayer;
+    Player loserPlayer;
     private TableLayout table;
     private TwoPlayerLocalActivity thisActivity;
     private LayoutInflater inflater;
@@ -51,8 +53,8 @@ public class GameOverDialog extends DialogFragment {
         builder.setPositiveButton(R.string.play_again, new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
-                Player playerOne = thisActivity.getFirstPlayer();
-                Player playerTwo = thisActivity.getSecondPlayer();
+                playerOne = thisActivity.getFirstPlayer();
+                playerTwo = thisActivity.getSecondPlayer();
                 Context context = getContext();
                 Intent newTwoPlayerGame = new Intent(context, TwoPlayerLocalActivity.class);
                 newTwoPlayerGame.putExtra(PLAYER_ONE_KEY, playerOne);
@@ -83,12 +85,15 @@ public class GameOverDialog extends DialogFragment {
         //Initialises victorPlayer with the victor of the current game
         if (p1Stones > p2Stones){
             victorPlayer = MainScreen.collection.findPlayer(playerBundle.getString(PLAYER_ONE_KEY));
+            loserPlayer = MainScreen.collection.findPlayer(playerBundle.getString(PLAYER_TWO_KEY));
         } else {
             victorPlayer = MainScreen.collection.findPlayer(playerBundle.getString(PLAYER_TWO_KEY));
+            loserPlayer = MainScreen.collection.findPlayer(playerBundle.getString(PLAYER_ONE_KEY));
         }
 
         //Updates the victor's wins and resorts the collection
         victorPlayer.setGamesWon(victorPlayer.getNumberOfGamesWon() + 1);
+        loserPlayer.setGamesLost(loserPlayer.getNumberOfGamesLost() + 1);
         MainScreen.collection.sortByGamesWon();
 
         //Sets win message
@@ -122,17 +127,22 @@ public class GameOverDialog extends DialogFragment {
     private void initialiseLeaderboard(){
 
         table = (TableLayout) layoutView.findViewById(R.id.leaderboard_table);
+
+
         Player player1st = MainScreen.collection.getPlayerAtPosition(0);
         Player player2nd = MainScreen.collection.getPlayerAtPosition(1);
-        Player player3rd = MainScreen.collection.getPlayerAtPosition(2);
-
         addRow(player1st.getPlayerRank(), player1st.getPlayerName(),
-                player1st.getNumberOfGamesWon(), table, inflater);
+                player1st.getNumberOfGamesWon(),player1st.getNumberOfGamesLost(), table, inflater);
         addRow(player2nd.getPlayerRank(), player2nd.getPlayerName(),
-                player2nd.getNumberOfGamesWon(), table, inflater);
-        addRow(player3rd.getPlayerRank(), player3rd.getPlayerName(),
-                player3rd.getNumberOfGamesWon(), table, inflater);
-
+                player2nd.getNumberOfGamesWon(),player2nd.getNumberOfGamesLost() ,table, inflater);
+        Player player3rd;
+        try{
+            player3rd = MainScreen.collection.getPlayerAtPosition(2);
+            addRow(player3rd.getPlayerRank(), player3rd.getPlayerName(),
+                    player3rd.getNumberOfGamesWon(),player3rd.getNumberOfGamesLost(), table, inflater);}
+        catch(Exception e){
+            player3rd = null;
+        }
 
         Log.d("GameOverDialog", String.valueOf(victorPlayer.getNumberOfGamesWon()));
 
@@ -140,8 +150,7 @@ public class GameOverDialog extends DialogFragment {
 
             addBlankRow(table, inflater);
 
-            addRow(victorPlayer.getPlayerRank(), victorPlayer.getPlayerName(),
-                    victorPlayer.getNumberOfGamesWon(),table, inflater);
+
         }
 
     }
@@ -150,7 +159,7 @@ public class GameOverDialog extends DialogFragment {
      * Takes in the player's rank, name and score, TableLayout and LayoutInflater and adds a row in the
      * provided TableLayout
      */
-    public static void addRow(Integer rank, String name, Integer score, TableLayout table, LayoutInflater inflater){
+    public static void addRow(Integer rank, String name, Integer score,Integer losses, TableLayout table, LayoutInflater inflater){
 
         View rowView = inflater.inflate(R.layout.leaderboard_row, null);
         TextView rankText = (TextView) rowView.findViewById(R.id.player_rank);
@@ -161,6 +170,9 @@ public class GameOverDialog extends DialogFragment {
 
         TextView scoreText = (TextView) rowView.findViewById(R.id.player_score);
         scoreText.setText(String.valueOf(score));
+
+        TextView lossesText = (TextView) rowView.findViewById(R.id.player_losses);
+        lossesText.setText(String.valueOf(losses));
 
         table.addView(rowView);
 
