@@ -16,8 +16,6 @@ import android.widget.TextView;
 /*
 Things to do in this class:
 - Add animation to updateCraterImage method to create a smoother transition
-- Disabled buttons
-- When its player 2's turn, have stone animation start from his side
  */
 
 public class TwoPlayerLocalActivity extends AppCompatActivity {
