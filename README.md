@@ -1,4 +1,5 @@
 How to use server:
+
 * Install node for your local machine: https://nodejs.org/en/download/
 * The installation should come with npm. If it does not, refer to https://www.npmjs.com/package/npm for more help
 * Open a terminal and run 'cd path/to/the/project'
