@@ -17,7 +17,7 @@ import android.widget.Button;
  */
 public class Crater extends Button {
 
-    public static final int ACTION_DELAY = 300; // Miliseconds
+    public static final int ACTION_DELAY = 300; // Milliseconds
     private Player owner, activePlayer, inactivePlayer;
     private Crater nextCrater, oppositeCrater;
     protected int stones;
