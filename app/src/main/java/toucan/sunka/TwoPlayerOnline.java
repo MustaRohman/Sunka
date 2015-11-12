@@ -96,23 +96,23 @@ public class TwoPlayerOnline extends AppCompatActivity {
         craterList[8] = playerOneStore;
     }
 
-    public void initializeCraters(){
+    public void initializeCraters() {
         initializeStores();
         LinearLayout topRow = (LinearLayout) findViewById(R.id.online_top_row);
         LinearLayout bottomRow = (LinearLayout) findViewById(R.id.online_bottom_row);
         int j = 15;
 
-        for (int i = 1; i < bottomRow.getChildCount() + 1; i++ ) {
-            Crater currentCrater = (Crater) bottomRow.getChildAt(i-1);
+        for (int i = 1; i < bottomRow.getChildCount() + 1; i++) {
+            Crater currentCrater = (Crater) bottomRow.getChildAt(i - 1);
             craterList[i] = currentCrater;
         }
-        for (int i = 0; i < topRow.getChildCount(); i++){
+        for (int i = 0; i < topRow.getChildCount(); i++) {
             Crater currentCrater = (Crater) topRow.getChildAt(i);
             craterList[j--] = currentCrater;
         }
         craterList[15].setNextCrater(craterList[0]);
-        for (int i = 0; i < 15; i++ )
-            craterList[i].setNextCrater(craterList[i+1]);
+        for (int i = 0; i < 15; i++)
+            craterList[i].setNextCrater(craterList[i + 1]);
 
         craterList[0].setOppositeCrater(craterList[8]);
         craterList[8].setOppositeCrater(craterList[0]);

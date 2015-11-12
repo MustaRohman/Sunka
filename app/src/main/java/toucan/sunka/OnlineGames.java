@@ -69,15 +69,23 @@ public class OnlineGames extends AppCompatActivity {
     }
 
     private class startGame extends AsyncTask<Object, Void, Void> {
+        Intent twoPlayerOnline;
+        Boolean dataArrived = false;
         protected void onPreExecute() {
+             twoPlayerOnline = new Intent(activity, TwoPlayerOnline.class);
             displayAlert(true);
         }
 
         protected Void doInBackground(Object... params) {
-            while( opponent == null ){
+            while( opponent == null  || !dataArrived ){
                 Log.d("BACKEND THREAD", "Opponent not loaded yet. Retrying in .1s...");
                 try {
                     Thread.sleep(100);
+                    Log.d("INFO","Opponent not ready. Retrying in .1s...");
+                    if (gameID != null) {
+                        twoPlayerOnline.putExtra(KEY_ID, gameID);
+                        dataArrived = true;
+                    }
                 } catch (InterruptedException e) {
                     e.printStackTrace();}
             }
@@ -90,10 +98,9 @@ public class OnlineGames extends AppCompatActivity {
 
         protected void onPostExecute(Void result) {
             Log.d("GUI THREAD", "GUI thread ended");
-            Intent twoPlayerOnline = new Intent(activity, TwoPlayerOnline.class);
             twoPlayerOnline.putExtra(KEY_PLAYER, player);
             twoPlayerOnline.putExtra(KEY_OPPONENT, opponent);
-            twoPlayerOnline.putExtra(KEY_ID, gameID);
+            Log.d("!!!!",gameID);
             activity.startActivity(twoPlayerOnline);
             displayAlert(false);
         }
@@ -176,7 +183,7 @@ public class OnlineGames extends AppCompatActivity {
                     int i = 0;
                     Log.d("LISTENER TRIGGERED", "Received message that signals game start, code : " + ((String) args[0]));
                     String firstPlayer = "", secondPlayer = "";
-                    gameID = "";
+                    String id = "";
                     while (game.charAt(i) != ':')
                         firstPlayer += game.charAt(i++);
                     i++;
@@ -184,15 +191,27 @@ public class OnlineGames extends AppCompatActivity {
                         secondPlayer += game.charAt(i++);
                     i++;
                     while (i != game.length())
-                        gameID += game.charAt(i++);
-                    if (firstPlayer + "" == player.getPlayerName())
-                        opponent = new Player(secondPlayer);
-                    else opponent = new Player(firstPlayer);
+                        id += game.charAt(i++);
+                    setOpponent(firstPlayer, secondPlayer, id);
                     Log.d("LISTENER TRIGGERED", firstPlayer + " " + secondPlayer + " " + gameID);
                 }
             });
         }
     };
+
+    public void setOpponent(String firstPlayer, String secondPlayer, String id){
+        String owner = this.player.getPlayerName();
+        if (firstPlayer.length() != owner.length())
+            opponent = new Player(firstPlayer);
+        int x=0;
+        boolean equals = true;
+        while( x != firstPlayer.length() )
+            if (firstPlayer.charAt(x) != owner.charAt(x++))
+                equals = false;
+        if (equals) opponent = new Player(secondPlayer);
+        else opponent = new Player(firstPlayer);
+        gameID = id;
+    }
 
     public void playGame(View view) {
         String message = String.format("g%s:%s-", player.getPlayerName(), opponent.getPlayerName());
@@ -227,6 +246,7 @@ public class OnlineGames extends AppCompatActivity {
     @Override
     protected void onPause() {
         super.onPause();
+        displayAlert(false);
     }
 
     @Override

@@ -17,7 +17,9 @@
     socket.on('game', function(msg){
       Log("GAME", "Request received, code: " + msg)
       var parserWrap = parseGameMove(msg)
-      io.emit(otherPlayer(parserWrap[1]), parserWrap)
+      io.emit(otherPlayer(parserWrap[1], parserWrap[0]), parserWrap[2])
+      Log("GAME", "Sent request to " + otherPlayer(parserWrap[1], parserWrap[0])
+              + " with message" + parserWrap[2])
     })
     socket.on('disconnect', function(){
       Log(INFO, "User disconnected!")
@@ -92,8 +94,12 @@
     Log("GAME", "Received move: " + gameID + " " + player + " " + pos)
   }
 
-  function otherPlayer (player){
-
+  function otherPlayer (player, id){
+    var p1 = games[id][0]
+    var p2 = games[id][1]
+    if (player === p1)
+      return p1
+    return p2
   }
 
   function parsePlayers( playerList, id ) {
