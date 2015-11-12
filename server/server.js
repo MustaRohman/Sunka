@@ -3,8 +3,8 @@
   var http = require('http').Server(app)
   var io = require('socket.io')(http)
   var INFO = "INFO", ERROR = "ERROR", REC = "RECEIVED", BRD = "BROADCAST"
-  var serverList = []
-  var matches = []
+  var serverList = ['opposite']
+  var games = {}
   var matchID = []
   var player1, player2
 
@@ -13,6 +13,11 @@
     socket.on('req', function(msg){
       Log(REC, "Request received, code: " + msg)
       parseRequest(msg)
+    })
+    socket.on('game', function(msg){
+      Log("GAME", "Request received, code: " + msg)
+      var parserWrap = parseGameMove(msg)
+      io.emit(otherPlayer(parserWrap[1]), parserWrap)
     })
     socket.on('disconnect', function(){
       Log(INFO, "User disconnected!")
@@ -36,8 +41,8 @@
         Log(INFO, "Received request to create server with name: " + serverList[serverList.length - 1])
         break
       case request.charAt(0) === "g":
-        parsePlayers(request.substring(1, request.length))
         var id = createMatchId()
+        parsePlayers(request.substring(1, request.length), id)
         addMatchID(id)
         io.emit('gameStart', player1 + ":" + player2 + ":" + id)
         Log(BRD, "Game started. Players: " + player1+":"+player2 + " id:" + id)
@@ -73,7 +78,25 @@
     if ( x === 0 ) matchID.push(id)
   }
 
-  function parsePlayers( playerList ) {
+  function parseGameMove(move){
+    var x=0, player = ""
+    var gameID =""
+    while (move[x] != ":"){
+      gameID += move[x++]
+    }
+    x++
+    while ( move[x] != ":")
+      player += move[x++]
+    var pos = move[++x]
+    return [gameID, player, pos]
+    Log("GAME", "Received move: " + gameID + " " + player + " " + pos)
+  }
+
+  function otherPlayer (player){
+
+  }
+
+  function parsePlayers( playerList, id ) {
     player1 = "", player2 = ""
     var index
     for ( x in playerList ){
@@ -86,8 +109,8 @@
     while (playerList[index] != "-")
       player2 += playerList[index++]
     player2 = player2.substring(1, player2.length )
-    Log(INFO, "Found game between " + player1 + " and " + player2)
-    matches.push([player1, player2])
+    games[id] = [player1, player2]
+    Log(INFO, "Found game between " + games[id])
   }
 
   function parseServerList() {

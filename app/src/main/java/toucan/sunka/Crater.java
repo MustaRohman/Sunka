@@ -295,6 +295,16 @@ public class Crater extends Button {
         inactivePlayer = getInactivePlayer();
     }
 
+    public int getPositionOnBoard() {
+        int i = 0 ;
+        Crater currentCrater = this;
+        while (!currentCrater.isStore()){
+            i++;
+            currentCrater = currentCrater.getNextCrater();
+        }
+        return 8-i;
+    }
+
     public boolean isEmpty(){
         return (stones == 0);
     }

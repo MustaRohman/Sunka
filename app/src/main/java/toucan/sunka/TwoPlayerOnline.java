@@ -1,5 +1,6 @@
 package toucan.sunka;
 
+import android.app.Activity;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
@@ -9,6 +10,7 @@ import android.view.View;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.github.nkzawa.emitter.Emitter;
 import com.github.nkzawa.socketio.client.IO;
 import com.github.nkzawa.socketio.client.Socket;
 
@@ -18,6 +20,7 @@ public class TwoPlayerOnline extends AppCompatActivity {
     private Crater playerOneStore;
     private Crater playerTwoStore;
     Crater[] craterList = new Crater[16];
+    final Activity activity = this;
     private Player firstPlayer;
     private Player secondPlayer;
     private boolean firstMove = true;
@@ -40,13 +43,30 @@ public class TwoPlayerOnline extends AppCompatActivity {
 
         firstPlayer = getIntent().getParcelableExtra(OnlineGames.KEY_PLAYER);
         secondPlayer = getIntent().getParcelableExtra(OnlineGames.KEY_OPPONENT);
+        gameID = getIntent().getStringExtra(OnlineGames.KEY_ID);
         initializeCraters();
 
-        TextView firstPlayerLabel = (TextView) findViewById(R.id.player_one_view);
+        TextView firstPlayerLabel = (TextView) findViewById(R.id.online_player_one_view);
         firstPlayerLabel.setText(firstPlayer.getPlayerName());
-        TextView secondPlayerLabel = (TextView) findViewById(R.id.player_two_view);
-        secondPlayerLabel.setText(secondPlayer.getPlayerName());
+        TextView secondPlayerLabel = (TextView) findViewById(R.id.online_player_two_view);
+        secondPlayerLabel.setText(secondPlayer.getPlayerName().toString());
+        setSocketUp();
     }
+
+    public void setSocketUp(){
+    }
+
+    private Emitter.Listener parseMove = new Emitter.Listener() {
+        @Override
+        public void call(Object... args) {
+            activity.runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+
+                }
+            });
+        }
+    };
 
     public void onCraterClick(View view){
         Crater crater = (Crater) view;
@@ -62,16 +82,15 @@ public class TwoPlayerOnline extends AppCompatActivity {
             firstMove = false;
         }
         crater.makeMoveFromHere();
+        mSocket.emit("game", gameID + ":" + crater.getOwner().getPlayerName() +
+                ":" + crater.getPositionOnBoard());
     }
 
-    public void setSocketUp(){
-
-    }
 
     public void initializeStores() {
-        playerOneStore = (Crater) findViewById(R.id.store_right);
+        playerOneStore = (Crater) findViewById(R.id.online_store_right);
         playerOneStore.initialise(true);
-        playerTwoStore = (Crater) findViewById(R.id.store_left);
+        playerTwoStore = (Crater) findViewById(R.id.online_store_left);
         playerTwoStore.initialise(true);
         craterList[0] = playerTwoStore;
         craterList[8] = playerOneStore;
@@ -79,8 +98,8 @@ public class TwoPlayerOnline extends AppCompatActivity {
 
     public void initializeCraters(){
         initializeStores();
-        LinearLayout topRow = (LinearLayout) findViewById(R.id.top_row);
-        LinearLayout bottomRow = (LinearLayout) findViewById(R.id.bottom_row);
+        LinearLayout topRow = (LinearLayout) findViewById(R.id.online_top_row);
+        LinearLayout bottomRow = (LinearLayout) findViewById(R.id.online_bottom_row);
         int j = 15;
 
         for (int i = 1; i < bottomRow.getChildCount() + 1; i++ ) {
@@ -109,6 +128,13 @@ public class TwoPlayerOnline extends AppCompatActivity {
             craterList[i].setOppositeCrater(craterList[16 - i]);
             craterList[i].setOwner(secondPlayer);
         }
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        mSocket.disconnect();
+        mSocket.off();
     }
 
     @Override

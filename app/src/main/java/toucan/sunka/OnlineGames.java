@@ -19,6 +19,8 @@ import com.github.nkzawa.emitter.Emitter;
 import com.github.nkzawa.socketio.client.IO;
 import com.github.nkzawa.socketio.client.Socket;
 
+import org.w3c.dom.CharacterData;
+
 import java.net.URISyntaxException;
 import java.util.Objects;
 
@@ -27,17 +29,16 @@ public class OnlineGames extends AppCompatActivity {
     final public static String SERVER_ADDRESS = "http://192.168.0.10:3000";
     final public static String KEY_PLAYER = "KEY_PLAYER";
     final public static String KEY_OPPONENT = "KEY_OPPONENT";
+    final public static String KEY_ID = "KEY_ID";
     final private Player player = new Player("test");
-    final Activity activity = this;
     protected String REQUEST =  "req";
     protected int serverNumber = 0;
+    final Activity activity = this;
     protected String[] servList = new String[30];
     protected boolean dataReceived;
     protected ListView serverListView;
     protected Player opponent = null;
-
-
-
+    protected String gameID;
     private Socket mSocket;
     {
         try {
@@ -47,6 +48,7 @@ public class OnlineGames extends AppCompatActivity {
             Log.d("INFO", "Unable to connect!!!");
         }
     }
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -81,16 +83,18 @@ public class OnlineGames extends AppCompatActivity {
             }
             if (opponent != null){
                 Log.d("BACKEND THREAD", "Player connected. Starting game");
-                Intent twoPlayerOnline = new Intent(activity, TwoPlayerOnline.class);
-                twoPlayerOnline.putExtra(KEY_PLAYER, player);
-                twoPlayerOnline.putExtra(KEY_OPPONENT, opponent);
-                activity.startActivity(twoPlayerOnline);
+
             }
             return null;
         }
 
         protected void onPostExecute(Void result) {
             Log.d("GUI THREAD", "GUI thread ended");
+            Intent twoPlayerOnline = new Intent(activity, TwoPlayerOnline.class);
+            twoPlayerOnline.putExtra(KEY_PLAYER, player);
+            twoPlayerOnline.putExtra(KEY_OPPONENT, opponent);
+            twoPlayerOnline.putExtra(KEY_ID, gameID);
+            activity.startActivity(twoPlayerOnline);
             displayAlert(false);
         }
     }
@@ -171,12 +175,20 @@ public class OnlineGames extends AppCompatActivity {
                     String game = ((String) args[0]);
                     int i = 0;
                     Log.d("LISTENER TRIGGERED", "Received message that signals game start, code : " + ((String) args[0]));
-                    String opponentName = "";
-                    while (game.charAt(i++) != ':');
+                    String firstPlayer = "", secondPlayer = "";
+                    gameID = "";
+                    while (game.charAt(i) != ':')
+                        firstPlayer += game.charAt(i++);
+                    i++;
+                    while (game.charAt(i) != ':')
+                        secondPlayer += game.charAt(i++);
+                    i++;
                     while (i != game.length())
-                        opponentName += game.charAt(i++);
-                    opponent = new Player(opponentName);
-                    Log.d("LISTENER TRIGGERED", "Found second player: " + opponentName);
+                        gameID += game.charAt(i++);
+                    if (firstPlayer + "" == player.getPlayerName())
+                        opponent = new Player(secondPlayer);
+                    else opponent = new Player(firstPlayer);
+                    Log.d("LISTENER TRIGGERED", firstPlayer + " " + secondPlayer + " " + gameID);
                 }
             });
         }
@@ -210,6 +222,11 @@ public class OnlineGames extends AppCompatActivity {
     public void updateOpponent( String opponentName, TextView view ){
         opponent = new Player(opponentName);
         view.setText("Opponent: " + opponentName);
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
     }
 
     @Override
