@@ -25,6 +25,7 @@ public class TwoPlayerOnline extends AppCompatActivity {
     private Player secondPlayer;
     private boolean firstMove = true;
     private String gameID;
+    protected int opponentMove;
     private Socket mSocket;
     {
         try {
@@ -54,15 +55,17 @@ public class TwoPlayerOnline extends AppCompatActivity {
     }
 
     public void setSocketUp(){
+        mSocket.on(firstPlayer.getPlayerName(), parseMove);
     }
 
     private Emitter.Listener parseMove = new Emitter.Listener() {
         @Override
-        public void call(Object... args) {
+        public void call(final Object... args) {
             activity.runOnUiThread(new Runnable() {
                 @Override
                 public void run() {
-
+                    opponentMove = (int) args[0];
+                    Log.d("LISTENER", "Received opponent move: " + opponentMove);
                 }
             });
         }

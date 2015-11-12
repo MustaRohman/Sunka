@@ -98,8 +98,9 @@
     var p1 = games[id][0]
     var p2 = games[id][1]
     if (player === p1)
-      return p1
-    return p2
+      return p2
+    console.log("p2");
+    return p1
   }
 
   function parsePlayers( playerList, id ) {
