@@ -2,7 +2,8 @@
   var http = require('http').Server(app)
   var io = require('socket.io')(http);
   var INFO = "INFO", ERROR = "ERROR", REC = "RECEIVED", BRD = "BROADCAST"
-  var serverList = ['server1', 'server2']
+  var serverList = ['opponent1', 'opponent2']
+  var matches = [];
 
   io.on('connection', function(socket){
     Log(INFO, "User connected!")
@@ -31,6 +32,9 @@
         addServer(server_name)
         Log(BRD, "Received request to create server with name: " + serverList[serverList.length - 1])
         break
+      case request.charAt(0) === "g":
+        parsePlayers(request.substring(1, request.length))
+        Log(BRD, "Game found!")
     }
   }
 
@@ -43,10 +47,22 @@
     if (x == 0) serverList[serverList.length] = server;
   }
 
-  function removeServer(String server){
+  function removeServer(server){
     for ( index in serverList ){
-      if ( serverList[index] === server ) {
+      if ( serverList[index] === server )
         serverList.splice(index, index)
+    }
+  }
+
+  function parsePlayers( playerList ) {
+    for ( x in playerList ){
+      if (playerList[x] === ":"){
+        var index = matches.length
+        Log(INFO, index + " games running currently")
+        matches[index][0] = playerList.substring(0, x-1)
+        matches[index][1] = playerList.substring(x+1, playerList.length - 1)
+        Log(BRD, "Matched players " + matches[index][0] + " and " + matches[index][1])
+        break;
       }
     }
   }

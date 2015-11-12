@@ -13,7 +13,7 @@
     <string name="cancel">Cancel</string>
     <string name="title_activity_two_player_local">TwoPlayerLocalActivity</string>
     <string name="title_activity_online_games">OnlineGames</string>
-    <string name="populate_list">Populate\n List</string>
+    <string name="populate_list">Refresh\n List</string>
     <string name="create_server">Create\n Server</string>
     <string name="title_activity_two_player_online">TwoPlayerOnline</string>
 
