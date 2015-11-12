@@ -1,0 +1,134 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                xmlns:tools="http://schemas.android.com/tools" android:layout_width="match_parent"
+                android:layout_height="match_parent" android:paddingLeft="@dimen/activity_horizontal_margin"
+                android:paddingRight="@dimen/activity_horizontal_margin"
+                android:paddingTop="@dimen/activity_vertical_margin"
+                android:paddingBottom="@dimen/activity_vertical_margin"
+                tools:context="toucan.sunka.TwoPlayerLocal">
+
+
+    <LinearLayout
+        android:id="@+id/linear_layout"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerVertical="true"
+        android:layout_centerHorizontal="true"
+        android:orientation="horizontal" >
+
+        <toucan.sunka.Crater
+            android:layout_width="wrap_content"
+            android:layout_height="fill_parent"
+            android:id="@+id/online_store_left"/>
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="vertical" >
+
+            <LinearLayout
+                android:id="@+id/online_top_row"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal" >
+                <toucan.sunka.Crater
+                    android:id="@+id/online_crater15"
+                    android:layout_width="@dimen/button_width"
+                    android:layout_height="wrap_content" />
+                <toucan.sunka.Crater
+                    android:id="@+id/online_crater14"
+                    android:layout_width="@dimen/button_width"
+                    android:layout_height="wrap_content" />
+                <toucan.sunka.Crater
+                    android:id="@+id/online_crater13"
+                    android:layout_width="@dimen/button_width"
+                    android:layout_height="wrap_content" />
+                <toucan.sunka.Crater
+                    android:id="@+id/online_crater12"
+                    android:layout_width="@dimen/button_width"
+                    android:layout_height="wrap_content" />
+                <toucan.sunka.Crater
+                    android:id="@+id/online_crater11"
+                    android:layout_width="@dimen/button_width"
+                    android:layout_height="wrap_content" />
+                <toucan.sunka.Crater
+                    android:id="@+id/online_crater10"
+                    android:layout_width="@dimen/button_width"
+                    android:layout_height="wrap_content" />
+                <toucan.sunka.Crater
+                    android:id="@+id/online_crater9"
+                    android:layout_width="@dimen/button_width"
+                    android:layout_height="wrap_content" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/online_bottom_row"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal" >
+                <toucan.sunka.Crater
+                    android:id="@+id/online_crater1"
+                    android:onClick="onCraterClick"
+                    android:layout_width="@dimen/button_width"
+                    android:layout_height="wrap_content" />
+                <toucan.sunka.Crater
+                    android:id="@+id/online_crater2"
+                    android:onClick="onCraterClick"
+                    android:layout_width="@dimen/button_width"
+                    android:layout_height="wrap_content" />
+                <toucan.sunka.Crater
+                    android:id="@+id/online_crater3"
+                    android:onClick="onCraterClick"
+                    android:layout_width="@dimen/button_width"
+                    android:layout_height="wrap_content" />
+                <toucan.sunka.Crater
+                    android:id="@+id/online_crater4"
+                    android:onClick="onCraterClick"
+                    android:layout_width="@dimen/button_width"
+                    android:layout_height="wrap_content" />
+                <toucan.sunka.Crater
+                    android:id="@+id/online_crater5"
+                    android:onClick="onCraterClick"
+                    android:layout_width="@dimen/button_width"
+                    android:layout_height="wrap_content" />
+                <toucan.sunka.Crater
+                    android:id="@+id/online_crater6"
+                    android:onClick="onCraterClick"
+                    android:layout_width="@dimen/button_width"
+                    android:layout_height="wrap_content" />
+                <toucan.sunka.Crater
+                    android:onClick="onCraterClick"
+                    android:id="@+id/online_crater7"
+                    android:layout_width="@dimen/button_width"
+                    android:layout_height="wrap_content" />
+            </LinearLayout>
+
+        </LinearLayout>
+
+        <toucan.sunka.Crater
+            android:layout_width="wrap_content"
+            android:layout_height="fill_parent"
+            android:id="@+id/online_store_right"/>
+
+    </LinearLayout>
+
+    <!--Player Labels, top and bottom respectively-->
+    <TextView
+        android:id="@+id/online_player_two_view"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:rotation="180.00"
+        android:layout_alignTop="@id/linear_layout"
+        android:layout_alignParentTop="true"
+        android:layout_centerInParent="true"
+        android:text="Player Two"/>
+
+    <TextView
+        android:id="@+id/online_player_one_view"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignBottom="@id/linear_layout"
+        android:layout_alignParentBottom="true"
+        android:layout_centerInParent="true"
+        android:text="Player One" />
+
+</RelativeLayout>

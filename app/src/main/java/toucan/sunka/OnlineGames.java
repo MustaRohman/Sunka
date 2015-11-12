@@ -2,6 +2,7 @@ package toucan.sunka;
 
 import android.app.Activity;
 import android.app.AlertDialog;
+import android.content.Intent;
 import android.os.AsyncTask;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -19,19 +20,22 @@ import com.github.nkzawa.socketio.client.IO;
 import com.github.nkzawa.socketio.client.Socket;
 
 import java.net.URISyntaxException;
+import java.util.Objects;
 
 public class OnlineGames extends AppCompatActivity {
 
-    public static String SERVER_ADDRESS = "http://192.168.0.10:3000";
-    public String REQUEST =  "req";
+    final public static String SERVER_ADDRESS = "http://192.168.0.10:3000";
+    final public static String KEY_PLAYER = "KEY_PLAYER";
+    final public static String KEY_OPPONENT = "KEY_OPPONENT";
     final private Player player = new Player("test");
     final Activity activity = this;
-    protected ArrayAdapter<String> serverListAdapter;
+    protected String REQUEST =  "req";
     protected int serverNumber = 0;
     protected String[] servList = new String[30];
     protected boolean dataReceived;
     protected ListView serverListView;
-    protected Player opponent;
+    protected Player opponent = null;
+
 
 
     private Socket mSocket;
@@ -62,33 +66,57 @@ public class OnlineGames extends AppCompatActivity {
 
     }
 
+    private class startGame extends AsyncTask<Object, Void, Void> {
+        protected void onPreExecute() {
+            displayAlert(true);
+        }
+
+        protected Void doInBackground(Object... params) {
+            while( opponent == null ){
+                Log.d("BACKEND THREAD", "Opponent not loaded yet. Retrying in .1s...");
+                try {
+                    Thread.sleep(100);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();}
+            }
+            if (opponent != null){
+                Log.d("BACKEND THREAD", "Player connected. Starting game");
+                Intent twoPlayerOnline = new Intent(activity, TwoPlayerOnline.class);
+                twoPlayerOnline.putExtra(KEY_PLAYER, player);
+                twoPlayerOnline.putExtra(KEY_OPPONENT, opponent);
+                activity.startActivity(twoPlayerOnline);
+            }
+            return null;
+        }
+
+        protected void onPostExecute(Void result) {
+            Log.d("GUI THREAD", "GUI thread ended");
+            displayAlert(false);
+        }
+    }
+
 
     private class populateList extends AsyncTask<Boolean, ArrayAdapter<String>, Void> {
         protected Void doInBackground(Boolean... params) {
             Log.d("BACKEND THREAD", "Backend thread started");
-            if (((Boolean) params[0])) {
-                while (servList[0] == null && !dataReceived) {
-                    Log.d("BACKEND THREAD", "Server request not received yet. Retrying again in .1s");
-                    try {
-                        Thread.sleep(300);
-                        if (servList[0] != null) {
-                            int i = 0;
-                            String[] serverListString = new String[serverNumber];
-                            dataReceived = true;
-                            while (servList[i] != null) {
-                                serverListString[i] = servList[i];
-                                Log.d("BACKEND THREAD", "Found server, name: " + serverListString[i]);
-                                i++;
-                            }
-                            publishProgress(new ArrayAdapter<>(activity, android.R.layout.simple_list_item_1, serverListString));
+            while (servList[0] == null && !dataReceived) {
+                Log.d("BACKEND THREAD", "Server request not received yet. Retrying again in .1s");
+                try {
+                    Thread.sleep(300);
+                    if (servList[0] != null) {
+                        int i = 0;
+                        String[] serverListString = new String[serverNumber];
+                        dataReceived = true;
+                        while (servList[i] != null) {
+                            serverListString[i] = servList[i];
+                            Log.d("BACKEND THREAD", "Found server, name: " + serverListString[i]);
+                            i++;
                         }
-                    } catch (InterruptedException e) {
-                        e.printStackTrace();
+                        publishProgress(new ArrayAdapter<>(activity, android.R.layout.simple_list_item_1, serverListString));
                     }
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
                 }
-            }
-            else {
-
             }
             Log.d("BACKEND THREAD", "Backend thread ended");
             return null;
@@ -105,6 +133,7 @@ public class OnlineGames extends AppCompatActivity {
 
     public void setSocketUp(){
         mSocket.on("serverList", parseServerList);
+        mSocket.on("gameStart", parseOpponentData);
         mSocket.connect();
     }
 
@@ -135,11 +164,19 @@ public class OnlineGames extends AppCompatActivity {
 
     private Emitter.Listener parseOpponentData = new Emitter.Listener() {
         @Override
-        public void call(Object... args) {
+        public void call(final Object... args) {
             activity.runOnUiThread(new Runnable() {
                 @Override
                 public void run() {
-
+                    String game = ((String) args[0]);
+                    int i = 0;
+                    Log.d("LISTENER TRIGGERED", "Received message that signals game start, code : " + ((String) args[0]));
+                    String opponentName = "";
+                    while (game.charAt(i++) != ':');
+                    while (i != game.length())
+                        opponentName += game.charAt(i++);
+                    opponent = new Player(opponentName);
+                    Log.d("LISTENER TRIGGERED", "Found second player: " + opponentName);
                 }
             });
         }
@@ -148,19 +185,21 @@ public class OnlineGames extends AppCompatActivity {
     public void playGame(View view) {
         String message = String.format("g%s:%s-", player.getPlayerName(), opponent.getPlayerName());
         mSocket.emit(REQUEST, message);
+        new startGame().execute();
     }
 
-    public void displayAlert(){
+    public void displayAlert(boolean display){
         AlertDialog alertDialog = new AlertDialog.Builder(this).create();
         alertDialog.setMessage("Waiting for "+ opponent.getPlayerName() + " to connect...");
-        alertDialog.show();
+        if (display) alertDialog.show();
+        else alertDialog.dismiss();
     }
 
 
     public void refreshServerList(View view){
         dataReceived = false;
         mSocket.emit(REQUEST, "getServers");
-        new populateList().execute(true);
+        new populateList().execute();
     }
 
     public void createServer(View view){

@@ -1,15 +1,18 @@
   var app = require('express')()
+  var randomstring = require("randomstring")
   var http = require('http').Server(app)
-  var io = require('socket.io')(http);
+  var io = require('socket.io')(http)
   var INFO = "INFO", ERROR = "ERROR", REC = "RECEIVED", BRD = "BROADCAST"
-  var serverList = ['opponent1', 'opponent2']
-  var matches = [];
+  var serverList = []
+  var matches = []
+  var matchID = []
+  var player1, player2
 
   io.on('connection', function(socket){
     Log(INFO, "User connected!")
     socket.on('req', function(msg){
       Log(REC, "Request received, code: " + msg)
-      parseRequest(msg);
+      parseRequest(msg)
     })
     socket.on('disconnect', function(){
       Log(INFO, "User disconnected!")
@@ -30,41 +33,61 @@
       case request.charAt(0) === "c":
         var server_name = request.substring(1,request.length)
         addServer(server_name)
-        Log(BRD, "Received request to create server with name: " + serverList[serverList.length - 1])
+        Log(INFO, "Received request to create server with name: " + serverList[serverList.length - 1])
         break
       case request.charAt(0) === "g":
         parsePlayers(request.substring(1, request.length))
-        Log(BRD, "Game found!")
+        var id = createMatchId()
+        addMatchID(id)
+        io.emit('gameStart', player1 + ":" + player2 + ":" + id)
+        Log(BRD, "Game started. Players: " + player1+":"+player2 + " id:" + id)
     }
   }
 
   function addServer(server){
-    var x = 0;
-    for ( index in serverList ){
+    var x = 0
+    for ( index in serverList )
       if (serverList[index] === server)
-        x = 1;
-    }
-    if (x == 0) serverList[serverList.length] = server;
+        x = 1
+    if (x === 0) serverList.push(server)
   }
 
   function removeServer(server){
-    for ( index in serverList ){
+    for ( index in serverList )
       if ( serverList[index] === server )
         serverList.splice(index, index)
-    }
+  }
+
+  function createMatchId(){
+    return randomstring.generate({
+      length: 4,
+      charset: 'alphabetic'
+    })
+  }
+
+  function addMatchID(id){
+    var x = 0
+    for ( index in matchID)
+      if (matchID[index] === id)
+        x = 1
+    if ( x === 0 ) matchID.push(id)
   }
 
   function parsePlayers( playerList ) {
+    player1 = "", player2 = ""
+    var index
     for ( x in playerList ){
       if (playerList[x] === ":"){
-        var index = matches.length
-        Log(INFO, index + " games running currently")
-        matches[index][0] = playerList.substring(0, x-1)
-        matches[index][1] = playerList.substring(x+1, playerList.length - 1)
-        Log(BRD, "Matched players " + matches[index][0] + " and " + matches[index][1])
-        break;
+        player1 = playerList.substring(0, x)
+        index = x
+        break
       }
     }
+    while (playerList[index] != "-")
+      player2 += playerList[index++]
+    player2 = player2.substring(1, player2.length )
+    Log(INFO, "Found game between " + player1 + " and " + player2)
+    matches.push([player1, player2])
   }
 
   function parseServerList() {
