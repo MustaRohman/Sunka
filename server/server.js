@@ -20,17 +20,22 @@
   })
 
   function parseRequest(request) {
-    switch (request) {
-      case "getServers":
+    switch (true) {
+      case request === "getServers":
         var message = parseServerList()
         io.emit('serverList', message)
         Log(BRD, "Sent broadcast to socket req, broadcast message: " + message)
+        break
+      case request.charAt(0) === "c":
+        var server_name = request.substring(1,request.length)
+        serverList[serverList.length] = server_name
+        Log(BRD, "Received request to create server with name: " + serverList[serverList.length - 1])
         break
     }
   }
 
   function parseServerList() {
-    var message = ""
+    var message = "" + serverList.length
     for ( x in serverList ) {
       message += serverList[x] + ":"
     }
