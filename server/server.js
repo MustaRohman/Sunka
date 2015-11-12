@@ -28,9 +28,26 @@
         break
       case request.charAt(0) === "c":
         var server_name = request.substring(1,request.length)
-        serverList[serverList.length] = server_name
+        addServer(server_name)
         Log(BRD, "Received request to create server with name: " + serverList[serverList.length - 1])
         break
+    }
+  }
+
+  function addServer(server){
+    var x = 0;
+    for ( index in serverList ){
+      if (serverList[index] === server)
+        x = 1;
+    }
+    if (x == 0) serverList[serverList.length] = server;
+  }
+
+  function removeServer(String server){
+    for ( index in serverList ){
+      if ( serverList[index] === server ) {
+        serverList.splice(index, index)
+      }
     }
   }
 
