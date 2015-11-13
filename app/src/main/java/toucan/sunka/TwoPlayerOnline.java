@@ -39,17 +39,24 @@ public class TwoPlayerOnline extends AppCompatActivity {
 
     private class makeOpponentMove extends AsyncTask<Void, Integer, Void> {
         protected Void doInBackground(Void... params) {
+            try {
+                Log.d("BACKEND THREAD", "WAITING 2.1s FOR GUI CHANGES");
+                Thread.sleep(2100);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
             while (opponentMove == 0) {
                 try {
-                    Thread.sleep(100);
-                    if (opponentMove != 0) {
-                        Log.d("BACKEND", "Published progress: " + opponentMove);
-                        opponentMove = 0;
-                        return null;
-                    }
+                    Log.d("BACKEND THREAD", "Waiting .7s for answer");
+                    Thread.sleep(700);
                 } catch (InterruptedException e) {
                     e.printStackTrace();
                 }
+            }
+            if (opponentMove != 0) {
+                publishProgress(opponentMove);
+                Log.d("BACKEND", "Published progress: " + opponentMove);
+                opponentMove = 0;
             }
             return null;
         }
@@ -116,6 +123,7 @@ public class TwoPlayerOnline extends AppCompatActivity {
         crater.makeMoveFromHere();
         mSocket.emit("game", gameID + ":" + crater.getOwner().getPlayerName() +
                 ":" + crater.getPositionOnBoard());
+        new makeOpponentMove().execute();
     }
 
 
