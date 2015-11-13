@@ -7,10 +7,10 @@ public class SimpleAI extends Player {
 
     private int storeIndex;
     private Crater[] buttonChoices; //includes the store at position 8.
+    private int[][] sevenStates;
     private TreeMap<int[], Crater> moveGeneratedFrom;
     private ArrayList<int[]> movesWithFreeTurn;
     private ArrayList<int[]> movesWhichPreventSteals;
-
 
     public SimpleAI(Player p) {
         super(p.getPlayerName());
@@ -25,6 +25,17 @@ public class SimpleAI extends Player {
         movesWhichPreventSteals = new ArrayList<>();
     }
 
+    public void generateSevenStates() {
+        clearCollections();
+        
+    }
+
+    public void placeStateAt(int[] state, int position) {
+        for(int i = 0; i < state.length; ++i) {
+            sevenStates[position][i] = state[i];
+        }
+    }
+
     public int[] makeMoveFrom(int[] board, int choice) {
         int choiceStones = board[choice];
         int stones = board[choice];
@@ -36,9 +47,7 @@ public class SimpleAI extends Player {
         int oppositeIndex = -1;
 
         //Index of crater to skip:
-        int otherPlayerStoreIndex;
-        if (storeIndex == 0) otherPlayerStoreIndex = 8;
-        else otherPlayerStoreIndex = 0;
+        int otherPlayerStoreIndex = getOtherPlayerStoreIndex();
 
         //Move:
         while(stones != 0) {
@@ -70,12 +79,6 @@ public class SimpleAI extends Player {
         return board;
     }
 
-    public void setButtonChoices() {buttonChoices = getStore().getTruePlayerCraters(SimpleAI.this);}
-
-    public void setStoreIndex(int index) {storeIndex = index;}
-
-    public Crater[] getButtonChoices() {return buttonChoices;}
-
     public boolean performsSteal(int[] board, int craterIndex, int stones) {
         int lastIndex = (craterIndex + stones) + 1;
         if (board[lastIndex] == 0 && board[16 - lastIndex] > 0) return true;
@@ -96,7 +99,38 @@ public class SimpleAI extends Player {
         return false;
     }
 
+    public boolean preventsSteal(int[] board, int craterIndex) {
+        board = makeMoveFrom(board, craterIndex);
+
+        int startIndex;
+        int lengthPosition;
+        if (getOtherPlayerStoreIndex() == 0) {
+            startIndex = 1;
+            lengthPosition = 8;
+        } else {
+            startIndex = 9;
+            lengthPosition = 16;
+        }
+
+        for(int i = startIndex; i < lengthPosition; ++i) {
+            if (performsSteal(board, i, board[i])) return false;
+        }
+        return true;
+    }
+
+    public int getOtherPlayerStoreIndex() {
+        if (storeIndex == 0) return 8;
+        else return 0;
+    }
+
+    public Crater[] getButtonChoices() {return buttonChoices;}
+
+    public void setButtonChoices() {buttonChoices = getStore().getTruePlayerCraters(SimpleAI.this);}
+
+    public void setStoreIndex(int index) {storeIndex = index;}
+
     public void clearCollections() {
+        sevenStates = new int[7][16];
         moveGeneratedFrom.clear();
         movesWithFreeTurn.clear();
         movesWhichPreventSteals.clear();
