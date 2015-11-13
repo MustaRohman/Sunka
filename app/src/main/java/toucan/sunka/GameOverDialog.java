@@ -32,6 +32,7 @@ public class GameOverDialog extends DialogFragment {
     private TwoPlayerLocalActivity thisActivity;
     private LayoutInflater inflater;
     private Bundle playerBundle;
+    private TextView winTitle;
     private View layoutView;
     public static final String PLAYER_ONE_KEY = "PLAYER_ONE_KEY";
     public static final String PLAYER_TWO_KEY = "PLAYER_TWO_KEY";
@@ -86,19 +87,24 @@ public class GameOverDialog extends DialogFragment {
         if (p1Stones > p2Stones){
             victorPlayer = MainScreen.collection.findPlayer(playerBundle.getString(PLAYER_ONE_KEY));
             loserPlayer = MainScreen.collection.findPlayer(playerBundle.getString(PLAYER_TWO_KEY));
-        } else {
+        } else if(p2Stones>p1Stones) {
             victorPlayer = MainScreen.collection.findPlayer(playerBundle.getString(PLAYER_TWO_KEY));
             loserPlayer = MainScreen.collection.findPlayer(playerBundle.getString(PLAYER_ONE_KEY));
         }
+        winTitle = (TextView) layoutView.findViewById(R.id.win_title);
 
         //Updates the victor's wins and resorts the collection
+        if(victorPlayer != null){
         victorPlayer.setGamesWon(victorPlayer.getNumberOfGamesWon() + 1);
         loserPlayer.setGamesLost(loserPlayer.getNumberOfGamesLost() + 1);
         MainScreen.collection.sortByGamesWon();
 
         //Sets win message
-        TextView winTitle = (TextView) layoutView.findViewById(R.id.win_title);
-        winTitle.setText(victorPlayer.getPlayerName() + " Has Won!");
+
+        winTitle.setText(victorPlayer.getPlayerName() + " Has Won!");}
+        else{
+            winTitle.setText("The game ends in a tie");
+        }
 
         //Sets player names
         TextView p1NameText = (TextView) layoutView.findViewById(R.id.player_one_name_leaderboard);
@@ -144,9 +150,8 @@ public class GameOverDialog extends DialogFragment {
             player3rd = null;
         }
 
-        Log.d("GameOverDialog", String.valueOf(victorPlayer.getNumberOfGamesWon()));
 
-        if (victorPlayer.getPlayerRank() > 3){
+        if (victorPlayer!=null && victorPlayer.getPlayerRank() > 3){
 
             addBlankRow(table, inflater);
 

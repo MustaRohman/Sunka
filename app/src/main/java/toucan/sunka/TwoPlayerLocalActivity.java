@@ -129,6 +129,16 @@ public class TwoPlayerLocalActivity extends AppCompatActivity {
             craterList[i].setOppositeCrater(craterList[16 - i]);
             craterList[i].setOwner(secondPlayer);
         }
+        //testing
+        for(int i = 1;i<7;i++){
+            craterList[i].setStones(0);
+        }
+        for(int k = 9;k<16;k++){
+            craterList[k].setStones(0);
+        }
+        craterList[0].setStones(24);
+        craterList[8].setStones(23);
+        craterList[7].setStones(1);
     }
     public void createGameOverDialog(){
         DialogFragment fragment = new GameOverDialog();
@@ -143,7 +153,7 @@ public class TwoPlayerLocalActivity extends AppCompatActivity {
         //Initialises victorPlayer with the victor of the current game
         if (p1Stones > p2Stones){
             firstPlayer.setGamesWon(firstPlayer.getNumberOfGamesWon() + 1);
-        } else {
+        } else if(p2Stones > p1Stones){
             Log.d("createGameOverDialog", String.valueOf(secondPlayer.getNumberOfGamesWon()));
             secondPlayer.setGamesWon(secondPlayer.getNumberOfGamesWon() + 1);
             Log.d("createGameOverDialog", String.valueOf(secondPlayer.getNumberOfGamesWon()));
