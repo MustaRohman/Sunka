@@ -26,7 +26,7 @@ public class TwoPlayerOnline extends AppCompatActivity {
     private Player secondPlayer;
     private boolean firstMove = true;
     private String gameID;
-    protected int opponentMove = 0;
+    protected int opponentMove = 0, freeMove = 0;
     static public Socket mSocket;
     {
         try {
@@ -102,13 +102,17 @@ public class TwoPlayerOnline extends AppCompatActivity {
                 @Override
                 public void run() {
                     if (firstMove) {
+                        new makeOpponentMove().execute();
                         firstPlayer.setPlayingTurnTo(false);
                         secondPlayer.setPlayingTurnTo(true);
                         firstMove = false;
                     }
-                    if (((String) args[0]).charAt(1) == 'f')
-                        new makeOpponentMove().execute();
-                    opponentMove = Integer.parseInt(((String) args[0]).charAt(0) + "");
+
+                    if (((String) args[0]).charAt(1) == 'f') {
+                        freeMove = Integer.parseInt(((String) args[0]).charAt(0) + "");
+                        correspondingCrater(freeMove).makeMoveFromHere();
+                    }
+                    else opponentMove = Integer.parseInt(((String) args[0]).charAt(0) + "");
                     Log.d("LISTENER", "Received opponent move: " + opponentMove);
                 }
             });
