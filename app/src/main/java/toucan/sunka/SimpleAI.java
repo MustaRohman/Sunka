@@ -1,11 +1,20 @@
 package toucan.sunka;
 
-public class SimpleAI {
+public class SimpleAI extends Player {
 
     private int storeIndex;
 
-    public SimpleAI() {
+    public SimpleAI(Player p) {
+        super(p.getPlayerName());
+        setGamesWon(p.getNumberOfGamesWon());
+        setGamesLost(p.getNumberOfGamesLost());
+        setPlayerRank(p.getPlayerRank());
+        setPlayingTurnTo(p.isPlayingTurn());
+        setStore(p.getStore());
+    }
 
+    public void setStoreIndex(int index) {
+        storeIndex = index;
     }
 
     public boolean getsFreeMoveWith(int craterIndex, int stones, int storeIndex) {
