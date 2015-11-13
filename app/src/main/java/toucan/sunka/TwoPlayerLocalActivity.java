@@ -221,12 +221,4 @@ public class TwoPlayerLocalActivity extends AppCompatActivity {
             return view.getTop() + getTopInParent((View) view.getParent());
     }
 
-
-
-
-
-
-
-
-
 }
