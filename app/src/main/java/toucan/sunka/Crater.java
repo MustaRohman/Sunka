@@ -331,6 +331,15 @@ public class Crater extends Button {
         return craterList;
     }
 
+    public Crater[] getTruePlayerCraters(Player player) {
+        Crater[] craters = new Crater[8];
+        craters[0] = player.getStore().getOppositeCrater().getNextCrater();
+        for(int i = 1; i < craters.length; ++i) {
+            craters[i] = craters[i - 1].getNextCrater();
+        }
+        return craters;
+    }
+
     /**
      * Checks if the move that is about to happen will award an extra move
      *
@@ -441,6 +450,7 @@ public class Crater extends Button {
         }
         return null;
     }
+
     public Player determineLoser(){
         Player p1 = getOwner();
         Player p2 = getOppositeCrater().getOwner();
