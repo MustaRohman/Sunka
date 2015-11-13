@@ -160,6 +160,11 @@
                 android:text="Score"
                 android:textSize="@dimen/text_size"
                 android:padding="7dip"/>
+            <TextView
+                android:background="@drawable/border"
+                android:text="Losses"
+                android:textSize="20sp"
+                android:padding="7dip"/>
 
         </TableRow>
 

@@ -192,12 +192,6 @@ public class Crater extends Button {
             placeAlong(stones);
             if (checkGameOver()) {
                 // Game over
-                Player winner = determineWinner();
-                Player loser = determineLoser();
-                try{
-                winner.setGamesWon(winner.getNumberOfGamesWon() + 1);
-                loser.setGamesLost(loser.getNumberOfGamesLost()+1);}
-                catch (NullPointerException n){}
                 activity.createGameOverDialog();
             }
         }
