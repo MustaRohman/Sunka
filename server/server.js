@@ -17,9 +17,9 @@
     socket.on('game', function(msg){
       Log("GAME", "Request received, code: " + msg)
       var parserWrap = parseGameMove(msg)
-      io.emit(otherPlayer(parserWrap[1], parserWrap[0]), parserWrap[2])
-      Log("GAME", "Sent request to " + otherPlayer(parserWrap[1], parserWrap[0])
-              + " with message" + parserWrap[2])
+      io.emit(otherPlayer(parserWrap[1], parserWrap[0]), parserWrap[2] + parserWrap[3])
+      Log("GAME", "SENT MAKE MOVE TO " + otherPlayer(parserWrap[1], parserWrap[0])
+              + " WITH MESSAGE: " + parserWrap[2] + parserWrap[3])
     })
     socket.on('disconnect', function(){
       Log(INFO, "User disconnected!")
@@ -90,8 +90,9 @@
     while ( move[x] != ":")
       player += move[x++]
     var pos = move[++x]
-    return [gameID, player, pos]
-    Log("GAME", "Received move: " + gameID + " " + player + " " + pos)
+    var type = move[++x]
+    return [gameID, player, pos, type]
+    Log("GAME", "Received move: " + gameID + " " + player + " " + pos + " " + type)
   }
 
   function otherPlayer (player, id){

@@ -38,6 +38,7 @@ public class TwoPlayerOnline extends AppCompatActivity {
     }
 
     private class makeOpponentMove extends AsyncTask<Void, Integer, Void> {
+
         protected Void doInBackground(Void... params) {
             try {
                 Log.d("BACKEND THREAD", "WAITING 2.1s FOR GUI CHANGES");
@@ -81,6 +82,7 @@ public class TwoPlayerOnline extends AppCompatActivity {
         TextView secondPlayerLabel = (TextView) findViewById(R.id.online_player_two_view);
         secondPlayerLabel.setText(secondPlayer.getPlayerName().toString());
         setSocketUp();
+        if (firstMove) new makeOpponentMove().execute();
     }
 
     public Crater correspondingCrater(int id){
@@ -100,7 +102,13 @@ public class TwoPlayerOnline extends AppCompatActivity {
             activity.runOnUiThread(new Runnable() {
                 @Override
                 public void run() {
-                    opponentMove = Integer.parseInt(((String) args[0]));
+                    if (firstMove) {
+                        firstPlayer.setPlayingTurnTo(false);
+                        secondPlayer.setPlayingTurnTo(true);
+                        firstMove = false;
+                    }
+                    if (((String) args[0]).charAt(1) == 'f');
+                    opponentMove = Integer.parseInt(((String) args[0]).charAt(0) + "");
                     Log.d("LISTENER", "Received opponent move: " + opponentMove);
                 }
             });
@@ -120,11 +128,14 @@ public class TwoPlayerOnline extends AppCompatActivity {
             }
             firstMove = false;
         }
+        String type = "n";
+        if (crater.getsFreeMove()) type = "f";
         crater.makeMoveFromHere();
         mSocket.emit("game", gameID + ":" + crater.getOwner().getPlayerName() +
-                ":" + crater.getPositionOnBoard());
+                ":" + crater.getPositionOnBoard() + type);
         new makeOpponentMove().execute();
     }
+
 
 
     public void initializeStores() {

@@ -26,11 +26,11 @@ import java.util.Objects;
 
 public class OnlineGames extends AppCompatActivity {
 
-    final public static String SERVER_ADDRESS = "http://192.168.0.10:3000";
+    final public static String SERVER_ADDRESS = "http://10.40.196.53:3000";
     final public static String KEY_PLAYER = "KEY_PLAYER";
     final public static String KEY_OPPONENT = "KEY_OPPONENT";
     final public static String KEY_ID = "KEY_ID";
-    final private Player player = new Player("test");
+    final private Player player = new Player("works");
     protected String REQUEST =  "req";
     protected int serverNumber = 0;
     final Activity activity = this;
@@ -80,7 +80,7 @@ public class OnlineGames extends AppCompatActivity {
             while( opponent == null  || !dataArrived ){
                 Log.d("BACKEND THREAD", "Opponent not loaded yet. Retrying in .1s...");
                 try {
-                    Thread.sleep(100);
+                    Thread.sleep(1000);
                     Log.d("INFO","Opponent not ready. Retrying in .1s...");
                     if (gameID != null) {
                         twoPlayerOnline.putExtra(KEY_ID, gameID);
@@ -221,7 +221,7 @@ public class OnlineGames extends AppCompatActivity {
 
     public void displayAlert(boolean display){
         AlertDialog alertDialog = new AlertDialog.Builder(this).create();
-        alertDialog.setMessage("Waiting for "+ opponent.getPlayerName() + " to connect...");
+        alertDialog.setMessage("Waiting for an opponent to connect...");
         if (display) alertDialog.show();
         else alertDialog.dismiss();
     }
@@ -236,6 +236,7 @@ public class OnlineGames extends AppCompatActivity {
     public void createServer(View view){
         String message = String.format("c%s", player.getPlayerName());
         mSocket.emit(REQUEST, message);
+        new startGame().execute();
     }
 
     public void updateOpponent( String opponentName, TextView view ){
