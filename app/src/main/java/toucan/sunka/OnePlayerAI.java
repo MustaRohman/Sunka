@@ -131,6 +131,7 @@ public class OnePlayerAI extends AppCompatActivity {
             craterList[i].setOppositeCrater(craterList[16 - i]);
             craterList[i].setOwner(aiPlayer);
         }
+        aiPlayer.setButtonChoices();
 //        for (Crater crater : craterList )
 //            crater.setStones(0);
 //        craterList[7].setStones(1);
