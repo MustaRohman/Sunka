@@ -462,4 +462,17 @@ public class Crater extends Button {
         }
         return null;
     }
+
+    public int[] getArrayBoard(Crater startingFrom) {
+        int[] array = new int[16];
+        array[0] = startingFrom.getStones();
+        Crater currentCrater = startingFrom.getNextCrater();
+        int index = 1;
+        while(currentCrater != startingFrom) {
+            array[index++] = currentCrater.getStones();
+            currentCrater = currentCrater.getNextCrater();
+        }
+        return array;
+    }
+
 }
