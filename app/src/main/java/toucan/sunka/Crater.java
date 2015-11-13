@@ -3,6 +3,7 @@ package toucan.sunka;
 import android.app.Activity;
 import android.content.Context;
 import android.os.AsyncTask;
+import android.support.v7.app.AppCompatActivity;
 import android.util.AttributeSet;
 import android.util.Log;
 import android.widget.Button;
@@ -22,12 +23,16 @@ public class Crater extends Button {
     protected boolean sideOne, sideTwo;
     protected int stones;
     private boolean store;
-    private TwoPlayerLocal activity;
+    private AppCompatActivity activity;
 
     public Crater(Context context, AttributeSet attrs){
         super(context, attrs);
         initialise(false);
-        activity = (TwoPlayerLocal) getContext();
+        try {
+            activity = (TwoPlayerLocal) getContext();
+        } catch (ClassCastException e) {
+            activity = (TwoPlayerOnline) getContext();
+        }
     }
 
     public Crater(boolean store) {
@@ -69,12 +74,10 @@ public class Crater extends Button {
             switch (params.length) {
                 case 4:
                     if ((boolean) params[2]) switchPlayers();
-                    TwoPlayerOnline.onlineData.endMove();
                     publishProgress(params[0], params[1], params[3]); //steal
                     break;
                 case 3:
                     switchPlayers();
-                    TwoPlayerOnline.onlineData.endMove();
                     publishProgress(params[0],params[1]); //last move
                     break;
                 case 2:
@@ -189,7 +192,6 @@ public class Crater extends Button {
             else if (!checkSide(this.getOppositeCrater().getOwner()) || !lastCraterAfterMove().owner.isPlayingTurn())
                 disableActivesEnableInactiveCrater();
             int stones = getStones();
-            TwoPlayerOnline.onlineData.startMove();
             updateCrater(this, 0);
             placeAlong(stones);
             if (checkGameOver()) {
@@ -200,7 +202,7 @@ public class Crater extends Button {
                 winner.setGamesWon(winner.getNumberOfGamesWon() + 1);
                 loser.setGamesLost(loser.getNumberOfGamesLost()+1);}
                 catch (NullPointerException n){}
-                activity.createGameOverDialog();
+//                getContext().createGameOverDialog();
             }
         }
     }

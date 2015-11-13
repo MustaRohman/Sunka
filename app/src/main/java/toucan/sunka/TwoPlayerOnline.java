@@ -116,8 +116,6 @@ public class TwoPlayerOnline extends AppCompatActivity {
             firstMove = false;
         }
         crater.makeMoveFromHere();
-        mSocket.emit("game", gameID + ":" + crater.getOwner().getPlayerName() +
-                ":" + crater.getPositionOnBoard());
     }
 
 
