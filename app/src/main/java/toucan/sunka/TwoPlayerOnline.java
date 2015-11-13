@@ -1,6 +1,7 @@
 package toucan.sunka;
 
 import android.app.Activity;
+import android.os.AsyncTask;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
@@ -17,6 +18,7 @@ import com.github.nkzawa.socketio.client.Socket;
 import java.net.URISyntaxException;
 
 public class TwoPlayerOnline extends AppCompatActivity {
+    public static OnlineData onlineData;
     private Crater playerOneStore;
     private Crater playerTwoStore;
     Crater[] craterList = new Crater[16];
@@ -25,8 +27,8 @@ public class TwoPlayerOnline extends AppCompatActivity {
     private Player secondPlayer;
     private boolean firstMove = true;
     private String gameID;
-    protected int opponentMove;
-    private Socket mSocket;
+    protected int opponentMove = 0;
+    static public Socket mSocket;
     {
         try {
             mSocket = IO.socket(OnlineGames.SERVER_ADDRESS);
@@ -36,6 +38,27 @@ public class TwoPlayerOnline extends AppCompatActivity {
         }
     }
 
+    private class makeOpponentMove extends AsyncTask<Void, Integer, Void> {
+        protected Void doInBackground(Void... params) {
+            while (opponentMove == 0) {
+                try {
+                    Thread.sleep(100);
+                    if (opponentMove != 0) {
+                        Log.d("BACKEND", "Published progress: " + opponentMove);
+                        opponentMove = 0;
+                        return null;
+                    }
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+            }
+            return null;
+        }
+
+        protected void onProgressUpdate(Integer... params){
+            correspondingCrater(params[0]).makeMoveFromHere();
+        }
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -52,6 +75,14 @@ public class TwoPlayerOnline extends AppCompatActivity {
         TextView secondPlayerLabel = (TextView) findViewById(R.id.online_player_two_view);
         secondPlayerLabel.setText(secondPlayer.getPlayerName().toString());
         setSocketUp();
+        new makeOpponentMove().execute();
+    }
+
+    public Crater correspondingCrater(int id){
+        Crater currentCrater = firstPlayer.getStore();
+        while (id-- != 0)
+            currentCrater = currentCrater.getNextCrater();
+        return currentCrater;
     }
 
     public void setSocketUp(){
@@ -64,7 +95,7 @@ public class TwoPlayerOnline extends AppCompatActivity {
             activity.runOnUiThread(new Runnable() {
                 @Override
                 public void run() {
-                    opponentMove = (int) args[0];
+                    opponentMove = Integer.parseInt(((String) args[0]));
                     Log.d("LISTENER", "Received opponent move: " + opponentMove);
                 }
             });

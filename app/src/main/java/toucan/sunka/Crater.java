@@ -49,7 +49,6 @@ public class Crater extends Button {
      * returns
      */
     private class setCraterStones extends AsyncTask<Object, Object, Void> {
-
         /**
          * Due to android limitations :( no method from the crater class can be called
          * in the doInBackground since Crater extends Button. The only backend task done done here
@@ -67,10 +66,12 @@ public class Crater extends Button {
             switch (params.length) {
                 case 4:
                     switchPlayers();
+                    TwoPlayerOnline.onlineData.endMove();
                     publishProgress(params[0], params[1], params[3]); //steal
                     break;
                 case 3:
                     switchPlayers();
+                    TwoPlayerOnline.onlineData.endMove();
                     publishProgress(params[0],params[1]); //last move
                     break;
                 case 2:
@@ -118,6 +119,7 @@ public class Crater extends Button {
         if (belongsToActivePlayer(this) && this.stones != 0 ) {
             disableActivesEnableInactiveCrater();
             int stones = getStones();
+            TwoPlayerOnline.onlineData.startMove();
             updateCrater(this, 0);
             placeAlong(stones);
             if (checkGameOver(nextCrater)) {
@@ -238,6 +240,7 @@ public class Crater extends Button {
         crater.stones = stones;
         new setCraterStones().execute(crater,stones);
     }
+
 
     public Crater[] getActivePlayerCraters(){
         Crater[] craterList = new Crater[8];
