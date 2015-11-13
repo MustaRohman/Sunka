@@ -36,16 +36,13 @@ public class AIDialogFragment extends DialogFragment {
                 String player1Name = player1Txt.getText().toString();
                 String player2Name = "AI Player";
 
-                Player player1 = MainScreen.collection.findPlayer(player1Name);
-                Player player2 = MainScreen.collection.findPlayer("AI Player");
-
-                initiatePlayer(player1, player1Name);
-                initiatePlayer(player2, player2Name);
+                Player player1 = initiatePlayer(player1Name);
+                Player player2 = initiatePlayer(player2Name);
 
                 Context context = getContext();
                 Intent twoPlayerGame = new Intent(context, TwoPlayerLocalActivity.class);
-                twoPlayerGame.putExtra(PLAYER_ONE_KEY, new Player(player1Name));
-                twoPlayerGame.putExtra(PLAYER_TWO_KEY, new Player(player2Name));
+                twoPlayerGame.putExtra(PLAYER_ONE_KEY, player1);
+                twoPlayerGame.putExtra(PLAYER_TWO_KEY, player2);
                 context.startActivity(twoPlayerGame);
             }
         });
@@ -54,11 +51,13 @@ public class AIDialogFragment extends DialogFragment {
         return builder.create();
     }
 
-    public void initiatePlayer(Player player, String name){
-        if (player == null) {
-            player = new Player(name);
-            MainScreen.collection.addPlayer(player);
+    public Player initiatePlayer(String name){
+        Player p;
+        if ((p = MainScreen.collection.findPlayer(name)) == null) {
+            p = new Player(name);
+            MainScreen.collection.addPlayer(p);
         }
+        return p;
     }
 
 }
