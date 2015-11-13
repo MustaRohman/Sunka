@@ -4,6 +4,7 @@ import android.support.v4.app.DialogFragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -28,9 +29,9 @@ public class MainScreen extends FragmentActivity{
                 createMultiplayerDialog();
             }
         });
-        collection = new PlayerCollection();
-
-
+        if (collection == null) collection = new PlayerCollection();
+        collection.loadPlayerInfoFromFile(getApplicationContext().getFilesDir());
+        Log.d("Collection state", collection.toString());
     }
 
     //Method only for testing
@@ -68,7 +69,13 @@ public class MainScreen extends FragmentActivity{
 
         DialogFragment fragment = new MultiplayerDialogFragment();
         FragmentManager fm = getSupportFragmentManager();
-        fragment.show(fm,"multiplayerDialog");
+        fragment.show(fm, "multiplayerDialog");
 
+    }
+
+    public void onStop() {
+        super.onStop();
+        collection.savePlayerInfoToFile(getApplicationContext().getFilesDir());
+        Log.d("Reached", "onStop on MainScreen");
     }
 }

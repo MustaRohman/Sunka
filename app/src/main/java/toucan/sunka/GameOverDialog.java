@@ -26,6 +26,7 @@ public class GameOverDialog extends DialogFragment {
 
 
     Player victorPlayer;
+    Player loserPlayer;
     private TableLayout table;
     private TwoPlayerLocalActivity thisActivity;
     private LayoutInflater inflater;
@@ -63,6 +64,8 @@ public class GameOverDialog extends DialogFragment {
         builder.setNegativeButton(R.string.main_menu, new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
+                MainScreen.collection.savePlayerInfoToFile(getContext().getFilesDir());
+                Log.d("Reached", "main_menu button on GameOverDialog");
                 Context context = getContext();
                 Intent backToMainMenu = new Intent(context, MainScreen.class);
                 context.startActivity(backToMainMenu);
@@ -83,12 +86,15 @@ public class GameOverDialog extends DialogFragment {
         //Initialises victorPlayer with the victor of the current game
         if (p1Stones > p2Stones){
             victorPlayer = MainScreen.collection.findPlayer(playerBundle.getString(PLAYER_ONE_KEY));
+            loserPlayer = MainScreen.collection.findPlayer(playerBundle.getString(PLAYER_TWO_KEY));
         } else {
             victorPlayer = MainScreen.collection.findPlayer(playerBundle.getString(PLAYER_TWO_KEY));
+            loserPlayer = MainScreen.collection.findPlayer(playerBundle.getString(PLAYER_ONE_KEY));
         }
 
-        //Updates the victor's wins and resorts the collection
+        //Updates the victor's/loser's wins/losses and resorts the collection
         victorPlayer.setGamesWon(victorPlayer.getNumberOfGamesWon() + 1);
+        loserPlayer.setGamesLost(loserPlayer.getNumberOfGamesLost() + 1);
         MainScreen.collection.sortByGamesWon();
 
         //Sets win message
@@ -191,6 +197,4 @@ public class GameOverDialog extends DialogFragment {
 
 
     }
-
-
 }
