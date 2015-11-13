@@ -134,10 +134,10 @@ public class TwoPlayerOnline extends AppCompatActivity {
         }
         String type = "n";
         if (crater.getsFreeMove()) type = "f";
+        else new makeOpponentMove().execute();
         crater.makeMoveFromHere();
         mSocket.emit("game", gameID + ":" + crater.getOwner().getPlayerName() +
                 ":" + crater.getPositionOnBoard() + type);
-        new makeOpponentMove().execute();
     }
 
 
