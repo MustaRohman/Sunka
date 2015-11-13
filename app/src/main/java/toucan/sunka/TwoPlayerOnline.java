@@ -133,7 +133,7 @@ public class TwoPlayerOnline extends AppCompatActivity {
             firstMove = false;
         }
         String type = "n";
-        if (crater.getsFreeMove()) type = "f";
+        if (crater.getsFreeMove() || secondPlayer.isIdle()) type = "f";
         crater.makeMoveFromHere();
         if (type != "f")
             new makeOpponentMove().execute();
