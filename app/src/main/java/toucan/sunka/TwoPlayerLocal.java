@@ -1,7 +1,11 @@
 package toucan.sunka;
 
+import android.graphics.Color;
+import android.support.v4.app.DialogFragment;
+import android.support.v4.app.FragmentManager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -13,8 +17,21 @@ public class TwoPlayerLocal extends AppCompatActivity {
     private Crater playerOneStore;
     private Crater playerTwoStore;
     Crater[] craterList = new Crater[16];
+
+    public Player getFirstPlayer() {
+        return firstPlayer;
+    }
+
+    public Player getSecondPlayer() {
+        return secondPlayer;
+    }
+
     private Player firstPlayer;
     private Player secondPlayer;
+
+    private TextView firstPlayerLabel;
+    private TextView secondPlayerLabel;
+    
     private boolean firstMove = true;
 
     @Override
@@ -27,9 +44,9 @@ public class TwoPlayerLocal extends AppCompatActivity {
 
         initializeCraters();
 
-        TextView firstPlayerLabel = (TextView) findViewById(R.id.player_one_view);
+        firstPlayerLabel = (TextView) findViewById(R.id.player_one_view);
         firstPlayerLabel.setText(firstPlayer.getPlayerName());
-        TextView secondPlayerLabel = (TextView) findViewById(R.id.player_two_view);
+        secondPlayerLabel = (TextView) findViewById(R.id.player_two_view);
         secondPlayerLabel.setText(secondPlayer.getPlayerName());
     }
 
@@ -112,5 +129,70 @@ public class TwoPlayerLocal extends AppCompatActivity {
             craterList[i].setOppositeCrater(craterList[16 - i]);
             craterList[i].setOwner(secondPlayer);
         }
+//        for (Crater crater : craterList )
+//            crater.setStones(0);
+//        craterList[7].setStones(1);
+//        craterList[9].setStones(1);
+//        craterList[15].setStones(4);
+    }
+    public void createGameOverDialog(){
+        DialogFragment fragment = new GameOverDialog();
+        FragmentManager fm = getSupportFragmentManager();
+
+        Bundle playerInfo = new Bundle();
+
+        int p1Stones = firstPlayer.getStore().getStones();
+        int p2Stones = secondPlayer.getStore().getStones();
+
+
+        //Initialises victorPlayer with the victor of the current game
+        if (p1Stones > p2Stones){
+            firstPlayer.setGamesWon(firstPlayer.getNumberOfGamesWon() + 1);
+        } else {
+            Log.d("createGameOverDialog", String.valueOf(secondPlayer.getNumberOfGamesWon()));
+            secondPlayer.setGamesWon(secondPlayer.getNumberOfGamesWon() + 1);
+            Log.d("createGameOverDialog", String.valueOf(secondPlayer.getNumberOfGamesWon()));
+        }
+
+        MainScreen.collection.sortByGamesWon();
+        Log.d("createGameOverDialog", String.valueOf(secondPlayer.getPlayerRank()));
+
+
+        playerInfo.putString(MultiplayerDialogFragment.PLAYER_ONE_KEY, firstPlayer.getPlayerName());
+        playerInfo.putString(MultiplayerDialogFragment.PLAYER_TWO_KEY, secondPlayer.getPlayerName());
+        playerInfo.putString(GameOverDialog.PLAYER_ONE_STONES, String.valueOf(firstPlayer.getStore().getStones()));
+        playerInfo.putString(GameOverDialog.PLAYER_TWO_STONES, String.valueOf(secondPlayer.getStore().getStones()));
+        playerInfo.putString(GameOverDialog.PLAYER_ONE_WINS, String.valueOf(firstPlayer.getNumberOfGamesWon()));
+        playerInfo.putString(GameOverDialog.PLAYER_TWO_WINS, String.valueOf(secondPlayer.getNumberOfGamesWon()));
+
+        fragment.setArguments(playerInfo);
+        fragment.show(fm,"gameOverDialog");
+    }
+    public void turnNotification(Player p){
+        if(firstPlayer.equals(p)){
+            firstPlayerLabel.setBackgroundColor(Color.GREEN);
+            secondPlayerLabel.setBackgroundColor(Color.TRANSPARENT);
+        }
+        else{
+            secondPlayerLabel.setBackgroundColor(Color.GREEN);
+            firstPlayerLabel.setBackgroundColor(Color.TRANSPARENT);
+        }
     }
 }
+
+/*
+Good test for one side empty functionality - All other stones are 0
+craterList[7].setStones(1)
+craterList[12].setStones(2)
+craterList[12].makeMoveFromHere
+craterList[14].makeMoveFromHere
+craterList[13].makeMoveFromHere
+craterList[14].makeMoveFromHere
+craterList[15].makeMoveFromHere
+craterList[1].makeMoveFromHere SHOULD BE POSSIBLE
+
+One more that checks steal
+craterList[6].setStones(1)
+craterList[9].setStones(1)
+craterList[10].setStones(1)
+ */

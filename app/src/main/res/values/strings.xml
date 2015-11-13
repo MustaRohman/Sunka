@@ -16,5 +16,9 @@
     <string name="populate_list">Refresh\n List</string>
     <string name="create_server">Create\n Server</string>
     <string name="title_activity_two_player_online">TwoPlayerOnline</string>
+    <string name="leaderboard">Leaderboard</string>
+    <string name="title_activity_game_over">GameOver</string>
+    <string name="play_again">Play Again</string>
+    <string name="main_menu">Main Menu</string>
 
 </resources>
