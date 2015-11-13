@@ -48,8 +48,8 @@ public class TwoPlayerOnline extends AppCompatActivity {
             }
             while (opponentMove == 0) {
                 try {
-                    Log.d("BACKEND THREAD", "Waiting .7s for answer");
-                    Thread.sleep(700);
+                    Log.d("BACKEND THREAD", "Waiting 1.7s for answer");
+                    Thread.sleep(1700);
                 } catch (InterruptedException e) {
                     e.printStackTrace();
                 }
@@ -82,7 +82,6 @@ public class TwoPlayerOnline extends AppCompatActivity {
         TextView secondPlayerLabel = (TextView) findViewById(R.id.online_player_two_view);
         secondPlayerLabel.setText(secondPlayer.getPlayerName().toString());
         setSocketUp();
-        if (firstMove) new makeOpponentMove().execute();
     }
 
     public Crater correspondingCrater(int id){
@@ -107,7 +106,8 @@ public class TwoPlayerOnline extends AppCompatActivity {
                         secondPlayer.setPlayingTurnTo(true);
                         firstMove = false;
                     }
-                    if (((String) args[0]).charAt(1) == 'f');
+                    if (((String) args[0]).charAt(1) == 'f')
+                        new makeOpponentMove().execute();
                     opponentMove = Integer.parseInt(((String) args[0]).charAt(0) + "");
                     Log.d("LISTENER", "Received opponent move: " + opponentMove);
                 }
