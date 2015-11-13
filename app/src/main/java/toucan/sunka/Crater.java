@@ -29,9 +29,9 @@ public class Crater extends Button {
         super(context, attrs);
         initialise(false);
         try {
-            activity = (TwoPlayerLocal) getContext();
+            //activity = (TwoPlayerLocal) getContext();
         } catch (ClassCastException e) {
-            activity = (TwoPlayerOnline) getContext();
+           // activity = (TwoPlayerOnline) getContext();
         }
     }
 

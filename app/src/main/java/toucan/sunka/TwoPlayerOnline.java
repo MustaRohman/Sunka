@@ -18,7 +18,6 @@ import com.github.nkzawa.socketio.client.Socket;
 import java.net.URISyntaxException;
 
 public class TwoPlayerOnline extends AppCompatActivity {
-    public static OnlineData onlineData;
     private Crater playerOneStore;
     private Crater playerTwoStore;
     Crater[] craterList = new Crater[16];
@@ -75,7 +74,6 @@ public class TwoPlayerOnline extends AppCompatActivity {
         TextView secondPlayerLabel = (TextView) findViewById(R.id.online_player_two_view);
         secondPlayerLabel.setText(secondPlayer.getPlayerName().toString());
         setSocketUp();
-        new makeOpponentMove().execute();
     }
 
     public Crater correspondingCrater(int id){
@@ -116,6 +114,8 @@ public class TwoPlayerOnline extends AppCompatActivity {
             firstMove = false;
         }
         crater.makeMoveFromHere();
+        mSocket.emit("game", gameID + ":" + crater.getOwner().getPlayerName() +
+                ":" + crater.getPositionOnBoard());
     }
 
 
