@@ -25,7 +25,8 @@
         android:layout_height="wrap_content"
         android:layout_centerHorizontal="true"
         android:layout_below="@id/title"
-        android:layout_marginBottom="@dimen/margin_bottom"/>
+        android:layout_marginBottom="@dimen/margin_bottom"
+        android:onClick="createAIDialog"/>
     <Button
         android:id="@+id/two_player_local"
         android:text="@string/two_player_local"

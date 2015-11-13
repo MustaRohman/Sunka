@@ -71,4 +71,12 @@ public class MainScreen extends FragmentActivity{
         fragment.show(fm,"multiplayerDialog");
 
     }
+
+    public void createAIDialog(View view){
+
+        DialogFragment fragment = new AIDialogFragment();
+        FragmentManager fm = getSupportFragmentManager();
+        fragment.show(fm,"AIDialog");
+
+    }
 }
