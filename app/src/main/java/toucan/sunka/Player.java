@@ -14,6 +14,7 @@ public class Player implements Parcelable {
     private Crater store;
     private int playerRank;
     private boolean playingTurn;
+    private boolean wasIdle;
 
     public Player(String pN) {
         playerName = pN;
@@ -38,6 +39,14 @@ public class Player implements Parcelable {
 
     public void setPlayerRank(int pR) {
         playerRank = pR;
+    }
+
+    public void setIdle(boolean idle){
+        wasIdle = idle;
+    }
+
+    public boolean isIdle(){
+        return wasIdle;
     }
 
     public void setStore(Crater crater){
