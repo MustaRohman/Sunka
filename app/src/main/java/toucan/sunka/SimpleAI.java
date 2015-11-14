@@ -3,6 +3,9 @@ package toucan.sunka;
 import java.util.ArrayList;
 import java.util.TreeMap;
 /**
+ * Since the best store would result in the largest steal do not worry about which
+ * move is getting us the largest store.
+ *
  * There is flaw in which we do not decide if its better to block individual steals.
  * We are oblivious that a player may have multiple steal options. We either block all
  * or none.
