@@ -435,8 +435,32 @@ public class Crater extends Button {
             case 12:
                 crater.setBackgroundResource(R.drawable.store_12stone);
                 break;
+            case 13:
+                crater.setBackgroundResource(R.drawable.store_13stone);
+                break;
+            case 14:
+                crater.setBackgroundResource(R.drawable.store_14stone);
+                break;
+            case 15:
+                crater.setBackgroundResource(R.drawable.store_15stone);
+                break;
+            case 16:
+                crater.setBackgroundResource(R.drawable.store_16stone);
+                break;
+            case 17:
+                crater.setBackgroundResource(R.drawable.store_17stone);
+                break;
+            case 18:
+                crater.setBackgroundResource(R.drawable.store_18stone);
+                break;
+            case 19:
+                crater.setBackgroundResource(R.drawable.store_19stone);
+                break;
+            case 20:
+                crater.setBackgroundResource(R.drawable.store_20stone);
+                break;
             default:
-                crater.setBackgroundResource(R.drawable.store_12stone);
+                crater.setBackgroundResource(R.drawable.store_20stone);
         }
     }
 
