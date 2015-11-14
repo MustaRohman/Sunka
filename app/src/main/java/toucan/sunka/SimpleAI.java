@@ -78,7 +78,7 @@ public class SimpleAI extends Player {
 
         //Move:
         while(stones != 0) {
-            if (choice + offset > 15) offset = -15; //backtrack to simulate the linked craters
+            if (choice + offset > 15) offset = -choice; //backtrack to simulate the linked craters
             currentIndex = choice + offset;
             if ((currentIndex) != otherPlayerStoreIndex) {
                 //Try to steal:
