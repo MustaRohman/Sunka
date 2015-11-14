@@ -29,7 +29,6 @@ public class MainScreen extends FragmentActivity{
         });
         collection = new PlayerCollection();
 
-
     }
 
     //Method only for testing
