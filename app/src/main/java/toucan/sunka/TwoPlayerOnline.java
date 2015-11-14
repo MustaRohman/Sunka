@@ -120,26 +120,29 @@ public class TwoPlayerOnline extends AppCompatActivity {
 
     public void onCraterClick(View view){
         Crater crater = (Crater) view;
-        if (firstMove){
-            if (crater.getOwner() == firstPlayer) {
-                firstPlayer.setPlayingTurnTo(true);
-                secondPlayer.setPlayingTurnTo(false);
+        if(crater.getStones() != 0 ) {
+            if (firstMove) {
+                if (crater.getOwner() == firstPlayer) {
+                    firstPlayer.setPlayingTurnTo(true);
+                    secondPlayer.setPlayingTurnTo(false);
+                } else {
+                    firstPlayer.setPlayingTurnTo(false);
+                    secondPlayer.setPlayingTurnTo(true);
+                }
+                firstMove = false;
             }
-            else {
-                firstPlayer.setPlayingTurnTo(false);
-                secondPlayer.setPlayingTurnTo(true);
-            }
-            firstMove = false;
+            String type = "n";
+            Boolean free = false;
+            if (crater.getsFreeMove()) free = true;
+            crater.makeMoveFromHere();
+            if (crater.checkSide(secondPlayer) || free) type = "f";
+            if (type == "f" && crater.checkSide(firstPlayer))
+                type = "n"; // game over
+            if (type != "f")
+                new makeOpponentMove().execute();
+            mSocket.emit("game", gameID + ":" + crater.getOwner().getPlayerName() +
+                    ":" + crater.getPositionOnBoard() + type);
         }
-        String type = "n";
-        Boolean free = false;
-        if (crater.getsFreeMove()) free = true;
-        crater.makeMoveFromHere();
-        if (crater.checkSide(secondPlayer) || free) type = "f";
-        if (type != "f")
-            new makeOpponentMove().execute();
-        mSocket.emit("game", gameID + ":" + crater.getOwner().getPlayerName() +
-                ":" + crater.getPositionOnBoard() + type);
     }
 
 
@@ -180,11 +183,15 @@ public class TwoPlayerOnline extends AppCompatActivity {
         for (int i = 1; i < 8; i++) {
             craterList[i].setOppositeCrater(craterList[16 - i]);
             craterList[i].setOwner(firstPlayer);
+            craterList[i].setStones(0);
         }
         for (int i = 9; i < 16; i++) {
             craterList[i].setOppositeCrater(craterList[16 - i]);
+            craterList[i].setStones(0);
             craterList[i].setOwner(secondPlayer);
         }
+        craterList[4].setStones(4);
+        craterList[9].setStones(4);
     }
 
     @Override
