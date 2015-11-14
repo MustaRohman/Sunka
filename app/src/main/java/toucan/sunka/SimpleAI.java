@@ -81,8 +81,11 @@ public class SimpleAI extends Player {
 
     public boolean performsSteal(int[] board, int craterIndex, int stones) {
         int lastIndex = getLastIndex(craterIndex, stones);
+        board = makeMoveFrom(board, craterIndex);
         //Check condition:
-        if (board[lastIndex] == 0 && board[16 - lastIndex] > 0) return true;
+        if (isIndexOnMySideAndAChoice(lastIndex) &&
+                board[lastIndex] == 0 &&
+                board[16 - lastIndex] > 0) return true;
         return false;
     }
 
@@ -118,6 +121,11 @@ public class SimpleAI extends Player {
             if (performsSteal(board, i, board[i])) return false;
         }
         return true;
+    }
+
+    public boolean isIndexOnMySideAndAChoice(int index) {
+        if (storeIndex == 8) return index < 8 && 0 < index;
+        else return index > 8 && 16 > index;
     }
 
     public int getLastIndex(int craterIndex, int stones) {
