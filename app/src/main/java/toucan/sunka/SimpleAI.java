@@ -39,6 +39,7 @@ public class SimpleAI extends Player {
         opponentBoardsBeforeSteal = new TreeMap<>();
     }
 
+    //I guess this is the method we are going AsyncTask
     public void playTurn() {
         while(isPlayingTurn()) {
             generateSevenStates();
