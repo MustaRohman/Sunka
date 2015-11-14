@@ -17,7 +17,6 @@ public class OnlineDialog extends DialogFragment {
 
     public static final String PLAYER_ONE_KEY = "PLAYER_ONE_KEY";
 
-
     public Dialog onCreateDialog(final Bundle savedInstanceState) {
         // Use the Builder class for convenient dialog construction
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
