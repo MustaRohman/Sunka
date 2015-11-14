@@ -42,10 +42,12 @@ public class MainScreen extends FragmentActivity{
         multiPlayer.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v){
-                Intent OnlineGames = new Intent(activity, OnlineGames.class);
-                activity.startActivity(OnlineGames);
+                DialogFragment fragment = new OnlineDialog();
+                FragmentManager fm = getSupportFragmentManager();
+                fragment.show(fm, "onlineDialog");
             }
         });
+
     }
 
     @Override
