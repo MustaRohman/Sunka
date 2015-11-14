@@ -18,14 +18,6 @@ public class OnePlayerAI extends AppCompatActivity {
     private Crater aiTwoStore;
     Crater[] craterList = new Crater[16];
 
-    public Player getFirstPlayer() {
-        return firstPlayer;
-    }
-
-    public Player getAiPlayer() {
-        return aiPlayer;
-    }
-
     private Player firstPlayer;
     private SimpleAI aiPlayer;
 
@@ -51,9 +43,9 @@ public class OnePlayerAI extends AppCompatActivity {
         secondPlayerLabel.setText(aiPlayer.getPlayerName());
     }
 
-    public void onCraterClick(View view){
+    public void onCraterClick(View view) {
         Crater crater = (Crater) view;
-        if (firstMove){
+        if (firstMove) {
             if (crater.getOwner() == firstPlayer) {
                 firstPlayer.setPlayingTurnTo(true);
                 aiPlayer.setPlayingTurnTo(false);
@@ -67,28 +59,6 @@ public class OnePlayerAI extends AppCompatActivity {
         crater.makeMoveFromHere();
     }
 
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.menu_one_player_ai, menu);
-        return true;
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
-        int id = item.getItemId();
-
-        //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
-            return true;
-        }
-
-        return super.onOptionsItemSelected(item);
-    }
-
     public void initializeStores() {
         playerOneStore = (Crater) findViewById(R.id.store_right);
         playerOneStore.initialise(true);
@@ -99,7 +69,7 @@ public class OnePlayerAI extends AppCompatActivity {
         craterList[8] = playerOneStore;
     }
 
-    public void initializeCraters(){
+    public void initializeCraters() {
         initializeStores();
         LinearLayout topRow = (LinearLayout) findViewById(R.id.top_row);
         LinearLayout bottomRow = (LinearLayout) findViewById(R.id.bottom_row);
@@ -132,13 +102,9 @@ public class OnePlayerAI extends AppCompatActivity {
             craterList[i].setOwner(aiPlayer);
         }
         aiPlayer.setButtonChoices();
-//        for (Crater crater : craterList )
-//            crater.setStones(0);
-//        craterList[7].setStones(1);
-//        craterList[9].setStones(1);
-//        craterList[15].setStones(4);
     }
-    public void createGameOverDialog(){
+
+    public void createGameOverDialog() {
         DialogFragment fragment = new GameOverDialog();
         FragmentManager fm = getSupportFragmentManager();
 
@@ -147,9 +113,8 @@ public class OnePlayerAI extends AppCompatActivity {
         int p1Stones = firstPlayer.getStore().getStones();
         int p2Stones = aiPlayer.getStore().getStones();
 
-
         //Initialises victorPlayer with the victor of the current game
-        if (p1Stones > p2Stones){
+        if (p1Stones > p2Stones) {
             firstPlayer.setGamesWon(firstPlayer.getNumberOfGamesWon() + 1);
         } else {
             Log.d("createGameOverDialog", String.valueOf(aiPlayer.getNumberOfGamesWon()));
@@ -158,9 +123,8 @@ public class OnePlayerAI extends AppCompatActivity {
         }
 
         MainScreen.collection.sortByGamesWon();
+
         Log.d("createGameOverDialog", String.valueOf(aiPlayer.getPlayerRank()));
-
-
         playerInfo.putString(MultiplayerDialogFragment.PLAYER_ONE_KEY, firstPlayer.getPlayerName());
         playerInfo.putString(MultiplayerDialogFragment.PLAYER_TWO_KEY, aiPlayer.getPlayerName());
         playerInfo.putString(GameOverDialog.PLAYER_ONE_STONES, String.valueOf(firstPlayer.getStore().getStones()));
@@ -171,14 +135,31 @@ public class OnePlayerAI extends AppCompatActivity {
         fragment.setArguments(playerInfo);
         fragment.show(fm,"gameOverDialog");
     }
-    public void turnNotification(Player p){
-        if(firstPlayer.equals(p)){
-            firstPlayerLabel.setBackgroundColor(Color.GREEN);
-            secondPlayerLabel.setBackgroundColor(Color.TRANSPARENT);
+
+    public Player getFirstPlayer() {
+        return firstPlayer;
+    }
+    public Player getAiPlayer() { return aiPlayer; }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        // Inflate the menu; this adds items to the action bar if it is present.
+        getMenuInflater().inflate(R.menu.menu_one_player_ai, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        // Handle action bar item clicks here. The action bar will
+        // automatically handle clicks on the Home/Up button, so long
+        // as you specify a parent activity in AndroidManifest.xml.
+        int id = item.getItemId();
+
+        //noinspection SimplifiableIfStatement
+        if (id == R.id.action_settings) {
+            return true;
         }
-        else{
-            secondPlayerLabel.setBackgroundColor(Color.GREEN);
-            firstPlayerLabel.setBackgroundColor(Color.TRANSPARENT);
-        }
+
+        return super.onOptionsItemSelected(item);
     }
 }
