@@ -15,7 +15,7 @@ import android.widget.EditText;
  */
 public class OnlineDialog extends DialogFragment {
 
-    public static final String PLAYER_ONE_KEY = "PLAYER_ONE_KEY";
+    public static final String ONLINE_PLAYER_ONE = "KEY_ONLINE_PLAYER";
 
     public Dialog onCreateDialog(final Bundle savedInstanceState) {
         // Use the Builder class for convenient dialog construction
@@ -36,7 +36,7 @@ public class OnlineDialog extends DialogFragment {
 
                 Context context = getContext();
                 Intent onlineGame = new Intent(context, OnlineGames.class);
-                onlineGame.putExtra(PLAYER_ONE_KEY, new Player(player1Name));
+                onlineGame.putExtra(ONLINE_PLAYER_ONE, player1);
                 context.startActivity(onlineGame);
             }
         });

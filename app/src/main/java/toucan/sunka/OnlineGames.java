@@ -30,7 +30,7 @@ public class OnlineGames extends AppCompatActivity {
     final public static String KEY_PLAYER = "KEY_PLAYER";
     final public static String KEY_OPPONENT = "KEY_OPPONENT";
     final public static String KEY_ID = "KEY_ID";
-    final private Player player = new Player("works");
+    private Player player;
     protected String REQUEST =  "req";
     protected int serverNumber = 0;
     final Activity activity = this;
@@ -54,6 +54,7 @@ public class OnlineGames extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_online_games);
 
+        player = getIntent().getParcelableExtra(OnlineDialog.ONLINE_PLAYER_ONE);
         final TextView opponentNameView = (TextView) findViewById(R.id.opponent_name);
         serverListView = (ListView) findViewById(R.id.server_list);
         serverListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
