@@ -2,7 +2,11 @@ package toucan.sunka;
 
 import java.util.ArrayList;
 import java.util.TreeMap;
-
+/**
+ * There is flaw in which we do not decide if its better to block individual steals.
+ * We are oblivious that a player may have multiple steal options. We either block all
+ * or none.
+ */
 public class SimpleAI extends Player {
 
     private int storeIndex;
@@ -11,6 +15,9 @@ public class SimpleAI extends Player {
     private TreeMap<int[], Crater> moveGeneratedFrom;
     private ArrayList<int[]> movesWithFreeTurn;
     private ArrayList<int[]> movesWhichPreventSteals;
+    private TreeMap<int[], Integer> opponentChoicesToSteal;
+    private TreeMap<Integer, int[]> opponentBoardsBeforeSteal;
+    private int[] currentState = new int[16];
 
     public SimpleAI(Player p) {
         super(p.getPlayerName());
@@ -25,6 +32,8 @@ public class SimpleAI extends Player {
         moveGeneratedFrom = new TreeMap<>();
         movesWithFreeTurn = new ArrayList<>();
         movesWhichPreventSteals = new ArrayList<>();
+        opponentChoicesToSteal = new TreeMap<>();
+        opponentBoardsBeforeSteal = new TreeMap<>();
     }
 
     public void playTurn() {
@@ -45,9 +54,13 @@ public class SimpleAI extends Player {
         for(int i = 0; i < buttonChoices.length - 1; ++i) {
             //Create a state based on a button choice:
             state = buttonChoices[i].getArrayBoard(getStore().getOppositeCrater()); //Starting from the player one store
+            currentState = state;
             //The next stuff need you to not perform the move yet:
             if (getsFreeMoveWith(i + offset, state[i], storeIndex)) movesWithFreeTurn.add(state);
-            if (preventsSteal(state, state[i + offset])) movesWhichPreventSteals.add(state);
+            if (preventsSteal(state, state[i + offset])) {
+                movesWhichPreventSteals.add(state);
+                int[] opponentState = makeMoveFrom(state, opponentChoicesToSteal.get(state), true);
+            }
             //Make the move on the copyBoard and store the result to access the crater which
             //would recreate it
             state = makeMoveFrom(state, i + offset, true);
@@ -93,7 +106,6 @@ public class SimpleAI extends Player {
                         board[storeIndex] += board[currentIndex];
                         board[currentIndex] = 0;
                     }
-
                 } else {
                     //Regular move:
                     board[currentIndex] += 1;
@@ -109,10 +121,28 @@ public class SimpleAI extends Player {
     }
 
     public Crater getBestMove() {
-        int[] bestMove;
+        int[] bestMoveMoveSoFar;
         int[] moveWithBestStore = getMoveWithBestStore(sevenStates);
-        bestMove = moveWithBestStore;
-        return moveGeneratedFrom.get(bestMove);
+        bestMoveMoveSoFar = moveWithBestStore;
+        //Pick if some move equal the moveWithBestScore pick the one which will
+        //give us a free turn:
+        for(int[] move: movesWithFreeTurn) {
+            if (bestMoveMoveSoFar[storeIndex] == move[storeIndex]) {
+                bestMoveMoveSoFar = move;
+            }
+        }
+        //Check (if any) prevents of steals are worth it:
+        for(int[] move: movesWhichPreventSteals) {
+            //Check store of the opponent if we give him the opportunity to steal
+            int opponentChoiceForSteal = opponentChoicesToSteal.get(move).intValue();
+            if (bestMoveMoveSoFar[storeIndex] >
+                    makeMoveFrom(opponentBoardsBeforeSteal.get(opponentChoiceForSteal),
+                            opponentChoiceForSteal,
+                            true)[getOtherPlayerStoreIndex()]) {
+                bestMoveMoveSoFar = move;
+            }
+        }
+        return moveGeneratedFrom.get(bestMoveMoveSoFar);
     }
 
     public int[] getMoveWithBestStore(int[][] moves) {
@@ -152,7 +182,10 @@ public class SimpleAI extends Player {
         }
 
         for(int i = startIndex; i < lengthPosition; ++i) {
-            if (performsSteal(board, i, board[i])) return false;
+            if (performsSteal(board, i, board[i])) {
+                opponentChoicesToSteal.put(currentState, i);
+                return false;
+            }
         }
         return true;
     }
@@ -192,5 +225,7 @@ public class SimpleAI extends Player {
         moveGeneratedFrom.clear();
         movesWithFreeTurn.clear();
         movesWhichPreventSteals.clear();
+        opponentChoicesToSteal.clear();
+        opponentBoardsBeforeSteal.clear();
     }
 }
