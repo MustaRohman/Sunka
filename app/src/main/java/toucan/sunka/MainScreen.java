@@ -16,6 +16,7 @@ public class MainScreen extends FragmentActivity{
 
     Button multiPlayerLocal;
     Button statistics;
+    Button exit;
 
     public static PlayerCollection collection; // needs to be saved in phone memory
 
@@ -38,6 +39,13 @@ public class MainScreen extends FragmentActivity{
             @Override
             public void onClick(View v) {
                 createStatisticsDialog();
+            }
+        });
+        exit = (Button) findViewById(R.id.exit);
+        exit.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                finish();
             }
         });
 
