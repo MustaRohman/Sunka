@@ -80,7 +80,6 @@ public class SimpleAI extends Player {
     }
 
     public int[] makeMoveFrom(int[] board, int choice, boolean performTheSteal) {
-        int choiceStones = board[choice];
         int stones = board[choice];
         board[choice] = 0; // picked up the stones.
 
