@@ -80,7 +80,8 @@ public class SimpleAI extends Player {
     }
 
     public boolean performsSteal(int[] board, int craterIndex, int stones) {
-        int lastIndex = (craterIndex + stones) + 1;
+        int lastIndex = getLastIndex(craterIndex, stones);
+        //Check condition:
         if (board[lastIndex] == 0 && board[16 - lastIndex] > 0) return true;
         return false;
     }
@@ -94,8 +95,9 @@ public class SimpleAI extends Player {
     }
 
     public boolean getsFreeMoveWith(int craterIndex, int stones, int storeIndex) {
-        if (storeIndex == 8 && ((craterIndex + stones) + 1) == storeIndex) return true;
-        else if (storeIndex == 0 && ((craterIndex + stones) + 1) == 16) return true;
+        int lastIndex = getLastIndex(craterIndex, stones);
+        if (storeIndex == 8 && lastIndex == storeIndex) return true;
+        else if (storeIndex == 0 && lastIndex == 16) return true;
         return false;
     }
 
@@ -116,6 +118,20 @@ public class SimpleAI extends Player {
             if (performsSteal(board, i, board[i])) return false;
         }
         return true;
+    }
+
+    public int getLastIndex(int craterIndex, int stones) {
+        int tempLastIndex = (craterIndex + stones) + 1;
+        int lastIndex = 0;
+        //Get to the last index:
+        if (tempLastIndex > 16) {
+            //Do some working out to derive the last index.
+            for (int i = 0; i < tempLastIndex; ++i) {
+                if (i == 16) lastIndex = 0;
+                else lastIndex = i;
+            }
+        } else return tempLastIndex;
+        return lastIndex;
     }
 
     public int getOtherPlayerStoreIndex() {
