@@ -25,6 +25,17 @@ public class SimpleAI extends Player {
         movesWhichPreventSteals = new ArrayList<>();
     }
 
+    public void playTurn() {
+        while(isPlayingTurn()) {
+            generateSevenStates();
+            Crater bestMove = getBestMove();
+            bestMove.makeMoveFromHere();
+            //I am guessing we want to do something like the following next:
+            //Pause AI tread, to wait on the Crater tread
+            //Resume the AI tread once the Crater tread has no more executions
+        }
+    }
+
     public void generateSevenStates() {
         clearCollections();
         int offset = 8;
@@ -93,6 +104,13 @@ public class SimpleAI extends Player {
         }
 
         return board;
+    }
+
+    public Crater getBestMove() {
+        int[] bestMove = null;
+        int[] moveWithBestStore = getMoveWithBestStore(sevenStates);
+
+        return moveGeneratedFrom.get(bestMove);
     }
 
     public int[] getMoveWithBestStore(int[][] moves) {
