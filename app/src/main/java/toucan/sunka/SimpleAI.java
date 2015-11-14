@@ -14,12 +14,14 @@ public class SimpleAI extends Player {
 
     public SimpleAI(Player p) {
         super(p.getPlayerName());
+        //Tranfer the AI statistics from the player object that it first started life as:
         setGamesWon(p.getNumberOfGamesWon());
         setGamesLost(p.getNumberOfGamesLost());
         setPlayerRank(p.getPlayerRank());
         setPlayingTurnTo(p.isPlayingTurn());
         setStore(p.getStore());
 
+        //Initialise collections:
         moveGeneratedFrom = new TreeMap<>();
         movesWithFreeTurn = new ArrayList<>();
         movesWhichPreventSteals = new ArrayList<>();
@@ -37,7 +39,7 @@ public class SimpleAI extends Player {
     }
 
     public void generateSevenStates() {
-        clearCollections();
+        clearCollections(); //Start from a clean slate so we don't introduce old data when deciding the best turn
         int offset = 8;
         int[] state;
         for(int i = 0; i < buttonChoices.length - 1; ++i) {
@@ -76,6 +78,7 @@ public class SimpleAI extends Player {
 
         //Move:
         while(stones != 0) {
+            if (choice + offset > 15) offset = -15; //backtrack to simulate the linked craters
             currentIndex = choice + offset;
             if ((currentIndex) != otherPlayerStoreIndex) {
                 //Try to steal:
@@ -100,16 +103,15 @@ public class SimpleAI extends Player {
             //Update status:
             --stones;
             ++offset;
-            if (offset == 16) offset = 0;
         }
 
         return board;
     }
 
     public Crater getBestMove() {
-        int[] bestMove = null;
+        int[] bestMove;
         int[] moveWithBestStore = getMoveWithBestStore(sevenStates);
-
+        bestMove = moveWithBestStore;
         return moveGeneratedFrom.get(bestMove);
     }
 
