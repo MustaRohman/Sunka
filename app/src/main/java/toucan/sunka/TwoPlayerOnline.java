@@ -71,7 +71,6 @@ public class TwoPlayerOnline extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_two_player_online);
-
         firstPlayer = getIntent().getParcelableExtra(OnlineGames.KEY_PLAYER);
         secondPlayer = getIntent().getParcelableExtra(OnlineGames.KEY_OPPONENT);
         gameID = getIntent().getStringExtra(OnlineGames.KEY_ID);
@@ -133,8 +132,10 @@ public class TwoPlayerOnline extends AppCompatActivity {
             firstMove = false;
         }
         String type = "n";
-        if (crater.getsFreeMove() || secondPlayer.isIdle()) type = "f";
+        Boolean free = false;
+        if (crater.getsFreeMove()) free = true;
         crater.makeMoveFromHere();
+        if (crater.checkSide(secondPlayer) || free) type = "f";
         if (type != "f")
             new makeOpponentMove().execute();
         mSocket.emit("game", gameID + ":" + crater.getOwner().getPlayerName() +
