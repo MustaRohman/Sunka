@@ -122,11 +122,11 @@ public class Player implements Parcelable {
     }
 
     public void highlightText(){
-//        playerTextView.setBackground(Color.YELLOW);
+        playerTextView.setBackgroundColor(Color.YELLOW);
     }
 
     public void unhighlightText(){
-
+        playerTextView.setBackgroundColor(Color.GRAY);
     }
 
 }

@@ -50,10 +50,12 @@ public class TwoPlayerLocalActivity extends AppCompatActivity {
         if (firstMove){
             if (crater.getOwner() == firstPlayer) {
                 firstPlayer.setPlayingTurnTo(true);
+                firstPlayer.highlightText();
                 secondPlayer.setPlayingTurnTo(false);
             }
             else {
                 firstPlayer.setPlayingTurnTo(false);
+                secondPlayer.highlightText();
                 secondPlayer.setPlayingTurnTo(true);
             }
             firstMove = false;
