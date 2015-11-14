@@ -27,7 +27,21 @@ public class SimpleAI extends Player {
 
     public void generateSevenStates() {
         clearCollections();
-        
+        int offset = 8;
+        int[] state;
+        for(int i = 0; i < buttonChoices.length - 1; ++i) {
+            //Create a state based on a button choice:
+            state = buttonChoices[i].getArrayBoard(getStore().getOppositeCrater()); //Starting from the player one store
+            //The next stuff need you to not perform the move yet:
+            if (getsFreeMoveWith(i + offset, state[i], storeIndex)) movesWithFreeTurn.add(state);
+            if (preventsSteal(state, state[i + offset])) movesWhichPreventSteals.add(state);
+            //Make the move on the copyBoard and store the result to access the crater which
+            //would recreate it
+            state = makeMoveFrom(state, i + offset, true);
+            moveGeneratedFrom.put(state, buttonChoices[i]);
+            //Add the state we just created
+            placeStateAt(state, i);
+        }
     }
 
     public void placeStateAt(int[] state, int position) {
