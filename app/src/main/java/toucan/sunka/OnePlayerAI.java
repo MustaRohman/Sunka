@@ -1,6 +1,7 @@
 package toucan.sunka;
 
 import android.graphics.Color;
+import android.os.AsyncTask;
 import android.support.v4.app.DialogFragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v7.app.AppCompatActivity;
@@ -17,13 +18,10 @@ public class OnePlayerAI extends AppCompatActivity {
     private Crater playerOneStore;
     private Crater aiTwoStore;
     Crater[] craterList = new Crater[16];
-
-    private Player firstPlayer;
+    protected Player firstPlayer;
     private SimpleAI aiPlayer;
-
     private TextView firstPlayerLabel;
     private TextView secondPlayerLabel;
-
     private boolean firstMove = true;
 
     @Override
@@ -43,6 +41,33 @@ public class OnePlayerAI extends AppCompatActivity {
         secondPlayerLabel.setText(aiPlayer.getPlayerName());
     }
 
+    private class makeAIMove extends AsyncTask<Void, Void, Void> {
+        protected Void doInBackground(Void... params){
+            try {
+                Thread.sleep(2100);
+                Log.d("INFO","Waiting for human player to finish");
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+            while( !aiPlayer.isPlayingTurn() ){
+                try {
+                    Thread.sleep(1000);
+                    Log.d("BACKEND THREAD","AI not currently playing. Retrying in 1s");
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+            }
+            aiPlayer.generateSevenStates();
+            aiPlayer.generateBestMove();
+            return null;
+        }
+
+        protected void onPostExecute(Void result) {
+            aiPlayer.getBestCrater().makeMoveFromHere();
+        }
+
+    }
+
     public void onCraterClick(View view) {
         Crater crater = (Crater) view;
         if (firstMove) {
@@ -57,6 +82,7 @@ public class OnePlayerAI extends AppCompatActivity {
             firstMove = false;
         }
         crater.makeMoveFromHere();
+        new makeAIMove().execute();
     }
 
     public void initializeStores() {

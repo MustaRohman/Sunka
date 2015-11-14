@@ -1,6 +1,8 @@
 package toucan.sunka;
 
 import java.util.ArrayList;
+import java.util.Comparator;
+import java.util.HashMap;
 import java.util.TreeMap;
 /**
  * Since the best store would result in the largest steal do not worry about which
@@ -20,6 +22,7 @@ public class SimpleAI extends Player {
     private ArrayList<int[]> movesWhichPreventSteals;
     private TreeMap<int[], Integer> opponentChoicesToSteal;
     private TreeMap<Integer, int[]> opponentBoardsBeforeSteal;
+    private int[] bestMove;
     private int[] currentState = new int[16];
 
     public SimpleAI(Player p) {
@@ -31,40 +34,34 @@ public class SimpleAI extends Player {
         setPlayingTurnTo(p.isPlayingTurn());
         setStore(p.getStore());
 
+        Comparator comp = new Comparator<int[]>(){
+            public int compare(int[] o1, int[] o2){
+                if (o1.equals(o2)) return 0;
+                return -1;
+            }
+        };
+
         //Initialise collections:
-        moveGeneratedFrom = new TreeMap<>();
+        moveGeneratedFrom = new TreeMap<>(comp);
         movesWithFreeTurn = new ArrayList<>();
         movesWhichPreventSteals = new ArrayList<>();
-        opponentChoicesToSteal = new TreeMap<>();
+        opponentChoicesToSteal = new TreeMap<>(comp);
         opponentBoardsBeforeSteal = new TreeMap<>();
-    }
-
-    //I guess this is the method we are going AsyncTask
-    public void playTurn() {
-        while(isPlayingTurn()) {
-            generateSevenStates();
-            Crater bestMove = getBestMove();
-            bestMove.makeMoveFromHere();
-            //I am guessing we want to do something like the following next:
-            //Pause AI tread, to wait on the Crater tread
-            //Resume the AI tread once the Crater tread has no more executions
-        }
     }
 
     public void generateSevenStates() {
         clearCollections(); //Start from a clean slate so we don't introduce old data when deciding the best turn
-        int offset = 8;
+        int offset = 9;
         int[] state;
         for(int i = 0; i < buttonChoices.length - 1; ++i) {
             //Create a state based on a button choice:
-            state = buttonChoices[i].getArrayBoard(getStore().getOppositeCrater()); //Starting from the player one store
+            state = buttonChoices[i].getArrayBoard(getStore()); //Starting from the player one store
             currentState = state;
             //The next stuff need you to not perform the move yet:
             if (getsFreeMoveWith(i + offset, state[i], storeIndex)) movesWithFreeTurn.add(state);
-            if (preventsSteal(state, state[i + offset])) {
+
+            if (preventsSteal(state, state[i + offset]))
                 movesWhichPreventSteals.add(state);
-                int[] opponentState = makeMoveFrom(state, opponentChoicesToSteal.get(state), true);
-            }
             //Make the move on the copyBoard and store the result to access the crater which
             //would recreate it
             state = makeMoveFrom(state, i + offset, true);
@@ -96,12 +93,13 @@ public class SimpleAI extends Player {
         while(stones != 0) {
             if (choice + offset > 15) offset = -choice; //backtrack to simulate the linked craters
             currentIndex = choice + offset;
+            oppositeIndex = 16 - currentIndex;
             if ((currentIndex) != otherPlayerStoreIndex) {
                 //Try to steal:
-                if (performTheSteal && stones == 1 && board[currentIndex] == 0) {
+                if (performTheSteal && stones == 1 && board[currentIndex] == 0 && isIndexOnMySideAndAChoice(currentIndex)) {
                     if (board[oppositeIndex] > 0) {
                         //Steal:
-                        oppositeIndex = 16 - currentIndex;
+
                         //Take stones from opponent
                         board[storeIndex] += board[oppositeIndex];
                         board[oppositeIndex] = 0;
@@ -123,7 +121,7 @@ public class SimpleAI extends Player {
         return board;
     }
 
-    public Crater getBestMove() {
+    public void generateBestMove() {
         int[] bestMoveMoveSoFar;
         int[] moveWithBestStore = getMoveWithBestStore(sevenStates);
         bestMoveMoveSoFar = moveWithBestStore;
@@ -137,23 +135,31 @@ public class SimpleAI extends Player {
         //Check (if any) prevents of steals are worth it:
         for(int[] move: movesWhichPreventSteals) {
             //Check store of the opponent if we give him the opportunity to steal
-            int opponentChoiceForSteal = opponentChoicesToSteal.get(move).intValue();
-            if (bestMoveMoveSoFar[storeIndex] >
-                    makeMoveFrom(opponentBoardsBeforeSteal.get(opponentChoiceForSteal),
-                            opponentChoiceForSteal,
-                            true)[getOtherPlayerStoreIndex()]) {
-                bestMoveMoveSoFar = move;
+            int opponentChoiceForSteal;
+            if (!opponentChoicesToSteal.isEmpty()) {
+                opponentChoiceForSteal = opponentChoicesToSteal.get(move).intValue();
+                if (bestMoveMoveSoFar[storeIndex] >
+                        makeMoveFrom(opponentBoardsBeforeSteal.get(opponentChoiceForSteal),
+                                opponentChoiceForSteal,
+                                true)[getOtherPlayerStoreIndex()]) {
+                    bestMoveMoveSoFar = move;
+                }
             }
         }
-        return moveGeneratedFrom.get(bestMoveMoveSoFar);
+
+        bestMove = bestMoveMoveSoFar;
     }
 
     public int[] getMoveWithBestStore(int[][] moves) {
         int[] bestYet = moves[0];
+        int lastIndex = 0;
         for(int i = 1; i < moves.length; ++i) {
-            if (bestYet[storeIndex] < moves[i][storeIndex]) bestYet = moves[i];
+            if (bestYet[storeIndex] < moves[i][storeIndex]) {
+                lastIndex = i;
+                bestYet = moves[i];
+            }
         }
-        return bestYet;
+        return moves[lastIndex];
     }
 
     public boolean getsFreeMoveWith(int craterIndex, int stones, int storeIndex) {
@@ -174,8 +180,10 @@ public class SimpleAI extends Player {
     }
 
     public boolean preventsSteal(int[] board, int craterIndex) {
+        int[] screenBoardCopy = getStore().getArrayBoard(getStore());
         int startIndex;
         int lengthPosition;
+
         if (getOtherPlayerStoreIndex() == 0) {
             startIndex = 1;
             lengthPosition = 8;
@@ -185,7 +193,7 @@ public class SimpleAI extends Player {
         }
 
         for(int i = startIndex; i < lengthPosition; ++i) {
-            if (performsSteal(board, i, board[i])) {
+            if (performsSteal(screenBoardCopy, i, board[i])) {
                 opponentChoicesToSteal.put(currentState, i);
                 return false;
             }
@@ -223,6 +231,10 @@ public class SimpleAI extends Player {
 
     public void setStoreIndex(int index) {storeIndex = index;}
 
+    public Crater getBestCrater(){
+        return moveGeneratedFrom.get(bestMove);
+    }
+
     public void clearCollections() {
         sevenStates = new int[7][16];
         moveGeneratedFrom.clear();
@@ -231,4 +243,5 @@ public class SimpleAI extends Player {
         opponentChoicesToSteal.clear();
         opponentBoardsBeforeSteal.clear();
     }
+
 }

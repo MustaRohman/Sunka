@@ -27,7 +27,7 @@ public class Crater extends Button {
     public Crater(Context context, AttributeSet attrs){
         super(context, attrs);
         initialise(false);
-        activity = (TwoPlayerLocalActivity) getContext();
+        //activity = (TwoPlayerLocalActivity) getContext();
     }
 
     public Crater(boolean store) {
@@ -198,7 +198,7 @@ public class Crater extends Button {
                 winner.setGamesWon(winner.getNumberOfGamesWon() + 1);
                 loser.setGamesLost(loser.getNumberOfGamesLost()+1);}
                 catch (NullPointerException n){}
-                activity.createGameOverDialog();
+    //            activity.createGameOverDialog();
             }
         }
     }
