@@ -1,8 +1,11 @@
 package toucan.sunka;
 
+import android.util.Log;
+
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.TreeMap;
 /**
  * Since the best store would result in the largest steal do not worry about which
@@ -17,11 +20,11 @@ public class SimpleAI extends Player {
     private int storeIndex;
     private Crater[] buttonChoices; //includes the store at position 8.
     private int[][] sevenStates;
-    private TreeMap<int[], Crater> moveGeneratedFrom;
+    private HashMap<int[], Crater> moveGeneratedFrom;
     private ArrayList<int[]> movesWithFreeTurn;
     private ArrayList<int[]> movesWhichPreventSteals;
-    private TreeMap<int[], Integer> opponentChoicesToSteal;
-    private TreeMap<Integer, int[]> opponentBoardsBeforeSteal;
+    private HashMap<int[], Integer> opponentChoicesToSteal;
+    private HashMap<Integer, int[]> opponentBoardsBeforeSteal;
     private int[] bestMove;
     private int[] currentState = new int[16];
 
@@ -34,19 +37,8 @@ public class SimpleAI extends Player {
         setPlayingTurnTo(p.isPlayingTurn());
         setStore(p.getStore());
 
-        Comparator comp = new Comparator<int[]>(){
-            public int compare(int[] o1, int[] o2){
-                if (o1.equals(o2)) return 0;
-                return -1;
-            }
-        };
-
         //Initialise collections:
-        moveGeneratedFrom = new TreeMap<>(comp);
-        movesWithFreeTurn = new ArrayList<>();
-        movesWhichPreventSteals = new ArrayList<>();
-        opponentChoicesToSteal = new TreeMap<>(comp);
-        opponentBoardsBeforeSteal = new TreeMap<>();
+
     }
 
     public void generateSevenStates() {
@@ -232,10 +224,30 @@ public class SimpleAI extends Player {
     public void setStoreIndex(int index) {storeIndex = index;}
 
     public Crater getBestCrater(){
-        return moveGeneratedFrom.get(bestMove);
+        Iterator it = moveGeneratedFrom.entrySet().iterator();
+        boolean isEquals = true;
+        while (it.hasNext()){
+            HashMap.Entry pair = (HashMap.Entry) it.next();
+            for (int i = 0; i < bestMove.length; i++)
+                if ( ((int[]) pair.getKey())[i] != bestMove[i] ) {
+                    isEquals = false;
+                    Log.d("INFO", "hash item:" + ((int[]) pair.getKey())[i] + " bestMove item: "+ bestMove[i]);
+                    break;
+                }
+            if (isEquals){
+                Log.d("Info", "FOUND CRATER!!!");
+                return (Crater) pair.getValue();
+            }
+        }
+        return null;
     }
 
     public void clearCollections() {
+        moveGeneratedFrom = new HashMap<>();
+        movesWithFreeTurn = new ArrayList<>();
+        movesWhichPreventSteals = new ArrayList<>();
+        opponentChoicesToSteal = new HashMap<>();
+        opponentBoardsBeforeSteal = new HashMap<>();
         sevenStates = new int[7][16];
         moveGeneratedFrom.clear();
         movesWithFreeTurn.clear();
