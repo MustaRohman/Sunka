@@ -36,7 +36,7 @@ public class SimpleAI extends Player {
         }
     }
 
-    public int[] makeMoveFrom(int[] board, int choice) {
+    public int[] makeMoveFrom(int[] board, int choice, boolean performTheSteal) {
         int choiceStones = board[choice];
         int stones = board[choice];
         board[choice] = 0; // picked up the stones.
@@ -54,15 +54,17 @@ public class SimpleAI extends Player {
             currentIndex = choice + offset;
             if ((currentIndex) != otherPlayerStoreIndex) {
                 //Try to steal:
-                if (stones == 1 && performsSteal(board, choice, choiceStones)) {
-                    //Steal:
-                    oppositeIndex = 16 - currentIndex;
-                    //Take stones from opponent
-                    board[storeIndex] += board[oppositeIndex];
-                    board[oppositeIndex] = 0;
-                    //Self reward
-                    board[storeIndex] += board[currentIndex];
-                    board[currentIndex] = 0;
+                if (performTheSteal && stones == 1 && board[currentIndex] == 0) {
+                    if (board[oppositeIndex] > 0) {
+                        //Steal:
+                        oppositeIndex = 16 - currentIndex;
+                        //Take stones from opponent
+                        board[storeIndex] += board[oppositeIndex];
+                        board[oppositeIndex] = 0;
+                        //Self reward
+                        board[storeIndex] += board[currentIndex];
+                        board[currentIndex] = 0;
+                    }
 
                 } else {
                     //Regular move:
@@ -77,16 +79,6 @@ public class SimpleAI extends Player {
         }
 
         return board;
-    }
-
-    public boolean performsSteal(int[] board, int craterIndex, int stones) {
-        int lastIndex = getLastIndex(craterIndex, stones);
-        board = makeMoveFrom(board, craterIndex);
-        //Check condition:
-        if (isIndexOnMySideAndAChoice(lastIndex) &&
-                board[lastIndex] == 0 &&
-                board[16 - lastIndex] > 0) return true;
-        return false;
     }
 
     public int[] getMoveWithBestStore(int[][] moves) {
@@ -104,9 +96,17 @@ public class SimpleAI extends Player {
         return false;
     }
 
-    public boolean preventsSteal(int[] board, int craterIndex) {
-        board = makeMoveFrom(board, craterIndex);
+    public boolean performsSteal(int[] board, int craterIndex, int stones) {
+        int lastIndex = getLastIndex(craterIndex, stones);
+        board = makeMoveFrom(board, craterIndex, false);
+        //Check condition:
+        if (isIndexOnMySideAndAChoice(lastIndex) &&
+                board[lastIndex] == 0 &&
+                board[16 - lastIndex] > 0) return true;
+        return false;
+    }
 
+    public boolean preventsSteal(int[] board, int craterIndex) {
         int startIndex;
         int lengthPosition;
         if (getOtherPlayerStoreIndex() == 0) {
