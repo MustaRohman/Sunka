@@ -40,10 +40,10 @@ public class AIDialogFragment extends DialogFragment {
                 Player player2 = initiatePlayer(player2Name);
 
                 Context context = getContext();
-                Intent twoPlayerGame = new Intent(context, TwoPlayerLocalActivity.class);
-                twoPlayerGame.putExtra(PLAYER_ONE_KEY, player1);
-                twoPlayerGame.putExtra(PLAYER_TWO_KEY, player2);
-                context.startActivity(twoPlayerGame);
+                Intent singlePlayerGame = new Intent(context, OnePlayerAI.class);
+                singlePlayerGame.putExtra(PLAYER_ONE_KEY, player1);
+                singlePlayerGame.putExtra(PLAYER_TWO_KEY, player2);
+                context.startActivity(singlePlayerGame);
             }
         });
         builder.setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
@@ -59,5 +59,4 @@ public class AIDialogFragment extends DialogFragment {
         }
         return p;
     }
-
 }

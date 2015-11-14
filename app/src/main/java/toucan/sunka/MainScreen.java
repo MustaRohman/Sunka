@@ -12,6 +12,7 @@ import android.widget.Button;
 public class MainScreen extends FragmentActivity{
 
     Button multiPlayerLocal;
+    Button singlePlayerLocal;
 
     public static PlayerCollection collection; // needs to be saved in phone memory
 
@@ -28,9 +29,15 @@ public class MainScreen extends FragmentActivity{
                 createMultiplayerDialog();
             }
         });
+        singlePlayerLocal = (Button) findViewById(R.id.single_player);
+        singlePlayerLocal.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                createAIDialog();
+            }
+        });
+
         collection = new PlayerCollection();
-
-
     }
 
     //Method only for testing
@@ -63,20 +70,23 @@ public class MainScreen extends FragmentActivity{
 
     /**
      * Creates an instance of the MultiplayerDialogFragment and displays it on screen.
+     * The user can use the dialog to enter her name and open a two player game on
+     * the local device.
      */
     public void createMultiplayerDialog() {
-
         DialogFragment fragment = new MultiplayerDialogFragment();
         FragmentManager fm = getSupportFragmentManager();
         fragment.show(fm,"multiplayerDialog");
-
     }
 
-    public void createAIDialog(View view){
-
+    /**
+     * Creates an instance of the AIDialogFragment and displays it on screen.
+     * The user can use the dialog to enter her name and to open a single player
+     * game on the local device which puts her up against an AI player.
+     */
+    public void createAIDialog(){
         DialogFragment fragment = new AIDialogFragment();
         FragmentManager fm = getSupportFragmentManager();
-        fragment.show(fm,"AIDialog");
-
+        fragment.show(fm,"aiDialog");
     }
 }
