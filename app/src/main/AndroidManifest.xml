@@ -24,11 +24,13 @@
         </activity>
         <activity
             android:name=".OnlineGames"
-            android:label="@string/title_activity_online_games" >
+            android:label="@string/title_activity_online_games"
+            android:screenOrientation="landscape" >
         </activity>
         <activity
             android:name=".TwoPlayerOnline"
-            android:label="@string/title_activity_two_player_online" >
+            android:label="@string/title_activity_two_player_online"
+            android:screenOrientation="landscape" >
         </activity>
     </application>
 
