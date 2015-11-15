@@ -7,7 +7,7 @@
     "type": "git",
     "url": "git+https://bitbucket.org/andreins/tucan.git"
   },
-  "scripts": { "start" : "node server/server.js" }
+  "scripts": { "start" : "node server/server.js" },
   "author": "Toucan",
   "license": "ISC",
   "homepage": "https://bitbucket.org/andreins/tucan#readme",
