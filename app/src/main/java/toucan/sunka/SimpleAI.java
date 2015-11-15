@@ -1,12 +1,9 @@
 package toucan.sunka;
 
-import android.util.Log;
-
 import java.util.ArrayList;
-import java.util.Comparator;
 import java.util.HashMap;
 import java.util.Iterator;
-import java.util.TreeMap;
+
 /**
  * Since the best store would result in the largest steal do not worry about which
  * move is getting us the largest store.
@@ -54,11 +51,11 @@ public class SimpleAI extends Player {
             state = buttonChoices[i].getArrayBoard(getStore()); //Starting from the player one store
             currentState = state;
             //The next stuff need you to not perform the move yet:
-            if (getsFreeMoveWith(i + offset, state[i], storeIndex)) movesWithFreeTurn.add(state);
+            if (getsFreeMoveWith(i + offset, state[i + offset], storeIndex)) movesWithFreeTurn.add(state);
             else if (preventsSteal(state, state[i + offset], false)) movesWhichPreventSteals.add(state);
             //Make the move on the copyBoard and store the result to access the crater which
             //would recreate it
-            state = makeMoveFrom(state, i + offset, true);
+            state = makeMoveFrom(state, i + offset, true, storeIndex);
             moveGeneratedFrom.put(state, buttonChoices[i]);
             //Add the state we just created
             placeStateAt(state, i);
@@ -71,7 +68,7 @@ public class SimpleAI extends Player {
         }
     }
 
-    public int[] makeMoveFrom(int[] board, int choice, boolean performTheSteal) {
+    public int[] makeMoveFrom(int[] board, int choice, boolean performTheSteal, int storeIndex) {
         int stones = board[choice];
         board[choice] = 0; // picked up the stones.
 
@@ -82,7 +79,7 @@ public class SimpleAI extends Player {
         boolean skippedStealOnRequest = false;
 
         //Index of crater to skip:
-        int otherPlayerStoreIndex = getOtherPlayerStoreIndex();
+        int otherPlayerStoreIndex = getOtherPlayerStoreIndex(storeIndex);
 
         //Move:
         while(stones != 0) {
@@ -91,7 +88,7 @@ public class SimpleAI extends Player {
             oppositeIndex = 16 - currentIndex;
             if ((currentIndex) != otherPlayerStoreIndex) {
                 //Try to steal:
-                if (stones == 1 && board[currentIndex] == 0 && isIndexOnMySideAndAChoice(currentIndex, choice)) {
+                if (stones == 1 && board[currentIndex] == 0 && isIndexOnTheCorrectSide(currentIndex, choice, storeIndex)) {
                     if (board[oppositeIndex] > 0) {
                         if (performTheSteal) {
                             //Steal:
@@ -133,11 +130,11 @@ public class SimpleAI extends Player {
             //Check store of the opponent if we give him the opportunity to steal
             int opponentChoiceForSteal;
             if (!opponentChoicesToSteal.isEmpty()) {
-                opponentChoiceForSteal = opponentChoicesToSteal.get(move).intValue();
+                opponentChoiceForSteal = getOpponentChoiceForSteal(move).intValue();
                 if (bestMoveMoveSoFar[storeIndex] >
                         makeMoveFrom(opponentBoardsBeforeSteal.get(opponentChoiceForSteal),
                                 opponentChoiceForSteal,
-                                true)[getOtherPlayerStoreIndex()]) {
+                                true, getOtherPlayerStoreIndex(storeIndex))[getOtherPlayerStoreIndex(storeIndex)]) {
                     bestMoveMoveSoFar = move;
                 }
             }
@@ -157,31 +154,29 @@ public class SimpleAI extends Player {
     }
 
     public boolean getsFreeMoveWith(int craterIndex, int stones, int storeIndex) {
-        int lastIndex = getLastIndex(craterIndex, stones);
-        if (storeIndex == 8 && lastIndex == storeIndex) return true;
-        else if (storeIndex == 0 && lastIndex == 16) return true;
+        if (getLastIndex(craterIndex, stones) == storeIndex) return true;
         return false;
     }
 
-    public boolean performsSteal(int[] board, int craterIndex, int stones) {
+    public boolean performsSteal(int[] board, int craterIndex, int stones, int storeIndex) {
         board = board.clone();
         int lastIndex = getLastIndex(craterIndex, stones);
-        board = makeMoveFrom(board, craterIndex, false);
+        board = makeMoveFrom(board, craterIndex, false, storeIndex);
         //Check condition:
-        if (isIndexOnMySideAndAChoice(lastIndex, craterIndex) &&
-                board[lastIndex] == 0 &&
-                board[16 - lastIndex] > 0) return true;
+        if (isIndexOnTheCorrectSide(lastIndex, craterIndex, storeIndex) &&
+                board[lastIndex] == storeIndex &&
+                board[16 - lastIndex] > storeIndex) return true;
         return false;
     }
 
     public boolean preventsSteal(int[] board, int craterIndex, boolean query) {
-        int[] screenBoardCopy = board.clone();
-        screenBoardCopy = makeMoveFrom(screenBoardCopy, craterIndex, true);
+        int[] screenBoardCopy = makeMoveFrom(board, craterIndex, true, storeIndex);
 
         int startIndex;
         int lengthPosition;
+        boolean foundAtLeastOne = false;
 
-        if (getOtherPlayerStoreIndex() == 0) {
+        if (getOtherPlayerStoreIndex(storeIndex) == 8) {
             startIndex = 1;
             lengthPosition = 8;
         } else {
@@ -190,18 +185,17 @@ public class SimpleAI extends Player {
         }
 
         for(int i = startIndex; i < lengthPosition; ++i) {
-            if (performsSteal(screenBoardCopy, i, screenBoardCopy[i])) {
+            if (performsSteal(screenBoardCopy, i, screenBoardCopy[i], getOtherPlayerStoreIndex(storeIndex))) {
                 if (!query) opponentChoicesToSteal.put(currentState, i);
-                return false;
+                foundAtLeastOne = true;
             }
         }
-        return true;
+        if (foundAtLeastOne) return false;
+        else return true;
     }
 
-    public boolean isIndexOnMySideAndAChoice(int index, int choice) {
-        int tempStoreIndex = storeIndex;
-        if (choiceBelongsToOtherPlayer(choice)) tempStoreIndex = getOtherPlayerStoreIndex();
-        if (tempStoreIndex == 8) return index < 8 && 0 < index;
+    public boolean isIndexOnTheCorrectSide(int index, int choice, int storeIndex) {
+        if (storeIndex == 8) return index < 8 && 0 < index;
         else return index > 8 && 16 > index;
     }
 
@@ -209,11 +203,11 @@ public class SimpleAI extends Player {
         int tempLastIndex = (craterIndex + stones);
         int lastIndex = 0;
         //Get to the last index:
-        if (tempLastIndex > 16) {
+        if (tempLastIndex >= 16) {
             //Do some working out to derive the last index.
-            for (int i = 0; i < tempLastIndex; ++i) {
+            for (int i = 0; i <= tempLastIndex; ++i) {
                 if (i == 16) lastIndex = 0;
-                else lastIndex = i;
+                else ++lastIndex;
             }
         } else return tempLastIndex;
         return lastIndex;
@@ -223,7 +217,7 @@ public class SimpleAI extends Player {
         return choice < 8 && choice > 0;
     }
 
-    public int getOtherPlayerStoreIndex() {
+    public int getOtherPlayerStoreIndex(int storeIndex) {
         if (storeIndex == 0) return 8;
         else return 0;
     }
@@ -232,28 +226,37 @@ public class SimpleAI extends Player {
 
     public int[][] getSevenStates() {return sevenStates;}
 
+    public int getStoreIndex() {
+        return storeIndex;
+    }
+
     public void setSevenStates(int[][] states) {sevenStates = states;}
 
     public void setButtonChoices() {buttonChoices = getStore().getTruePlayerCraters(SimpleAI.this);}
 
     public void setStoreIndex(int index) {storeIndex = index;}
 
+
     public Crater getBestCrater() {
-        Iterator it = moveGeneratedFrom.entrySet().iterator();
-        for (int i =0 ; i < 16; i ++ ) Log.d("bestmove",bestMove[i] + "");
+        return (Crater) searchThrough(moveGeneratedFrom.entrySet().iterator(), bestMove);
+    }
+
+    public Integer getOpponentChoiceForSteal(int[] key) {
+        return (Integer) searchThrough(opponentChoicesToSteal.entrySet().iterator(), key);
+    }
+
+    public Object searchThrough(Iterator it, int[] key) {
         boolean isEquals;
         while (it.hasNext()){
             HashMap.Entry pair = (HashMap.Entry) it.next();
             isEquals = true;
-            for (int i = 0; i < bestMove.length; i++)
-                if ( ((int[]) pair.getKey())[i] != bestMove[i] ) {
+            for (int i = 0; i < key.length; i++)
+                if ( ((int[]) pair.getKey())[i] != key[i] ) {
                     isEquals = false;
-                    Log.d("BREAK","BREAK TRIGGERED");
                     break;
                 }
             if (isEquals){
-                Log.d("Info", "FOUND CRATER!!!");
-                return (Crater) pair.getValue();
+                return pair.getValue();
             }
         }
         return null;

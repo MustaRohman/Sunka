@@ -55,6 +55,7 @@ public class AITest {
         board[0].setOppositeCrater(board[8]);
         board[8].setOppositeCrater(board[0]);
         aiPlayer.setButtonChoices();
+        aiPlayer.setStoreIndex(0);
         return board;
     }
 
@@ -122,11 +123,16 @@ public class AITest {
     }
 
     @Test
+    public void getsFreeMoveTest1() {
+        assertTrue(aiPlayer.getsFreeMoveWith(15, 1, 0));
+    }
+
+    @Test
     public void makeMoveTest1() {
         int[] testBoard = {0, 7, 7, 7, 7, 8, 7, 7, 0, 7, 1, 0, 7, 7, 7, 7};
         int choice = 10;
         int[] expected = {9, 7, 7, 7, 7, 0, 7, 7, 0, 7, 0, 0, 7, 7, 7, 7};
-        int [] result = aiPlayer.makeMoveFrom(testBoard, choice, true);
+        int [] result = aiPlayer.makeMoveFrom(testBoard, choice, true, aiPlayer.getStoreIndex());
         assertArrayEquals(expected, result);
     }
 
@@ -135,26 +141,26 @@ public class AITest {
         int[] testBoard = {0, 7, 7, 7, 20, 7, 7, 7, 0, 7, 2, 7, 0, 7, 7, 7};
         int choice = 10;
         int[] expected = {21, 7, 7, 7, 0, 7, 7, 7, 0, 7, 0, 8, 0, 7, 7, 7};
-        int [] result = aiPlayer.makeMoveFrom(testBoard, choice, true);
+        int [] result = aiPlayer.makeMoveFrom(testBoard, choice, true, aiPlayer.getStoreIndex());
         assertArrayEquals(expected, result);
     }
 
     @Test
     public void performsSteal1() {
         int[] testBoard = {0, 7, 7, 7, 20, 7, 7, 7, 0, 7, 2, 7, 0, 7, 7, 7};
-        assertTrue(aiPlayer.performsSteal(testBoard, 10, 2));
+        assertTrue(aiPlayer.performsSteal(testBoard, 10, 2, aiPlayer.getStoreIndex()));
     }
 
     @Test
     public void performsSteal2() {
         int[] testBoard = {21, 7, 3, 10, 7, 7, 7, 12, 37, 7, 9, 7, 7, 16, 7, 7};
-        assertFalse(aiPlayer.performsSteal(testBoard, 10, 2));
+        assertFalse(aiPlayer.performsSteal(testBoard, 10, 2, aiPlayer.getStoreIndex()));
     }
 
     @Test
     public void preventsSteal1() {
-        int[] testBoard = {21, 6, 3, 10, 7, 7, 7, 12, 37, 6, 9, 7, 7, 16, 7, 7};
-        assertFalse(aiPlayer.preventsSteal(testBoard, 9, true));
+        int[] testBoard = {21, 6, 3, 10, 7, 7, 7, 0, 37, 9, 5, 7, 7, 16, 7, 7};
+        assertFalse(aiPlayer.preventsSteal(testBoard, 10, true));
     }
 
     @Test
@@ -220,9 +226,29 @@ public class AITest {
     }
 
     @Test
-    public void testGetBestCrater() {
+    public void testGetBestCrater1() {
         aiPlayer.generateSevenStates();
         aiPlayer.generateBestMove();
         assertTrue(aiPlayer.getButtonChoices()[0] == aiPlayer.getBestCrater());
     }
+
+    @Test
+    public void testGenerateBestMove() {
+        board[0].setStones(33);
+        board[4].setStones(1);
+        board[5].setStones(0);
+        board[8].setStones(31);
+        board[9].setStones(0);
+        board[10].setStones(0);
+        board[11].setStones(4);
+        board[12].setStones(0);
+        board[13].setStones(0);
+        board[14].setStones(0);
+        board[15].setStones(1);
+        aiPlayer.generateSevenStates();
+        aiPlayer.generateBestMove();
+        assertTrue(aiPlayer.getButtonChoices()[3] == aiPlayer.getBestCrater());
+    }
+
+
 }
