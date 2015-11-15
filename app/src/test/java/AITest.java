@@ -169,5 +169,60 @@ public class AITest {
         assertFalse(aiPlayer.preventsSteal(testBoard, 10, true));
     }
 
+    @Test
+    public void generateSevenStates() {
+        aiPlayer.generateSevenStates();
+        int[][] result = aiPlayer.getSevenStates();
+        int[][] expected = new int[7][16];
+        int[] tempExpected0 = {1, 7, 7, 7, 7, 7, 7, 7, 0, 0, 8, 8, 8, 8, 8, 8};
+        expected[0] = tempExpected0;
+        int[] tempExpected1 = {1, 8, 7, 7, 7, 7, 7, 7, 0, 7, 0, 8, 8, 8, 8, 8};
+        expected[1] = tempExpected1;
+        int[] tempExpected2 = {1, 8, 8, 7, 7, 7, 7, 7, 0, 7, 7, 0, 8, 8, 8, 8};
+        expected[2] = tempExpected2;
+        int[] tempExpected3 = {1, 8, 8, 8, 7, 7, 7, 7, 0, 7, 7, 7, 0, 8, 8, 8};
+        expected[3] = tempExpected3;
+        int[] tempExpected4 = {1, 8, 8, 8, 8, 7, 7, 7, 0, 7, 7, 7, 7, 0, 8, 8};
+        expected[4] = tempExpected4;
+        int[] tempExpected5 = {1, 8, 8, 8, 8, 8, 7, 7, 0, 7, 7, 7, 7, 7, 0, 8};
+        expected[5] = tempExpected5;
+        int[] tempExpected6 = {1, 8, 8, 8, 8, 8, 8, 7, 0, 7, 7, 7, 7, 7, 7, 0};
+        expected[6] = tempExpected6;
+        assertArrayEquals(expected[0], result[0]);
+        assertArrayEquals(expected[1], result[1]);
+        assertArrayEquals(expected[2], result[2]);
+        assertArrayEquals(expected[3], result[3]);
+        assertArrayEquals(expected[4], result[4]);
+        assertArrayEquals(expected[5], result[5]);
+        assertArrayEquals(expected[6], result[6]);
+    }
 
+    @Test
+    public void testGetMoveWithBestScore() {
+        int[][] states = new int[7][16];
+        int[] state0 = {1, 7, 7, 7, 7, 7, 7, 7, 0, 0, 8, 8, 8, 8, 8, 8};
+        states[0] = state0;
+        int[] state1 = {2, 8, 7, 7, 7, 7, 7, 7, 0, 7, 0, 8, 8, 8, 8, 8};
+        states[1] = state1;
+        int[] state2 = {3, 8, 8, 7, 7, 7, 7, 7, 0, 7, 7, 0, 8, 8, 8, 8};
+        states[2] = state2;
+        int[] state3 = {4, 8, 8, 8, 7, 7, 7, 7, 0, 7, 7, 7, 0, 8, 8, 8};
+        states[3] = state3;
+        int[] state4 = {5, 8, 8, 8, 8, 7, 7, 7, 0, 7, 7, 7, 7, 0, 8, 8};
+        states[4] = state4;
+        int[] state5 = {6, 8, 8, 8, 8, 8, 7, 7, 0, 7, 7, 7, 7, 7, 0, 8};
+        states[5] = state5;
+        int[] state6 = {7, 8, 8, 8, 8, 8, 8, 7, 0, 7, 7, 7, 7, 7, 7, 0};
+        states[6] = state6;
+        aiPlayer.setSevenStates(states);
+        int[] result = aiPlayer.getMoveWithBestStore();
+        assertArrayEquals(result, state6);
+    }
+
+    @Test
+    public void testGetBestCrater() {
+        aiPlayer.generateSevenStates();
+        aiPlayer.generateBestMove();
+        assertTrue(aiPlayer.getButtonChoices()[0] == aiPlayer.getBestCrater());
+    }
 }

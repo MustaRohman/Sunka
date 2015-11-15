@@ -26,7 +26,7 @@ public class SimpleAI extends Player {
     private HashMap<int[], Integer> opponentChoicesToSteal;
     private HashMap<Integer, int[]> opponentBoardsBeforeSteal;
     private int[] bestMove;
-    private int[] currentState = new int[16];
+    private int[] currentState;
 
     public SimpleAI(Player p) {
         super(p.getPlayerName());
@@ -38,7 +38,11 @@ public class SimpleAI extends Player {
         setStore(p.getStore());
 
         //Initialise collections:
-
+        moveGeneratedFrom = new HashMap<>();
+        movesWithFreeTurn = new ArrayList<>();
+        movesWhichPreventSteals = new ArrayList<>();
+        opponentChoicesToSteal = new HashMap<>();
+        opponentBoardsBeforeSteal = new HashMap<>();
     }
 
     public void generateSevenStates() {
@@ -115,7 +119,7 @@ public class SimpleAI extends Player {
 
     public void generateBestMove() {
         int[] bestMoveMoveSoFar;
-        int[] moveWithBestStore = getMoveWithBestStore(sevenStates);
+        int[] moveWithBestStore = getMoveWithBestStore();
         bestMoveMoveSoFar = moveWithBestStore;
         //Pick if some move equal the moveWithBestScore pick the one which will
         //give us a free turn:
@@ -142,16 +146,14 @@ public class SimpleAI extends Player {
         bestMove = bestMoveMoveSoFar;
     }
 
-    public int[] getMoveWithBestStore(int[][] moves) {
-        int[] bestYet = moves[0];
-        int lastIndex = 0;
-        for(int i = 1; i < moves.length; ++i) {
-            if (bestYet[storeIndex] < moves[i][storeIndex]) {
-                lastIndex = i;
-                bestYet = moves[i];
+    public int[] getMoveWithBestStore() {
+        int[] bestYet = sevenStates[0];
+        for(int i = 1; i < sevenStates.length; ++i) {
+            if (bestYet[storeIndex] < sevenStates[i][storeIndex]) {
+                bestYet = sevenStates[i];
             }
         }
-        return moves[lastIndex];
+        return bestYet;
     }
 
     public boolean getsFreeMoveWith(int craterIndex, int stones, int storeIndex) {
@@ -228,11 +230,15 @@ public class SimpleAI extends Player {
 
     public Crater[] getButtonChoices() {return buttonChoices;}
 
+    public int[][] getSevenStates() {return sevenStates;}
+
+    public void setSevenStates(int[][] states) {sevenStates = states;}
+
     public void setButtonChoices() {buttonChoices = getStore().getTruePlayerCraters(SimpleAI.this);}
 
     public void setStoreIndex(int index) {storeIndex = index;}
 
-    public Crater getBestCrater(){
+    public Crater getBestCrater() {
         Iterator it = moveGeneratedFrom.entrySet().iterator();
         for (int i =0 ; i < 16; i ++ ) Log.d("bestmove",bestMove[i] + "");
         boolean isEquals;
@@ -254,11 +260,11 @@ public class SimpleAI extends Player {
     }
 
     public void clearCollections() {
-        moveGeneratedFrom = new HashMap<>();
-        movesWithFreeTurn = new ArrayList<>();
-        movesWhichPreventSteals = new ArrayList<>();
-        opponentChoicesToSteal = new HashMap<>();
-        opponentBoardsBeforeSteal = new HashMap<>();
+//        moveGeneratedFrom = new HashMap<>();
+//        movesWithFreeTurn = new ArrayList<>();
+//        movesWhichPreventSteals = new ArrayList<>();
+//        opponentChoicesToSteal = new HashMap<>();
+//        opponentBoardsBeforeSteal = new HashMap<>();
         sevenStates = new int[7][16];
         moveGeneratedFrom.clear();
         movesWithFreeTurn.clear();
