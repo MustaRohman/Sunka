@@ -26,7 +26,7 @@
     })
   })
 
-  http.listen(3000, function(){
+  http.listen(process.env.PORT || 3000, function(){
     Log(INFO, "Listening on port 3000")
   })
 
