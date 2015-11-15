@@ -52,7 +52,7 @@ public class SimpleAI extends Player {
             currentState = state;
             //The next stuff need you to not perform the move yet:
             if (getsFreeMoveWith(i + offset, state[i + offset], storeIndex)) movesWithFreeTurn.add(state);
-            else if (preventsSteal(state, state[i + offset], false)) movesWhichPreventSteals.add(state);
+            else if (preventsSteal(state, state[i + offset], false, storeIndex)) movesWhichPreventSteals.add(state);
             //Make the move on the copyBoard and store the result to access the crater which
             //would recreate it
             state = makeMoveFrom(state, i + offset, true, storeIndex);
@@ -118,11 +118,13 @@ public class SimpleAI extends Player {
         int[] bestMoveMoveSoFar;
         int[] moveWithBestStore = getMoveWithBestStore();
         bestMoveMoveSoFar = moveWithBestStore;
+        boolean weDidNotChooseATurnWithAFreeMove = true;
         //Pick if some move equal the moveWithBestScore pick the one which will
         //give us a free turn:
         for(int[] move: movesWithFreeTurn) {
             if (bestMoveMoveSoFar[storeIndex] == move[storeIndex]) {
                 bestMoveMoveSoFar = move;
+                weDidNotChooseATurnWithAFreeMove = false;
             }
         }
         //Check (if any) prevents of steals are worth it:
@@ -164,12 +166,12 @@ public class SimpleAI extends Player {
         board = makeMoveFrom(board, craterIndex, false, storeIndex);
         //Check condition:
         if (isIndexOnTheCorrectSide(lastIndex, craterIndex, storeIndex) &&
-                board[lastIndex] == storeIndex &&
-                board[16 - lastIndex] > storeIndex) return true;
+                board[lastIndex] == 0 &&
+                board[16 - lastIndex] > stones) return true;
         return false;
     }
 
-    public boolean preventsSteal(int[] board, int craterIndex, boolean query) {
+    public boolean preventsSteal(int[] board, int craterIndex, boolean query, int storeIndex) {
         int[] screenBoardCopy = makeMoveFrom(board, craterIndex, true, storeIndex);
 
         int startIndex;
@@ -206,7 +208,7 @@ public class SimpleAI extends Player {
         if (tempLastIndex >= 16) {
             //Do some working out to derive the last index.
             for (int i = 0; i <= tempLastIndex; ++i) {
-                if (i == 16) lastIndex = 0;
+                if (i >= 16) lastIndex = 0;
                 else ++lastIndex;
             }
         } else return tempLastIndex;

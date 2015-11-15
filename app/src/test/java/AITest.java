@@ -160,19 +160,19 @@ public class AITest {
     @Test
     public void preventsSteal1() {
         int[] testBoard = {21, 6, 3, 10, 7, 7, 7, 0, 37, 9, 5, 7, 7, 16, 7, 7};
-        assertFalse(aiPlayer.preventsSteal(testBoard, 10, true));
+        assertFalse(aiPlayer.preventsSteal(testBoard, 10, true, 0));
     }
 
     @Test
     public void preventsSteal2() {
         int[] testBoard = {21, 6, 3, 10, 7, 7, 7, 12, 37, 6, 9, 7, 7, 16, 7, 7};
-        assertTrue(aiPlayer.preventsSteal(testBoard, 1, true));
+        assertTrue(aiPlayer.preventsSteal(testBoard, 1, true, 8));
     }
 
     @Test
     public void preventsSteal3() {
-        int[] testBoard = {21, 6, 3, 10, 7, 7, 7, 12, 37, 6, 9, 7, 7, 16, 7, 7};
-        assertFalse(aiPlayer.preventsSteal(testBoard, 10, true));
+        int[] testBoard = {21, 6, 4, 10, 7, 7, 7, 0, 37, 6, 9, 7, 7, 16, 7, 7};
+        assertFalse(aiPlayer.preventsSteal(testBoard, 10, true, 0));
     }
 
     @Test
