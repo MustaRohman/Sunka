@@ -1,5 +1,8 @@
 package toucan.sunka;
 
+import android.content.Context;
+import android.content.Intent;
+import android.os.Parcelable;
 import android.support.v4.app.DialogFragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentActivity;
@@ -13,15 +16,22 @@ import android.widget.Button;
 public class MainScreen extends FragmentActivity{
 
     Button multiPlayerLocal;
+    Button multiPlayer;
+    Button statistics;
+    Button exit;
 
     public static PlayerCollection collection; // needs to be saved in phone memory
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main_screen);
 
+        initButtons();
+        collection = new PlayerCollection();
+    }
+
+    public void initButtons(){
         multiPlayerLocal = (Button) findViewById(R.id.two_player_local);
         multiPlayerLocal.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -32,13 +42,35 @@ public class MainScreen extends FragmentActivity{
         if (collection == null) collection = new PlayerCollection();
         collection.loadPlayerInfoFromFile(getApplicationContext().getFilesDir());
         Log.d("Collection state", collection.toString());
-    }
+        if (collection == null) collection = new PlayerCollection();
+        statistics = (Button) findViewById(R.id.statistics);
+        statistics.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                createStatisticsDialog();
+            }
+        });
+        exit = (Button) findViewById(R.id.exit);
+        exit.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                finish();
+            }
+        });
 
-    //Method only for testing
-    public int randomMethod(){
-        return 5;
-    }
+        multiPlayer = (Button) findViewById (R.id.two_player_online);
+        final FragmentActivity activity = this;
+        multiPlayer.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v){
+                DialogFragment fragment = new OnlineDialog();
+                FragmentManager fm = getSupportFragmentManager();
+                fragment.show(fm, "onlineDialog");
+            }
+        });
 
+    }
+    
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
@@ -69,7 +101,7 @@ public class MainScreen extends FragmentActivity{
 
         DialogFragment fragment = new MultiplayerDialogFragment();
         FragmentManager fm = getSupportFragmentManager();
-        fragment.show(fm, "multiplayerDialog");
+        fragment.show(fm,"multiplayerDialog");
 
     }
 
@@ -77,5 +109,10 @@ public class MainScreen extends FragmentActivity{
         super.onStop();
         collection.savePlayerInfoToFile(getApplicationContext().getFilesDir());
         Log.d("Reached", "onStop on MainScreen");
+    }
+    public void createStatisticsDialog(){
+        StatisticsDialog fragment = new StatisticsDialog();
+        FragmentManager fm = getSupportFragmentManager();
+        fragment.show(fm,"statisticsDialog");
     }
 }

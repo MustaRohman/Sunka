@@ -29,5 +29,14 @@
         android:textSize="@dimen/leaderboard_size"
         android:gravity="center"/>
 
+    <TextView
+        android:id="@+id/player_losses"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="000"
+        android:padding="7dip"
+        android:textSize="@dimen/leaderboard_size"
+        android:gravity="center" />
+
 
 </TableRow>
