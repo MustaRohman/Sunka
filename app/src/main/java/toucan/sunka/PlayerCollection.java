@@ -1,5 +1,3 @@
-// Redundant comment.
-
 package toucan.sunka;
 
 import java.io.File;
@@ -15,7 +13,7 @@ public class PlayerCollection {
     public String path;
 
     public PlayerCollection() {
-        players = new ArrayList<Player>();
+        players = new ArrayList<>();
         path = System.getProperty("os.name").contains("Windows") ? "GameData\\PlayerDatabase.pd" :
                 "GameData/PlayerDatabase.pd";
     }
@@ -36,10 +34,22 @@ public class PlayerCollection {
     }
 
     public void sortByGamesWon() {
-        if (!players.isEmpty()) {
+        if (!players.isEmpty())
             Collections.sort(players, Player.PlayerScoreComparator);
+
+        for (int i = 0; i < players.size(); i++){
+            players.get(i).setPlayerRank(i + 1);
         }
     }
+
+    public Player getPlayerAtPosition(int pos){
+      return players.get(pos);
+    }
+
+    public int size(){
+        return players.size();
+        }
+
 
     // Call this method as follows: savePlayerInfoToFile(context.getFilesDir())
     public void savePlayerInfoToFile(File directory) {

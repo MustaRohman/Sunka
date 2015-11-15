@@ -15,5 +15,8 @@
     <dimen name="view_width">230dp</dimen>
     <dimen name="view_height">60dp</dimen>
     <dimen name="main_screen_text_size">20sp</dimen>
+    <dimen name="margin_bottom_gameOver">15dp</dimen>
+    <dimen name="text_size">20sp</dimen>
+    <dimen name="leaderboard_size">17sp</dimen>
 
 </resources>

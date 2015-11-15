@@ -1,5 +1,8 @@
 package toucan.sunka;
 
+import android.graphics.Color;
+import android.support.v4.app.DialogFragment;
+import android.support.v4.app.FragmentManager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
@@ -13,17 +16,24 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
-/*
-Things to do in this class:
-- Redo store images (Resize stones)
- */
 
 public class TwoPlayerLocalActivity extends AppCompatActivity {
     private Crater playerOneStore;
     private Crater playerTwoStore;
     Crater[] craterList = new Crater[16];
+
+    public Player getFirstPlayer() {
+        return firstPlayer;
+    }
+
+    public Player getSecondPlayer() {
+        return secondPlayer;
+    }
+
     private Player firstPlayer;
     private Player secondPlayer;
+    private TextView firstPlayerLabel;
+    private TextView secondPlayerLabel;
     private boolean firstMove = true;
     public ImageView stoneImage;
 
@@ -37,10 +47,10 @@ public class TwoPlayerLocalActivity extends AppCompatActivity {
 
         initializeCraters();
 
-        TextView firstPlayerLabel = (TextView) findViewById(R.id.player_one_view);
+        firstPlayerLabel = (TextView) findViewById(R.id.player_one_view);
         firstPlayerLabel.setText(firstPlayer.getPlayerName());
         firstPlayer.setTextView(firstPlayerLabel);
-        TextView secondPlayerLabel = (TextView) findViewById(R.id.player_two_view);
+        secondPlayerLabel = (TextView) findViewById(R.id.player_two_view);
         secondPlayerLabel.setText(secondPlayer.getPlayerName());
         secondPlayer.setTextView(secondPlayerLabel);
     }
@@ -197,8 +207,49 @@ public class TwoPlayerLocalActivity extends AppCompatActivity {
             craterList[i].setGravity(Gravity.TOP);
 
         }
+    }
+    public void createGameOverDialog(){
+        DialogFragment fragment = new GameOverDialog();
+        FragmentManager fm = getSupportFragmentManager();
+
+        Bundle playerInfo = new Bundle();
+
+        int p1Stones = firstPlayer.getStore().getStones();
+        int p2Stones = secondPlayer.getStore().getStones();
 
 
+        //Initialises victorPlayer with the victor of the current game
+        if (p1Stones > p2Stones){
+            firstPlayer.setGamesWon(firstPlayer.getNumberOfGamesWon() + 1);
+        } else if (p2Stones > p1Stones){
+            Log.d("createGameOverDialog", String.valueOf(secondPlayer.getNumberOfGamesWon()));
+            secondPlayer.setGamesWon(secondPlayer.getNumberOfGamesWon() + 1);
+            Log.d("createGameOverDialog", String.valueOf(secondPlayer.getNumberOfGamesWon()));
+        }
+
+        MainScreen.collection.sortByGamesWon();
+        Log.d("createGameOverDialog", String.valueOf(secondPlayer.getPlayerRank()));
+
+
+        playerInfo.putString(MultiplayerDialogFragment.PLAYER_ONE_KEY, firstPlayer.getPlayerName());
+        playerInfo.putString(MultiplayerDialogFragment.PLAYER_TWO_KEY, secondPlayer.getPlayerName());
+        playerInfo.putString(GameOverDialog.PLAYER_ONE_STONES, String.valueOf(firstPlayer.getStore().getStones()));
+        playerInfo.putString(GameOverDialog.PLAYER_TWO_STONES, String.valueOf(secondPlayer.getStore().getStones()));
+        playerInfo.putString(GameOverDialog.PLAYER_ONE_WINS, String.valueOf(firstPlayer.getNumberOfGamesWon()));
+        playerInfo.putString(GameOverDialog.PLAYER_TWO_WINS, String.valueOf(secondPlayer.getNumberOfGamesWon()));
+
+        fragment.setArguments(playerInfo);
+        fragment.show(fm,"gameOverDialog");
+    }
+    public void turnNotification(Player p){
+        if(firstPlayer.equals(p)){
+            firstPlayerLabel.setBackgroundColor(Color.GREEN);
+            secondPlayerLabel.setBackgroundColor(Color.TRANSPARENT);
+        }
+        else{
+            secondPlayerLabel.setBackgroundColor(Color.GREEN);
+            firstPlayerLabel.setBackgroundColor(Color.TRANSPARENT);
+        }
     }
     private int getLeftInParent(View view) {
         if (view.getParent() == view.getRootView())
