@@ -263,15 +263,12 @@ public class TwoPlayerOnline extends AppCompatActivity {
             craterList[i].setOppositeCrater(craterList[16 - i]);
             craterList[i].setOwner(firstPlayer);
             craterList[i].setGravity(Gravity.BOTTOM);
-            craterList[i].setStones(0);
         }
         for (int i = 9; i < 16; i++) {
             craterList[i].setOppositeCrater(craterList[16 - i]);
             craterList[i].setOwner(secondPlayer);
             craterList[i].setGravity(Gravity.TOP);
-            craterList[i].setStones(0);
         }
-        craterList[7].setStones(1);
     }
 
     private int getLeftInParent(View view) {
