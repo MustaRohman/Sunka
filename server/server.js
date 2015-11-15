@@ -30,6 +30,10 @@
     Log(INFO, "Listening on port 3000")
   })
 
+  app.get('/', function(req, res) {
+    res.send('Server started. All information restarted')
+});
+
   function parseRequest(request) {
     switch (true) {
       case request === "getServers":
