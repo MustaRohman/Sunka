@@ -17,8 +17,10 @@
     <string name="title_activity_two_player_online">TwoPlayerOnline</string>
     <string name="leaderboard">Leaderboard</string>
     <string name="title_activity_game_over">GameOver</string>
+    <string name="hello_world">Hello world!</string>
     <string name="play_again">Play Again</string>
     <string name="main_menu">Main Menu</string>
     <string name="refresh_list">Refresh List</string>
+    <string name="title_activity_statistics">StatisticsActivity</string>
 
 </resources>

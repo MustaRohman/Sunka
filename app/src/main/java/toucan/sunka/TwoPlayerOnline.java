@@ -5,9 +5,13 @@ import android.os.AsyncTask;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.Gravity;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.animation.Animation;
+import android.view.animation.TranslateAnimation;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
@@ -27,6 +31,7 @@ public class TwoPlayerOnline extends AppCompatActivity {
     private boolean firstMove = true;
     private String gameID;
     protected int opponentMove = 0, freeMove = 0;
+    public ImageView stoneImage;
     static public Socket mSocket;
     {
         try {
@@ -78,8 +83,10 @@ public class TwoPlayerOnline extends AppCompatActivity {
 
         TextView firstPlayerLabel = (TextView) findViewById(R.id.online_player_one_view);
         firstPlayerLabel.setText(firstPlayer.getPlayerName());
+        firstPlayer.setTextView(firstPlayerLabel);
         TextView secondPlayerLabel = (TextView) findViewById(R.id.online_player_two_view);
         secondPlayerLabel.setText(secondPlayer.getPlayerName().toString());
+        secondPlayer.setTextView(secondPlayerLabel);
         setSocketUp();
     }
 
@@ -123,14 +130,21 @@ public class TwoPlayerOnline extends AppCompatActivity {
         if(crater.getStones() != 0 ) {
             if (firstMove) {
                 if (crater.getOwner() == firstPlayer) {
+                    firstPlayer.highlightText();
                     firstPlayer.setPlayingTurnTo(true);
                     secondPlayer.setPlayingTurnTo(false);
                 } else {
                     firstPlayer.setPlayingTurnTo(false);
+                    secondPlayer.highlightText();
                     secondPlayer.setPlayingTurnTo(true);
                 }
                 firstMove = false;
             }
+            stoneImage = crater.getActivePlayer().equals(firstPlayer) ?
+                    ((ImageView) findViewById(R.id.online_store_imageView_p1)) :
+                    ((ImageView) findViewById(R.id.online_store_imageView_p2));
+            Crater.updateCraterImage(crater, 0);
+            moveAnimation(crater.getNextCrater(), crater.getStones(), crater.getActivePlayer(), stoneImage);
             String type = "n";
             Boolean free = false;
             if (crater.getsFreeMove()) free = true;
@@ -142,6 +156,56 @@ public class TwoPlayerOnline extends AppCompatActivity {
                 new makeOpponentMove().execute();
             mSocket.emit("game", gameID + ":" + crater.getOwner().getPlayerName() +
                     ":" + crater.getPositionOnBoard() + type);
+        }
+    }
+
+    private void moveAnimation(final Crater crater, final int count, final Player player, final ImageView stoneImage){
+        stoneImage.setVisibility(View.INVISIBLE);
+        Log.d("moveAnimation", "stoneImage has been set as Invisible");
+        if (count > 0) {
+
+            stoneImage.setVisibility(View.VISIBLE);
+            Log.d("moveAnimation", "stoneImage has been set as Visible");
+
+            int moveXCenter = (getLeftInParent(crater) - getLeftInParent(stoneImage)) +
+                    (crater.getRight() - crater.getLeft()) / 4;
+            int moveY = getTopInParent(crater) - getTopInParent(stoneImage) +
+                    (crater.getBottom() - crater.getTop()) / 4;
+
+            TranslateAnimation move = new TranslateAnimation(0, moveXCenter,
+                    0, moveY);
+            move.setDuration(500);
+            move.setFillAfter(false);
+            move.setAnimationListener(new Animation.AnimationListener() {
+                @Override
+                public void onAnimationStart(Animation animation) {
+
+                }
+
+                @Override
+                public void onAnimationEnd(Animation animation) {
+
+                    stoneImage.setVisibility(View.INVISIBLE);
+                    Log.d("moveAnimation", "stoneImage has been set as Invisible");
+
+                    Crater nextCrater;
+
+                    //Checks if next crater is opponent's store
+                    nextCrater = crater.getNextCrater().equals(player.getStore().getOppositeCrater()) ?
+                            crater.getNextCrater().getNextCrater() :
+                            crater.getNextCrater();
+                    if (crater.isStore()) {
+                        Crater.updateStoreImage(crater, crater.getStones());
+                    } else {
+                        Crater.updateCraterImage(crater, crater.getStones());
+                    }
+                    moveAnimation(nextCrater, count - 1, player, stoneImage);
+                }
+                @Override
+                public void onAnimationRepeat(Animation animation) {
+                }
+            });
+            stoneImage.startAnimation(move);
         }
     }
 
@@ -183,15 +247,27 @@ public class TwoPlayerOnline extends AppCompatActivity {
         for (int i = 1; i < 8; i++) {
             craterList[i].setOppositeCrater(craterList[16 - i]);
             craterList[i].setOwner(firstPlayer);
-            craterList[i].setStones(0);
+            craterList[i].setGravity(Gravity.BOTTOM);
         }
         for (int i = 9; i < 16; i++) {
             craterList[i].setOppositeCrater(craterList[16 - i]);
-            craterList[i].setStones(0);
             craterList[i].setOwner(secondPlayer);
+            craterList[i].setGravity(Gravity.TOP);
         }
-        craterList[4].setStones(4);
-        craterList[9].setStones(4);
+    }
+
+    private int getLeftInParent(View view) {
+        if (view.getParent() == view.getRootView())
+            return view.getLeft();
+        else
+            return view.getLeft() + getLeftInParent((View) view.getParent());
+    }
+
+    private int getTopInParent(View view) {
+        if (view.getParent() == view.getRootView())
+            return view.getTop();
+        else
+            return view.getTop() + getTopInParent((View) view.getParent());
     }
 
     @Override

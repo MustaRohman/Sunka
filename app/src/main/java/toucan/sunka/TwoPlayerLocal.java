@@ -6,9 +6,13 @@ import android.support.v4.app.FragmentManager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.Gravity;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.animation.Animation;
+import android.view.animation.TranslateAnimation;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
@@ -28,11 +32,10 @@ public class TwoPlayerLocal extends AppCompatActivity {
 
     private Player firstPlayer;
     private Player secondPlayer;
-
     private TextView firstPlayerLabel;
     private TextView secondPlayerLabel;
-    
     private boolean firstMove = true;
+    public ImageView stoneImage;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -46,8 +49,10 @@ public class TwoPlayerLocal extends AppCompatActivity {
 
         firstPlayerLabel = (TextView) findViewById(R.id.player_one_view);
         firstPlayerLabel.setText(firstPlayer.getPlayerName());
+        firstPlayer.setTextView(firstPlayerLabel);
         secondPlayerLabel = (TextView) findViewById(R.id.player_two_view);
         secondPlayerLabel.setText(secondPlayer.getPlayerName());
+        secondPlayer.setTextView(secondPlayerLabel);
     }
 
     public void onCraterClick(View view){
@@ -55,16 +60,70 @@ public class TwoPlayerLocal extends AppCompatActivity {
         if (firstMove){
             if (crater.getOwner() == firstPlayer) {
                 firstPlayer.setPlayingTurnTo(true);
+                firstPlayer.highlightText();
                 secondPlayer.setPlayingTurnTo(false);
             }
             else {
                 firstPlayer.setPlayingTurnTo(false);
+                secondPlayer.highlightText();
                 secondPlayer.setPlayingTurnTo(true);
             }
             firstMove = false;
         }
+        if (crater.getActivePlayer().equals(firstPlayer)){
+            stoneImage = (ImageView) findViewById(R.id.store_imageView_p1);
+        } else {
+            stoneImage = (ImageView) findViewById(R.id.store_imageView_p2);
+        }
+        Crater.updateCraterImage(crater, 0);
+        moveAnimation(crater.getNextCrater(), crater.getStones(), crater.getActivePlayer(), stoneImage);
         crater.makeMoveFromHere();
     }
+
+    private void moveAnimation(final Crater crater, final int count, final Player player, final ImageView stoneImage){
+        stoneImage.setVisibility(View.INVISIBLE);
+        Log.d("moveAnimation", "stoneImage has been set as Invisible");
+        if (count > 0) {
+            stoneImage.setVisibility(View.VISIBLE);
+            Log.d("moveAnimation", "stoneImage has been set as Visible");
+            int moveXCenter = (getLeftInParent(crater) - getLeftInParent(stoneImage)) +
+                    (crater.getRight() - crater.getLeft()) / 4;
+            int moveY = getTopInParent(crater) - getTopInParent(stoneImage) +
+                    (crater.getBottom() - crater.getTop()) / 4;
+            TranslateAnimation move = new TranslateAnimation(0, moveXCenter,
+                    0, moveY);
+            move.setDuration(500);
+            move.setFillAfter(false);
+            move.setAnimationListener(new Animation.AnimationListener() {
+                @Override
+                public void onAnimationStart(Animation animation) {}
+
+                @Override
+                public void onAnimationEnd(Animation animation) {
+                    stoneImage.setVisibility(View.INVISIBLE);
+                    Log.d("moveAnimation", "stoneImage has been set as Invisible");
+                    Crater nextCrater;
+                    //Checks if next crater is opponent's store
+                    if (crater.getNextCrater().equals(player.getStore().getOppositeCrater())) {
+                        nextCrater = crater.getNextCrater().getNextCrater();
+                    } else {
+                        nextCrater = crater.getNextCrater();
+                    }
+                    if (crater.isStore()) {
+                        Crater.updateStoreImage(crater, crater.getStones());
+                    } else {
+                        Crater.updateCraterImage(crater, crater.getStones());
+                    }
+                    moveAnimation(nextCrater, count - 1, player, stoneImage);
+                }
+                @Override
+                public void onAnimationRepeat(Animation animation) {
+                }
+            });
+            stoneImage.startAnimation(move);
+        }
+    }
+
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -124,16 +183,14 @@ public class TwoPlayerLocal extends AppCompatActivity {
         for (int i = 1; i < 8; i++) {
             craterList[i].setOppositeCrater(craterList[16 - i]);
             craterList[i].setOwner(firstPlayer);
+            craterList[i].setGravity(Gravity.BOTTOM);
         }
         for (int i = 9; i < 16; i++) {
             craterList[i].setOppositeCrater(craterList[16 - i]);
             craterList[i].setOwner(secondPlayer);
+            craterList[i].setGravity(Gravity.TOP);
+
         }
-//        for (Crater crater : craterList )
-//            crater.setStones(0);
-//        craterList[7].setStones(1);
-//        craterList[9].setStones(1);
-//        craterList[15].setStones(4);
     }
     public void createGameOverDialog(){
         DialogFragment fragment = new GameOverDialog();
@@ -148,7 +205,7 @@ public class TwoPlayerLocal extends AppCompatActivity {
         //Initialises victorPlayer with the victor of the current game
         if (p1Stones > p2Stones){
             firstPlayer.setGamesWon(firstPlayer.getNumberOfGamesWon() + 1);
-        } else {
+        } else if (p2Stones > p1Stones){
             Log.d("createGameOverDialog", String.valueOf(secondPlayer.getNumberOfGamesWon()));
             secondPlayer.setGamesWon(secondPlayer.getNumberOfGamesWon() + 1);
             Log.d("createGameOverDialog", String.valueOf(secondPlayer.getNumberOfGamesWon()));
@@ -178,21 +235,18 @@ public class TwoPlayerLocal extends AppCompatActivity {
             firstPlayerLabel.setBackgroundColor(Color.TRANSPARENT);
         }
     }
+    private int getLeftInParent(View view) {
+        if (view.getParent() == view.getRootView())
+            return view.getLeft();
+        else
+            return view.getLeft() + getLeftInParent((View) view.getParent());
+    }
+
+    private int getTopInParent(View view) {
+        if (view.getParent() == view.getRootView())
+            return view.getTop();
+        else
+            return view.getTop() + getTopInParent((View) view.getParent());
+    }
+
 }
-
-/*
-Good test for one side empty functionality - All other stones are 0
-craterList[7].setStones(1)
-craterList[12].setStones(2)
-craterList[12].makeMoveFromHere
-craterList[14].makeMoveFromHere
-craterList[13].makeMoveFromHere
-craterList[14].makeMoveFromHere
-craterList[15].makeMoveFromHere
-craterList[1].makeMoveFromHere SHOULD BE POSSIBLE
-
-One more that checks steal
-craterList[6].setStones(1)
-craterList[9].setStones(1)
-craterList[10].setStones(1)
- */

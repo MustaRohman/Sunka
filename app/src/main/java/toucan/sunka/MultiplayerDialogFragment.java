@@ -7,6 +7,8 @@ import android.support.v4.app.DialogFragment;
 import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.v7.app.AlertDialog;
+import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.widget.EditText;
 
@@ -37,16 +39,13 @@ public class MultiplayerDialogFragment extends DialogFragment {
                 String player1Name = player1Txt.getText().toString();
                 String player2Name = player2Txt.getText().toString();
 
-                Player player1 = MainScreen.collection.findPlayer(player1Name);
-                Player player2 = MainScreen.collection.findPlayer(player2Name);
-
-                initiatePlayer(player1, player1Name);
-                initiatePlayer(player2, player2Name);
+                Player player1 = initiatePlayer(player1Name);
+                Player player2 = initiatePlayer(player2Name);
 
                 Context context = getContext();
                 Intent twoPlayerGame = new Intent(context, TwoPlayerLocal.class);
-                twoPlayerGame.putExtra(PLAYER_ONE_KEY, new Player(player1Name));
-                twoPlayerGame.putExtra(PLAYER_TWO_KEY, new Player(player2Name));
+                twoPlayerGame.putExtra(PLAYER_ONE_KEY, player1);
+                twoPlayerGame.putExtra(PLAYER_TWO_KEY, player2);
                 context.startActivity(twoPlayerGame);
             }
         });
@@ -55,11 +54,15 @@ public class MultiplayerDialogFragment extends DialogFragment {
         return builder.create();
     }
 
-    public void initiatePlayer(Player player, String name){
-        if (player == null) {
-            player = new Player(name);
-            MainScreen.collection.addPlayer(player);
-        }
+    public Player initiatePlayer(String name){
+            Player p = MainScreen.collection.findPlayer(name);
+
+            if(p == null) {
+                p = new Player(name);
+                MainScreen.collection.addPlayer(p);
+            }
+
+        return p;
     }
 
 }

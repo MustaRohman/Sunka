@@ -26,7 +26,7 @@ import java.util.Objects;
 
 public class OnlineGames extends AppCompatActivity {
 
-    final public static String SERVER_ADDRESS = "http://10.40.196.53:3000";
+    final public static String SERVER_ADDRESS = "http://10.40.145.82:3000";
     final public static String KEY_PLAYER = "KEY_PLAYER";
     final public static String KEY_OPPONENT = "KEY_OPPONENT";
     final public static String KEY_ID = "KEY_ID";
