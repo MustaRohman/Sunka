@@ -68,9 +68,41 @@ public class TwoPlayerOnline extends AppCompatActivity {
         }
 
         protected void onProgressUpdate(Integer... params){
-            correspondingCrater(params[0]).makeMoveFromHere();
+            stoneImage = (ImageView) findViewById(R.id.online_store_imageView_p2);
+            Crater crater = correspondingCrater(params[0]);
+            Crater.updateCraterImage(crater, 0);
+            moveAnimation(crater.getNextCrater(), crater.getStones(), crater.getActivePlayer(), stoneImage);
+            crater.makeMoveFromHere();
         }
     }
+
+    private Emitter.Listener parseMove = new Emitter.Listener() {
+        @Override
+        public void call(final Object... args) {
+            activity.runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    if (firstMove) {
+                        new makeOpponentMove().execute();
+                        firstPlayer.setPlayingTurnTo(false);
+                        secondPlayer.setPlayingTurnTo(true);
+                        firstMove = false;
+                    }
+
+                    if (((String) args[0]).charAt(1) == 'f') {
+                        freeMove = Integer.parseInt(((String) args[0]).charAt(0) + "");
+                        stoneImage = (ImageView) findViewById(R.id.online_store_imageView_p2);
+                        Crater crater = correspondingCrater(freeMove);
+                        Crater.updateCraterImage(crater, 0);
+                        moveAnimation(crater.getNextCrater(), crater.getStones(), crater.getActivePlayer(), stoneImage);
+                        crater.makeMoveFromHere();
+                    }
+                    else opponentMove = Integer.parseInt(((String) args[0]).charAt(0) + "");
+                    Log.d("LISTENER", "Received opponent move: " + opponentMove);
+                }
+            });
+        }
+    };
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -100,30 +132,6 @@ public class TwoPlayerOnline extends AppCompatActivity {
     public void setSocketUp(){
         mSocket.on(firstPlayer.getPlayerName(), parseMove);
     }
-
-    private Emitter.Listener parseMove = new Emitter.Listener() {
-        @Override
-        public void call(final Object... args) {
-            activity.runOnUiThread(new Runnable() {
-                @Override
-                public void run() {
-                    if (firstMove) {
-                        new makeOpponentMove().execute();
-                        firstPlayer.setPlayingTurnTo(false);
-                        secondPlayer.setPlayingTurnTo(true);
-                        firstMove = false;
-                    }
-
-                    if (((String) args[0]).charAt(1) == 'f') {
-                        freeMove = Integer.parseInt(((String) args[0]).charAt(0) + "");
-                        correspondingCrater(freeMove).makeMoveFromHere();
-                    }
-                    else opponentMove = Integer.parseInt(((String) args[0]).charAt(0) + "");
-                    Log.d("LISTENER", "Received opponent move: " + opponentMove);
-                }
-            });
-        }
-    };
 
     public void onCraterClick(View view){
         Crater crater = (Crater) view;

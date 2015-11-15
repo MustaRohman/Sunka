@@ -206,7 +206,7 @@ public class OnlineGames extends AppCompatActivity {
             opponent = new Player(firstPlayer);
         int x=0;
         boolean equals = true;
-        while( x != firstPlayer.length() )
+        while( x != firstPlayer.length() - 1  )
             if (firstPlayer.charAt(x) != owner.charAt(x++))
                 equals = false;
         if (equals) opponent = new Player(secondPlayer);
