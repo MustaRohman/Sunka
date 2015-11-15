@@ -28,7 +28,6 @@ public class MainScreen extends FragmentActivity {
         setContentView(R.layout.activity_main_screen);
 
         initButtons();
-        collection = new PlayerCollection();
     }
 
     public void initButtons(){
