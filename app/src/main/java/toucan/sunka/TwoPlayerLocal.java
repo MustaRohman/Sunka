@@ -21,15 +21,6 @@ public class TwoPlayerLocal extends AppCompatActivity {
     private Crater playerOneStore;
     private Crater playerTwoStore;
     Crater[] craterList = new Crater[16];
-
-    public Player getFirstPlayer() {
-        return firstPlayer;
-    }
-
-    public Player getSecondPlayer() {
-        return secondPlayer;
-    }
-
     private Player firstPlayer;
     private Player secondPlayer;
     private TextView firstPlayerLabel;
@@ -78,6 +69,7 @@ public class TwoPlayerLocal extends AppCompatActivity {
         Crater.updateCraterImage(crater, 0);
         moveAnimation(crater.getNextCrater(), crater.getStones(), crater.getActivePlayer(), stoneImage);
         crater.makeMoveFromHere();
+        if (crater.checkGameOver()) createGameOverDialog();
     }
 
     private void moveAnimation(final Crater crater, final int count, final Player player, final ImageView stoneImage){
@@ -184,13 +176,15 @@ public class TwoPlayerLocal extends AppCompatActivity {
             craterList[i].setOppositeCrater(craterList[16 - i]);
             craterList[i].setOwner(firstPlayer);
             craterList[i].setGravity(Gravity.BOTTOM);
+            craterList[i].setStones(0);
         }
         for (int i = 9; i < 16; i++) {
             craterList[i].setOppositeCrater(craterList[16 - i]);
             craterList[i].setOwner(secondPlayer);
             craterList[i].setGravity(Gravity.TOP);
-
+            craterList[i].setStones(0);
         }
+        craterList[7].setStones(1);
     }
     public void createGameOverDialog(){
         DialogFragment fragment = new GameOverDialog();
@@ -225,16 +219,6 @@ public class TwoPlayerLocal extends AppCompatActivity {
         fragment.setArguments(playerInfo);
         fragment.show(fm,"gameOverDialog");
     }
-    public void turnNotification(Player p){
-        if(firstPlayer.equals(p)){
-            firstPlayerLabel.setBackgroundColor(Color.GREEN);
-            secondPlayerLabel.setBackgroundColor(Color.TRANSPARENT);
-        }
-        else{
-            secondPlayerLabel.setBackgroundColor(Color.GREEN);
-            firstPlayerLabel.setBackgroundColor(Color.TRANSPARENT);
-        }
-    }
     private int getLeftInParent(View view) {
         if (view.getParent() == view.getRootView())
             return view.getLeft();
@@ -247,6 +231,13 @@ public class TwoPlayerLocal extends AppCompatActivity {
             return view.getTop();
         else
             return view.getTop() + getTopInParent((View) view.getParent());
+    }
+    public Player getFirstPlayer() {
+        return firstPlayer;
+    }
+
+    public Player getSecondPlayer() {
+        return secondPlayer;
     }
 
 }

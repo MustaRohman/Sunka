@@ -7,6 +7,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.DialogFragment;
 import android.support.v7.app.AlertDialog;
+import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -28,7 +29,6 @@ public class GameOverDialog extends DialogFragment {
     Player victorPlayer;
     Player loserPlayer;
     private TableLayout table;
-    private TwoPlayerLocal thisActivity;
     private LayoutInflater inflater;
     private Bundle playerBundle;
     private TextView winTitle;
@@ -47,21 +47,44 @@ public class GameOverDialog extends DialogFragment {
         initialisePlayerInfo();
 
         initialiseLeaderboard();
-
         builder.setView(layoutView);
-        thisActivity = (TwoPlayerLocal) this.getActivity();
-        builder.setPositiveButton(R.string.play_again, new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-                Player playerOne = thisActivity.getFirstPlayer();
-                Player playerTwo = thisActivity.getSecondPlayer();
-                Context context = getContext();
-                Intent newTwoPlayerGame = new Intent(context, TwoPlayerLocal.class);
-                newTwoPlayerGame.putExtra(PLAYER_ONE_KEY, playerOne);
-                newTwoPlayerGame.putExtra(PLAYER_TWO_KEY, playerTwo);
-                context.startActivity(newTwoPlayerGame);
-            }
-        });
+
+        final DialogFragment dg = this;
+        boolean online;
+        try {
+            online = true;
+            TwoPlayerLocal blabla = (TwoPlayerLocal) this.getActivity();
+        }
+        catch (ClassCastException e){
+            online = false;
+        }
+        if (online) {
+            builder.setPositiveButton(R.string.play_again, new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialog, int which) {
+                    TwoPlayerOnline onlineActivity;
+                    TwoPlayerLocal localActivity;
+                    Player playerOne = null, playerTwo = null;
+                    try {
+                        localActivity = (TwoPlayerLocal) dg.getActivity();
+                        playerOne = localActivity.getFirstPlayer();
+                        playerTwo = localActivity.getSecondPlayer();
+                    } catch (ClassCastException c) {
+                        try {
+                            onlineActivity = (TwoPlayerOnline) dg.getActivity();
+                            playerOne = onlineActivity.getFirstPlayer();
+                            playerTwo = onlineActivity.getSecondPlayer();
+                        } catch (ClassCastException e) { // TODO ai
+                        }
+                    }
+                    Context context = getContext();
+                    Intent newTwoPlayerGame = new Intent(context, TwoPlayerLocal.class);
+                    newTwoPlayerGame.putExtra(PLAYER_ONE_KEY, playerOne);
+                    newTwoPlayerGame.putExtra(PLAYER_TWO_KEY, playerTwo);
+                    context.startActivity(newTwoPlayerGame);
+                }
+            });
+        }
         builder.setNegativeButton(R.string.main_menu, new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
@@ -86,16 +109,14 @@ public class GameOverDialog extends DialogFragment {
 
         //Initialises victorPlayer with the victor of the current game
         if (p1Stones > p2Stones){
-            victorPlayer = MainScreen.collection.findPlayer(playerBundle.getString(PLAYER_ONE_KEY));
-            loserPlayer = MainScreen.collection.findPlayer(playerBundle.getString(PLAYER_TWO_KEY));
+            victorPlayer = MainScreen.fetchPlayer(playerBundle.getString(PLAYER_ONE_KEY));
+            loserPlayer = MainScreen.fetchPlayer(playerBundle.getString(PLAYER_TWO_KEY));
         } else {
-            victorPlayer = MainScreen.collection.findPlayer(playerBundle.getString(PLAYER_TWO_KEY));
-            loserPlayer = MainScreen.collection.findPlayer(playerBundle.getString(PLAYER_ONE_KEY));
+            victorPlayer = MainScreen.fetchPlayer(playerBundle.getString(PLAYER_TWO_KEY));
+            loserPlayer = MainScreen.fetchPlayer(playerBundle.getString(PLAYER_ONE_KEY));
         }
 
         //Updates the victor's/loser's wins/losses and resorts the collection
-        victorPlayer.setGamesWon(victorPlayer.getNumberOfGamesWon() + 1);
-        loserPlayer.setGamesLost(loserPlayer.getNumberOfGamesLost() + 1);
         MainScreen.collection.sortByGamesWon();
         winTitle = (TextView) layoutView.findViewById(R.id.win_title);
         //Updates the victor's wins and resorts the collection

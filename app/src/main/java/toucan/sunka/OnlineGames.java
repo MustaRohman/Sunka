@@ -55,6 +55,7 @@ public class OnlineGames extends AppCompatActivity {
         setContentView(R.layout.activity_online_games);
 
         player = getIntent().getParcelableExtra(OnlineDialog.ONLINE_PLAYER_ONE);
+        ((TextView) findViewById(R.id.player_text_view_mp)).setText(player.getPlayerName());
         final TextView opponentNameView = (TextView) findViewById(R.id.opponent_name);
         serverListView = (ListView) findViewById(R.id.server_list);
         serverListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
@@ -124,7 +125,7 @@ public class OnlineGames extends AppCompatActivity {
                             Log.d("BACKEND THREAD", "Found server, name: " + serverListString[i]);
                             i++;
                         }
-                        publishProgress(new ArrayAdapter<>(activity, android.R.layout.simple_list_item_1, serverListString));
+                        publishProgress(new ArrayAdapter<>(activity, R.layout.list_item, serverListString));
                     }
                 } catch (InterruptedException e) {
                     e.printStackTrace();

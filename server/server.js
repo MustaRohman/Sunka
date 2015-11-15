@@ -3,7 +3,7 @@
   var http = require('http').Server(app)
   var io = require('socket.io')(http)
   var INFO = "INFO", ERROR = "ERROR", REC = "RECEIVED", BRD = "BROADCAST"
-  var serverList = ['opposite']
+  var serverList = ['']
   var games = {}
   var matchID = []
   var player1, player2
