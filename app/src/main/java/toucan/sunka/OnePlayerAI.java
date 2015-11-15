@@ -82,8 +82,14 @@ public class OnePlayerAI extends AppCompatActivity {
             }
             firstMove = false;
         }
+        boolean wait = false;
+        if (crater.getsFreeMove()) wait = true;
         crater.makeMoveFromHere();
-        new makeAIMove().execute();
+        if (crater.checkSide(aiPlayer)) wait = true;
+        if (wait && crater.checkSide(firstPlayer));
+             // gameover
+        if (!wait)
+            new makeAIMove().execute();
     }
 
     public void initializeStores() {
