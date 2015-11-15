@@ -1,7 +1,9 @@
 package toucan.sunka;
 
+import android.graphics.Color;
 import android.os.Parcel;
 import android.os.Parcelable;
+import android.widget.TextView;
 
 import java.io.Serializable;
 import java.util.Comparator;
@@ -14,6 +16,7 @@ public class Player implements Parcelable {
     private Crater store;
     private int playerRank;
     private boolean playingTurn;
+    protected TextView playerTextView;
     private boolean wasIdle;
 
     public Player(String pN) {
@@ -122,4 +125,17 @@ public class Player implements Parcelable {
                 gamesWon + "\n" +
                 gamesLost;
     }
+
+    public void setTextView(TextView view){
+        playerTextView = view;
+    }
+
+    public void highlightText(){
+        playerTextView.setBackgroundColor(Color.YELLOW);
+    }
+
+    public void unhighlightText(){
+        playerTextView.setBackgroundColor(Color.GRAY);
+    }
+
 }

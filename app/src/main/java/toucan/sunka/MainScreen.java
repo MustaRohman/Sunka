@@ -20,7 +20,6 @@ public class MainScreen extends FragmentActivity{
 
     public static PlayerCollection collection; // needs to be saved in phone memory
 
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -48,7 +47,6 @@ public class MainScreen extends FragmentActivity{
                 finish();
             }
         });
-
 
     }
 
