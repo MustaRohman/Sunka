@@ -51,9 +51,7 @@ public class SimpleAI extends Player {
             currentState = state;
             //The next stuff need you to not perform the move yet:
             if (getsFreeMoveWith(i + offset, state[i], storeIndex)) movesWithFreeTurn.add(state);
-
-            if (preventsSteal(state, state[i + offset]))
-                movesWhichPreventSteals.add(state);
+            else if (preventsSteal(state, state[i + offset], false)) movesWhichPreventSteals.add(state);
             //Make the move on the copyBoard and store the result to access the crater which
             //would recreate it
             state = makeMoveFrom(state, i + offset, true);
@@ -77,6 +75,7 @@ public class SimpleAI extends Player {
         int offset = 1;
         int currentIndex = -1;
         int oppositeIndex = -1;
+        boolean skippedStealOnRequest = false;
 
         //Index of crater to skip:
         int otherPlayerStoreIndex = getOtherPlayerStoreIndex();
@@ -88,18 +87,19 @@ public class SimpleAI extends Player {
             oppositeIndex = 16 - currentIndex;
             if ((currentIndex) != otherPlayerStoreIndex) {
                 //Try to steal:
-                if (performTheSteal && stones == 1 && board[currentIndex] == 0 && isIndexOnMySideAndAChoice(currentIndex)) {
+                if (stones == 1 && board[currentIndex] == 0 && isIndexOnMySideAndAChoice(currentIndex, choice)) {
                     if (board[oppositeIndex] > 0) {
-                        //Steal:
-
-                        //Take stones from opponent
-                        board[storeIndex] += board[oppositeIndex];
-                        board[oppositeIndex] = 0;
-                        //Self reward
-                        board[storeIndex] += board[currentIndex];
-                        board[currentIndex] = 0;
+                        if (performTheSteal) {
+                            //Steal:
+                            //Take stones from opponent
+                            board[storeIndex] += board[oppositeIndex];
+                            board[oppositeIndex] = 0;
+                            //Self reward
+                            board[storeIndex] += stones;
+                            board[currentIndex] = 0;
+                        } else skippedStealOnRequest = true;
                     }
-                } else {
+                } else if (!skippedStealOnRequest) {
                     //Regular move:
                     board[currentIndex] += 1;
                 }
@@ -162,17 +162,20 @@ public class SimpleAI extends Player {
     }
 
     public boolean performsSteal(int[] board, int craterIndex, int stones) {
+        board = board.clone();
         int lastIndex = getLastIndex(craterIndex, stones);
         board = makeMoveFrom(board, craterIndex, false);
         //Check condition:
-        if (isIndexOnMySideAndAChoice(lastIndex) &&
+        if (isIndexOnMySideAndAChoice(lastIndex, craterIndex) &&
                 board[lastIndex] == 0 &&
                 board[16 - lastIndex] > 0) return true;
         return false;
     }
 
-    public boolean preventsSteal(int[] board, int craterIndex) {
-        int[] screenBoardCopy = getStore().getArrayBoard(getStore());
+    public boolean preventsSteal(int[] board, int craterIndex, boolean query) {
+        int[] screenBoardCopy = board.clone();
+        screenBoardCopy = makeMoveFrom(screenBoardCopy, craterIndex, true);
+
         int startIndex;
         int lengthPosition;
 
@@ -185,21 +188,23 @@ public class SimpleAI extends Player {
         }
 
         for(int i = startIndex; i < lengthPosition; ++i) {
-            if (performsSteal(screenBoardCopy, i, board[i])) {
-                opponentChoicesToSteal.put(currentState, i);
+            if (performsSteal(screenBoardCopy, i, screenBoardCopy[i])) {
+                if (!query) opponentChoicesToSteal.put(currentState, i);
                 return false;
             }
         }
         return true;
     }
 
-    public boolean isIndexOnMySideAndAChoice(int index) {
-        if (storeIndex == 8) return index < 8 && 0 < index;
+    public boolean isIndexOnMySideAndAChoice(int index, int choice) {
+        int tempStoreIndex = storeIndex;
+        if (choiceBelongsToOtherPlayer(choice)) tempStoreIndex = getOtherPlayerStoreIndex();
+        if (tempStoreIndex == 8) return index < 8 && 0 < index;
         else return index > 8 && 16 > index;
     }
 
     public int getLastIndex(int craterIndex, int stones) {
-        int tempLastIndex = (craterIndex + stones) + 1;
+        int tempLastIndex = (craterIndex + stones);
         int lastIndex = 0;
         //Get to the last index:
         if (tempLastIndex > 16) {
@@ -210,6 +215,10 @@ public class SimpleAI extends Player {
             }
         } else return tempLastIndex;
         return lastIndex;
+    }
+
+    public boolean choiceBelongsToOtherPlayer(int choice) {
+        return choice < 8 && choice > 0;
     }
 
     public int getOtherPlayerStoreIndex() {

@@ -3,6 +3,7 @@ import org.junit.Test;
 
 import toucan.sunka.Crater;
 import toucan.sunka.Player;
+import toucan.sunka.SimpleAI;
 
 import static org.junit.Assert.*;
 
@@ -11,12 +12,14 @@ public class AITest {
     Crater regularCrater, storeCrater;
     Crater[] board;
     Player player1 = new Player("John");
-    Player player2 = new Player("Tim");
+    SimpleAI aiPlayer;
 
     @Before
     public void init() {
+        Player player2 = new Player("Tim");
         regularCrater = new Crater(false);
         storeCrater = new Crater(true);
+        aiPlayer = new SimpleAI(player2);
         board = initialiseBoard();
     }
 
@@ -30,9 +33,9 @@ public class AITest {
             else
                 board[i] = new Crater(true);
             if (i > 0 && i < 9)
-                board[i].setOwner(player2);
-            else
                 board[i].setOwner(player1);
+            else
+                board[i].setOwner(aiPlayer);
         }
 
         board[15].setNextCrater(board[0]);
@@ -47,10 +50,11 @@ public class AITest {
 
         }
 
-        player1.setStore(board[0]);
-        player2.setStore(board[8]);
+        player1.setStore(board[8]);
+        aiPlayer.setStore(board[0]);
         board[0].setOppositeCrater(board[8]);
         board[8].setOppositeCrater(board[0]);
+        aiPlayer.setButtonChoices();
         return board;
     }
 
@@ -116,5 +120,54 @@ public class AITest {
 
         assertArrayEquals(expected, result);
     }
+
+    @Test
+    public void makeMoveTest1() {
+        int[] testBoard = {0, 7, 7, 7, 7, 8, 7, 7, 0, 7, 1, 0, 7, 7, 7, 7};
+        int choice = 10;
+        int[] expected = {9, 7, 7, 7, 7, 0, 7, 7, 0, 7, 0, 0, 7, 7, 7, 7};
+        int [] result = aiPlayer.makeMoveFrom(testBoard, choice, true);
+        assertArrayEquals(expected, result);
+    }
+
+    @Test
+    public void makeMoveTest2() {
+        int[] testBoard = {0, 7, 7, 7, 20, 7, 7, 7, 0, 7, 2, 7, 0, 7, 7, 7};
+        int choice = 10;
+        int[] expected = {21, 7, 7, 7, 0, 7, 7, 7, 0, 7, 0, 8, 0, 7, 7, 7};
+        int [] result = aiPlayer.makeMoveFrom(testBoard, choice, true);
+        assertArrayEquals(expected, result);
+    }
+
+    @Test
+    public void performsSteal1() {
+        int[] testBoard = {0, 7, 7, 7, 20, 7, 7, 7, 0, 7, 2, 7, 0, 7, 7, 7};
+        assertTrue(aiPlayer.performsSteal(testBoard, 10, 2));
+    }
+
+    @Test
+    public void performsSteal2() {
+        int[] testBoard = {21, 7, 3, 10, 7, 7, 7, 12, 37, 7, 9, 7, 7, 16, 7, 7};
+        assertFalse(aiPlayer.performsSteal(testBoard, 10, 2));
+    }
+
+    @Test
+    public void preventsSteal1() {
+        int[] testBoard = {21, 6, 3, 10, 7, 7, 7, 12, 37, 6, 9, 7, 7, 16, 7, 7};
+        assertFalse(aiPlayer.preventsSteal(testBoard, 9, true));
+    }
+
+    @Test
+    public void preventsSteal2() {
+        int[] testBoard = {21, 6, 3, 10, 7, 7, 7, 12, 37, 6, 9, 7, 7, 16, 7, 7};
+        assertTrue(aiPlayer.preventsSteal(testBoard, 1, true));
+    }
+
+    @Test
+    public void preventsSteal3() {
+        int[] testBoard = {21, 6, 3, 10, 7, 7, 7, 12, 37, 6, 9, 7, 7, 16, 7, 7};
+        assertFalse(aiPlayer.preventsSteal(testBoard, 10, true));
+    }
+
 
 }
