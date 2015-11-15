@@ -13,7 +13,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 
-public class MainScreen extends FragmentActivity{
+public class MainScreen extends FragmentActivity {
 
     Button multiPlayerLocal;
     Button multiPlayer;
@@ -93,12 +93,10 @@ public class MainScreen extends FragmentActivity{
         return super.onOptionsItemSelected(item);
     }
 
-
     /**
      * Creates an instance of the MultiplayerDialogFragment and displays it on screen.
      */
     public void createMultiplayerDialog() {
-
         DialogFragment fragment = new MultiplayerDialogFragment();
         FragmentManager fm = getSupportFragmentManager();
         fragment.show(fm,"multiplayerDialog");
@@ -110,9 +108,22 @@ public class MainScreen extends FragmentActivity{
         collection.savePlayerInfoToFile(getApplicationContext().getFilesDir());
         Log.d("Reached", "onStop on MainScreen");
     }
-    public void createStatisticsDialog(){
+
+    /**
+     * Creates an instance of the StatisticsDialogFragment and displays it on screen.
+     */
+    public void createStatisticsDialog() {
         StatisticsDialog fragment = new StatisticsDialog();
         FragmentManager fm = getSupportFragmentManager();
         fragment.show(fm,"statisticsDialog");
+    }
+
+    public static Player fetchPlayer(String name) {
+        Player p;
+        if((p = MainScreen.collection.findPlayer(name)) == null) {
+            p = new Player(name);
+            MainScreen.collection.addPlayer(p);
+        }
+        return p;
     }
 }
