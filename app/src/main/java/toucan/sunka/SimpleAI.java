@@ -225,13 +225,15 @@ public class SimpleAI extends Player {
 
     public Crater getBestCrater(){
         Iterator it = moveGeneratedFrom.entrySet().iterator();
-        boolean isEquals = true;
+        for (int i =0 ; i < 16; i ++ ) Log.d("bestmove",bestMove[i] + "");
+        boolean isEquals;
         while (it.hasNext()){
             HashMap.Entry pair = (HashMap.Entry) it.next();
+            isEquals = true;
             for (int i = 0; i < bestMove.length; i++)
                 if ( ((int[]) pair.getKey())[i] != bestMove[i] ) {
                     isEquals = false;
-                    Log.d("INFO", "hash item:" + ((int[]) pair.getKey())[i] + " bestMove item: "+ bestMove[i]);
+                    Log.d("BREAK","BREAK TRIGGERED");
                     break;
                 }
             if (isEquals){

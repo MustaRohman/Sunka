@@ -63,6 +63,7 @@ public class OnePlayerAI extends AppCompatActivity {
         }
 
         protected void onPostExecute(Void result) {
+
             aiPlayer.getBestCrater().makeMoveFromHere();
         }
 
