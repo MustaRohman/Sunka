@@ -17,7 +17,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 
-public class TwoPlayerLocalActivity extends AppCompatActivity {
+public class TwoPlayerLocal extends AppCompatActivity {
     private Crater playerOneStore;
     private Crater playerTwoStore;
     Crater[] craterList = new Crater[16];
@@ -84,60 +84,44 @@ public class TwoPlayerLocalActivity extends AppCompatActivity {
         stoneImage.setVisibility(View.INVISIBLE);
         Log.d("moveAnimation", "stoneImage has been set as Invisible");
         if (count > 0) {
-
             stoneImage.setVisibility(View.VISIBLE);
             Log.d("moveAnimation", "stoneImage has been set as Visible");
-
             int moveXCenter = (getLeftInParent(crater) - getLeftInParent(stoneImage)) +
                     (crater.getRight() - crater.getLeft()) / 4;
             int moveY = getTopInParent(crater) - getTopInParent(stoneImage) +
                     (crater.getBottom() - crater.getTop()) / 4;
-
             TranslateAnimation move = new TranslateAnimation(0, moveXCenter,
                     0, moveY);
             move.setDuration(500);
             move.setFillAfter(false);
             move.setAnimationListener(new Animation.AnimationListener() {
                 @Override
-                public void onAnimationStart(Animation animation) {
-
-                }
+                public void onAnimationStart(Animation animation) {}
 
                 @Override
                 public void onAnimationEnd(Animation animation) {
-
                     stoneImage.setVisibility(View.INVISIBLE);
                     Log.d("moveAnimation", "stoneImage has been set as Invisible");
-
                     Crater nextCrater;
-
                     //Checks if next crater is opponent's store
                     if (crater.getNextCrater().equals(player.getStore().getOppositeCrater())) {
                         nextCrater = crater.getNextCrater().getNextCrater();
                     } else {
                         nextCrater = crater.getNextCrater();
                     }
-
                     if (crater.isStore()) {
                         Crater.updateStoreImage(crater, crater.getStones());
                     } else {
                         Crater.updateCraterImage(crater, crater.getStones());
                     }
-
                     moveAnimation(nextCrater, count - 1, player, stoneImage);
-
                 }
-
                 @Override
                 public void onAnimationRepeat(Animation animation) {
-
                 }
             });
-
             stoneImage.startAnimation(move);
-
         }
-
     }
 
 

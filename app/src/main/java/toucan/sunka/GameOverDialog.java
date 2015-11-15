@@ -28,7 +28,7 @@ public class GameOverDialog extends DialogFragment {
     Player victorPlayer;
     Player loserPlayer;
     private TableLayout table;
-    private TwoPlayerLocalActivity thisActivity;
+    private TwoPlayerLocal thisActivity;
     private LayoutInflater inflater;
     private Bundle playerBundle;
     private TextView winTitle;
@@ -49,14 +49,14 @@ public class GameOverDialog extends DialogFragment {
         initialiseLeaderboard();
 
         builder.setView(layoutView);
-        thisActivity = (TwoPlayerLocalActivity) this.getActivity();
+        thisActivity = (TwoPlayerLocal) this.getActivity();
         builder.setPositiveButton(R.string.play_again, new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
                 Player playerOne = thisActivity.getFirstPlayer();
                 Player playerTwo = thisActivity.getSecondPlayer();
                 Context context = getContext();
-                Intent newTwoPlayerGame = new Intent(context, TwoPlayerLocalActivity.class);
+                Intent newTwoPlayerGame = new Intent(context, TwoPlayerLocal.class);
                 newTwoPlayerGame.putExtra(PLAYER_ONE_KEY, playerOne);
                 newTwoPlayerGame.putExtra(PLAYER_TWO_KEY, playerTwo);
                 context.startActivity(newTwoPlayerGame);

@@ -18,5 +18,6 @@
     <dimen name="margin_bottom_gameOver">15dp</dimen>
     <dimen name="text_size">20sp</dimen>
     <dimen name="leaderboard_size">17sp</dimen>
+    <dimen name="online_margin_left">500dp</dimen>
 
 </resources>

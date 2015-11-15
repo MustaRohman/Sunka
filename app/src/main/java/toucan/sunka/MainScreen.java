@@ -15,6 +15,7 @@ import android.widget.Button;
 public class MainScreen extends FragmentActivity{
 
     Button multiPlayerLocal;
+    Button multiPlayer;
     Button statistics;
     Button exit;
 
@@ -25,6 +26,11 @@ public class MainScreen extends FragmentActivity{
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main_screen);
 
+        initButtons();
+        collection = new PlayerCollection();
+    }
+
+    public void initButtons(){
         multiPlayerLocal = (Button) findViewById(R.id.two_player_local);
         multiPlayerLocal.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -48,13 +54,19 @@ public class MainScreen extends FragmentActivity{
             }
         });
 
-    }
+        multiPlayer = (Button) findViewById (R.id.two_player_online);
+        final FragmentActivity activity = this;
+        multiPlayer.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v){
+                DialogFragment fragment = new OnlineDialog();
+                FragmentManager fm = getSupportFragmentManager();
+                fragment.show(fm, "onlineDialog");
+            }
+        });
 
-    //Method only for testing
-    public int randomMethod(){
-        return 5;
     }
-
+    
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.

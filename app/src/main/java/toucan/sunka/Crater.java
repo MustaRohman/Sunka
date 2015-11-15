@@ -3,12 +3,11 @@ package toucan.sunka;
 import android.app.Activity;
 import android.content.Context;
 import android.os.AsyncTask;
+import android.support.v7.app.AppCompatActivity;
 import android.util.AttributeSet;
 import android.view.Gravity;
 import android.util.Log;
 import android.widget.Button;
-
-
 
 /**
  * Created by andrei on 21/10/15.
@@ -29,6 +28,11 @@ public class Crater extends Button {
     public Crater(Context context, AttributeSet attrs){
         super(context, attrs);
         initialise(false);
+        try {
+            //activity = (TwoPlayerLocal) getContext();
+        } catch (ClassCastException e) {
+           // activity = (TwoPlayerOnline) getContext();
+        }
     }
 
     public Crater(boolean store) {
@@ -60,7 +64,6 @@ public class Crater extends Button {
      * returns
      */
     private class setCraterStones extends AsyncTask<Object, Object, Void> {
-
         /**
          * Due to android limitations :( no method from the crater class can be called
          * in the doInBackground since Crater extends Button. The only backend task done done here
@@ -74,7 +77,7 @@ public class Crater extends Button {
          * @param params is an array that contains all the parameters sent when creating a new
          *               instance of setCraterStones and executing it.
          */
-        protected Void doInBackground(Object... params) {
+        protected Void doInBackground(Object... params){
             switch (params.length) {
                 case 4:
                     if ((boolean) params[2]) switchPlayers();
@@ -103,7 +106,7 @@ public class Crater extends Button {
          * @param params contains the crater that needs to be updated, the stones, and an optional
          *               parameter, the oppositeCrater when the steal is made
          */
-        protected void onProgressUpdate(Object... params) {
+        protected void onProgressUpdate(Object... params){
             Crater currentCrater = (Crater) params[0];
             int stones = (int) params[1];
             currentCrater.setText(String.format("%d",stones));
@@ -211,6 +214,13 @@ public class Crater extends Button {
             placeAlong(stones);
             if (checkGameOver()) {
                 // Game over
+                Player winner = determineWinner();
+                Player loser = determineLoser();
+                try{
+                winner.setGamesWon(winner.getNumberOfGamesWon() + 1);
+                loser.setGamesLost(loser.getNumberOfGamesLost()+1);}
+                catch (NullPointerException n){}
+//                getContext().createGameOverDialog();
             }
         }
     }
@@ -400,6 +410,16 @@ public class Crater extends Button {
     public void updatePlayers() {
         activePlayer = getActivePlayer();
         inactivePlayer = getInactivePlayer();
+    }
+
+    public int getPositionOnBoard() {
+        int i = 0 ;
+        Crater currentCrater = this;
+        while (!currentCrater.isStore()){
+            i++;
+            currentCrater = currentCrater.getNextCrater();
+        }
+        return 8-i;
     }
 
     public boolean isEmpty() {

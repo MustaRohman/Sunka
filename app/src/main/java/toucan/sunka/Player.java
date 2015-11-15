@@ -18,6 +18,7 @@ public class Player implements Parcelable {
     private boolean playingTurn;
     protected TextView playerTextView;
     private boolean wasIdle;
+    private String[] serverList;
 
     public Player(String pN) {
         playerName = pN;
@@ -25,6 +26,14 @@ public class Player implements Parcelable {
         gamesLost = 0;
         playerRank = -1;
         playingTurn = false;
+    }
+
+    public void setServerList( String[] serverList) {
+        this.serverList = serverList;
+    }
+
+    public String[] getServerList(){
+        return serverList;
     }
 
     public void setGamesWon(int gW) {
