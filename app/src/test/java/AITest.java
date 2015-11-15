@@ -222,7 +222,7 @@ public class AITest {
         states[6] = state6;
         aiPlayer.setSevenStates(states);
         int[] result = aiPlayer.getMoveWithBestStore();
-        assertArrayEquals(result, state6);
+        assertArrayEquals(state6, result);
     }
 
     @Test
