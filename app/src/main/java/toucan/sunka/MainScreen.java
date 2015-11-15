@@ -7,6 +7,7 @@ import android.support.v4.app.DialogFragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -38,6 +39,9 @@ public class MainScreen extends FragmentActivity{
                 createMultiplayerDialog();
             }
         });
+        if (collection == null) collection = new PlayerCollection();
+        collection.loadPlayerInfoFromFile(getApplicationContext().getFilesDir());
+        Log.d("Collection state", collection.toString());
         if (collection == null) collection = new PlayerCollection();
         statistics = (Button) findViewById(R.id.statistics);
         statistics.setOnClickListener(new View.OnClickListener() {
@@ -99,6 +103,12 @@ public class MainScreen extends FragmentActivity{
         FragmentManager fm = getSupportFragmentManager();
         fragment.show(fm,"multiplayerDialog");
 
+    }
+
+    public void onStop() {
+        super.onStop();
+        collection.savePlayerInfoToFile(getApplicationContext().getFilesDir());
+        Log.d("Reached", "onStop on MainScreen");
     }
     public void createStatisticsDialog(){
         StatisticsDialog fragment = new StatisticsDialog();
