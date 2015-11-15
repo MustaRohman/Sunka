@@ -28,7 +28,7 @@ public class GameOverDialog extends DialogFragment {
     Player victorPlayer;
     Player loserPlayer;
     private TableLayout table;
-    private TwoPlayerLocalActivity thisActivity;
+    private TwoPlayerLocal thisActivity;
     private LayoutInflater inflater;
     private Bundle playerBundle;
     private TextView winTitle;
@@ -49,14 +49,14 @@ public class GameOverDialog extends DialogFragment {
         initialiseLeaderboard();
 
         builder.setView(layoutView);
-        thisActivity = (TwoPlayerLocalActivity) this.getActivity();
+        thisActivity = (TwoPlayerLocal) this.getActivity();
         builder.setPositiveButton(R.string.play_again, new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
                 Player playerOne = thisActivity.getFirstPlayer();
                 Player playerTwo = thisActivity.getSecondPlayer();
                 Context context = getContext();
-                Intent newTwoPlayerGame = new Intent(context, TwoPlayerLocalActivity.class);
+                Intent newTwoPlayerGame = new Intent(context, TwoPlayerLocal.class);
                 newTwoPlayerGame.putExtra(PLAYER_ONE_KEY, playerOne);
                 newTwoPlayerGame.putExtra(PLAYER_TWO_KEY, playerTwo);
                 context.startActivity(newTwoPlayerGame);
@@ -65,6 +65,8 @@ public class GameOverDialog extends DialogFragment {
         builder.setNegativeButton(R.string.main_menu, new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
+                MainScreen.collection.savePlayerInfoToFile(getContext().getFilesDir());
+                Log.d("Reached", "main_menu button on GameOverDialog");
                 Context context = getContext();
                 Intent backToMainMenu = new Intent(context, MainScreen.class);
                 context.startActivity(backToMainMenu);
@@ -90,6 +92,11 @@ public class GameOverDialog extends DialogFragment {
             victorPlayer = MainScreen.collection.findPlayer(playerBundle.getString(PLAYER_TWO_KEY));
             loserPlayer = MainScreen.collection.findPlayer(playerBundle.getString(PLAYER_ONE_KEY));
         }
+
+        //Updates the victor's/loser's wins/losses and resorts the collection
+        victorPlayer.setGamesWon(victorPlayer.getNumberOfGamesWon() + 1);
+        loserPlayer.setGamesLost(loserPlayer.getNumberOfGamesLost() + 1);
+        MainScreen.collection.sortByGamesWon();
         winTitle = (TextView) layoutView.findViewById(R.id.win_title);
         //Updates the victor's wins and resorts the collection
         if(victorPlayer != null){
@@ -200,6 +207,4 @@ public class GameOverDialog extends DialogFragment {
 
 
     }
-
-
 }

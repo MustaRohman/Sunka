@@ -3,7 +3,9 @@ package toucan.sunka;
 import android.app.Activity;
 import android.content.Context;
 import android.os.AsyncTask;
+import android.support.v7.app.AppCompatActivity;
 import android.util.AttributeSet;
+import android.view.Gravity;
 import android.util.Log;
 import android.widget.Button;
 
@@ -16,18 +18,21 @@ import android.widget.Button;
  */
 public class Crater extends Button {
 
-    public static final int ACTION_DELAY = 300; // Miliseconds
+    public static final int ACTION_DELAY = 500; // Milliseconds
     private Player owner, activePlayer, inactivePlayer;
     private Crater nextCrater, oppositeCrater;
     protected boolean sideOne, sideTwo;
     protected int stones;
     private boolean store;
-    private TwoPlayerLocalActivity activity;
 
     public Crater(Context context, AttributeSet attrs){
         super(context, attrs);
         initialise(false);
-        activity = (TwoPlayerLocalActivity) getContext();
+        try {
+            //activity = (TwoPlayerLocal) getContext();
+        } catch (ClassCastException e) {
+           // activity = (TwoPlayerOnline) getContext();
+        }
     }
 
     public Crater(boolean store) {
@@ -38,6 +43,13 @@ public class Crater extends Button {
     public void initialise(boolean store) {
         this.store = store;
         setStones(this.store ? 0 : 7);
+
+        if (store){
+            updateStoreImage(this,0);
+            setGravity(Gravity.BOTTOM);
+        } else {
+            updateCraterImage(this, stones);
+        }
     }
 
     /**
@@ -52,7 +64,6 @@ public class Crater extends Button {
      * returns
      */
     private class setCraterStones extends AsyncTask<Object, Object, Void> {
-
         /**
          * Due to android limitations :( no method from the crater class can be called
          * in the doInBackground since Crater extends Button. The only backend task done done here
@@ -66,24 +77,24 @@ public class Crater extends Button {
          * @param params is an array that contains all the parameters sent when creating a new
          *               instance of setCraterStones and executing it.
          */
-        protected Void doInBackground(Object... params) {
+        protected Void doInBackground(Object... params){
             switch (params.length) {
                 case 4:
                     if ((boolean) params[2]) switchPlayers();
-                    publishProgress(params[0], params[1], params[3]); //steal
+                    publishProgress(params[0], params[1], params[3], params[2]); //steal
                     break;
                 case 3:
                     switchPlayers();
-                    publishProgress(params[0], params[1]); //last move
+                    publishProgress(params[0],params[1],params[2]); //last move
                     break;
                 case 2:
                     publishProgress(params[0], params[1]); //normal move
                     break;
             }
-            try {
+            try{
                 Thread.sleep(ACTION_DELAY);
-            } catch (InterruptedException e) {
             }
+            catch (InterruptedException e){}
             return null;
         }
 
@@ -92,15 +103,26 @@ public class Crater extends Button {
          * have it's setText cast on with the second parameter, the number of stones.
          * The third parameter is only sent in case of a steal, and it sets its text 0 in the same
          * thread.
-         *
          * @param params contains the crater that needs to be updated, the stones, and an optional
          *               parameter, the oppositeCrater when the steal is made
          */
-        protected void onProgressUpdate(Object... params) {
+        protected void onProgressUpdate(Object... params){
             Crater currentCrater = (Crater) params[0];
             int stones = (int) params[1];
-            currentCrater.setText(String.format("%d", stones));
-            if (params.length == 3) ((Crater) params[2]).setText(String.format("%d", 0));
+            currentCrater.setText(String.format("%d",stones));
+            if (params.length == 3) {
+                activePlayer.unhighlightText();
+                inactivePlayer.highlightText();
+            }
+            if (params.length == 4) {
+                Crater oppositeCrater = ((Crater) params[2]);
+                oppositeCrater.setText(String.format("%d", 0));
+                Crater store = currentCrater.owner.getStore();
+                updateStoreImage(store, store.getStones());
+                updateCraterImage(oppositeCrater, 0);
+                activePlayer.unhighlightText();
+                inactivePlayer.highlightText();
+            }
         }
 
         /**
@@ -192,7 +214,13 @@ public class Crater extends Button {
             placeAlong(stones);
             if (checkGameOver()) {
                 // Game over
-                activity.createGameOverDialog();
+                Player winner = determineWinner();
+                Player loser = determineLoser();
+                try{
+                winner.setGamesWon(winner.getNumberOfGamesWon() + 1);
+                loser.setGamesLost(loser.getNumberOfGamesLost()+1);}
+                catch (NullPointerException n){}
+//                getContext().createGameOverDialog();
             }
         }
     }
@@ -384,6 +412,16 @@ public class Crater extends Button {
         inactivePlayer = getInactivePlayer();
     }
 
+    public int getPositionOnBoard() {
+        int i = 0 ;
+        Crater currentCrater = this;
+        while (!currentCrater.isStore()){
+            i++;
+            currentCrater = currentCrater.getNextCrater();
+        }
+        return 8-i;
+    }
+
     public boolean isEmpty() {
         return (stones == 0);
     }
@@ -445,5 +483,145 @@ public class Crater extends Button {
             return p1;
         }
         return null;
+    }
+
+    public void setActiveImage(boolean active){
+
+        if (active){
+            updateCraterImage(this, stones);
+        } else {
+            switch (stones){
+                case 0:setBackgroundResource(R.drawable.button_disabled);
+                    break;
+                case 1:setBackgroundResource(R.drawable.crater_1stone_disabled);
+                    break;
+                case 2:setBackgroundResource(R.drawable.crater_2stone_disabled);
+                    break;
+                case 3:setBackgroundResource(R.drawable.crater_3stone_disabled);
+                    break;
+                case 4:setBackgroundResource(R.drawable.crater_4stone_disabled);
+                    break;
+                case 5:setBackgroundResource(R.drawable.crater_5stone_disabled);
+                    break;
+                case 6:setBackgroundResource(R.drawable.crater_6stone_disabled);
+                    break;
+                case 7:setBackgroundResource(R.drawable.crater_7stone_disabled);
+                    break;
+                case 8:setBackgroundResource(R.drawable.crater_8stone_disabled);
+                    break;
+                case 9:setBackgroundResource(R.drawable.crater_9stone_disabled);
+                    break;
+                case 10:setBackgroundResource(R.drawable.crater_10stone_disabled);
+                    break;
+                case 11:setBackgroundResource(R.drawable.crater_11stone_disabled);
+                    break;
+                default:setBackgroundResource(R.drawable.crater_11stone_disabled);
+                    break;
+            }
+
+        }
+
+    }
+
+    public static void updateStoreImage(Crater crater, int stones) {
+        switch (stones) {
+            case 0:
+                crater.setBackgroundResource(R.drawable.store2);
+                break;
+            case 1:
+                crater.setBackgroundResource(R.drawable.store_1stone);
+                break;
+            case 2:
+                crater.setBackgroundResource(R.drawable.store_2stone);
+                break;
+            case 3:
+                crater.setBackgroundResource(R.drawable.store_3stone);
+                break;
+            case 4:
+                crater.setBackgroundResource(R.drawable.store_4stone);
+                break;
+            case 5:
+                crater.setBackgroundResource(R.drawable.store_5stone);
+                break;
+            case 6:
+                crater.setBackgroundResource(R.drawable.store_6stone);
+                break;
+            case 7:
+                crater.setBackgroundResource(R.drawable.store_7stone);
+                break;
+            case 8:
+                crater.setBackgroundResource(R.drawable.store_8stone);
+                break;
+            case 9:
+                crater.setBackgroundResource(R.drawable.store_9stone);
+                break;
+            case 10:
+                crater.setBackgroundResource(R.drawable.store_10stone);
+                break;
+            case 11:
+                crater.setBackgroundResource(R.drawable.store_11stone);
+                break;
+            case 12:
+                crater.setBackgroundResource(R.drawable.store_12stone);
+                break;
+            case 13:
+                crater.setBackgroundResource(R.drawable.store_13stone);
+                break;
+            case 14:
+                crater.setBackgroundResource(R.drawable.store_14stone);
+                break;
+            case 15:
+                crater.setBackgroundResource(R.drawable.store_15stone);
+                break;
+            case 16:
+                crater.setBackgroundResource(R.drawable.store_16stone);
+                break;
+            case 17:
+                crater.setBackgroundResource(R.drawable.store_17stone);
+                break;
+            case 18:
+                crater.setBackgroundResource(R.drawable.store_18stone);
+                break;
+            case 19:
+                crater.setBackgroundResource(R.drawable.store_19stone);
+                break;
+            case 20:
+                crater.setBackgroundResource(R.drawable.store_20stone);
+                break;
+            default:
+                crater.setBackgroundResource(R.drawable.store_20stone);
+        }
+    }
+
+    public static void updateCraterImage(Crater crater, int stones){
+
+        switch (stones){
+            case 0:crater.setBackgroundResource(R.drawable.button_enabled);
+                break;
+            case 1:crater.setBackgroundResource(R.drawable.crater_1stone);
+                break;
+            case 2:crater.setBackgroundResource(R.drawable.crater_2stone);
+                break;
+            case 3:crater.setBackgroundResource(R.drawable.crater_3stone);
+                break;
+            case 4:crater.setBackgroundResource(R.drawable.crater_4stone);
+                break;
+            case 5:crater.setBackgroundResource(R.drawable.crater_5stone);
+                break;
+            case 6:crater.setBackgroundResource(R.drawable.crater_6stone);
+                break;
+            case 7:crater.setBackgroundResource(R.drawable.crater_7stone);
+                break;
+            case 8:crater.setBackgroundResource(R.drawable.crater_8stone);
+                break;
+            case 9:crater.setBackgroundResource(R.drawable.crater_9stone);
+                break;
+            case 10:crater.setBackgroundResource(R.drawable.crater_10stone);
+                break;
+            case 11:crater.setBackgroundResource(R.drawable.crater_11stone);
+                break;
+            default:crater.setBackgroundResource(R.drawable.crater_11stone);
+                break;
+        }
     }
 }
