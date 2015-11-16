@@ -123,8 +123,8 @@ public class Crater extends Button {
                 Crater oppositeCrater = ((Crater) params[2]);
                 oppositeCrater.setText(String.format("%d", 0));
                 Crater store = currentCrater.owner.getStore();
-//                updateCraterImage(oppositeCrater, 0);
-//                updateStoreImage(store, store.getStones());
+                updateCraterImage(oppositeCrater, 0);
+                updateStoreImage(store, store.getStones());
                 activePlayer.unhighlightText();
                 inactivePlayer.highlightText();
             }
