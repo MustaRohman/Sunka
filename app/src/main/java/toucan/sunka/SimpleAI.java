@@ -10,7 +10,7 @@ import java.util.Iterator;
  *
  * There is flaw in which we do not decide if its better to block individual steals.
  * We are oblivious that a player may have multiple steal options. We either block all
- * or none.
+ * or one.
  */
 public class SimpleAI extends Player {
 
