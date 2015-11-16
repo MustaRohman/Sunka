@@ -158,12 +158,23 @@ public class TwoPlayerLocal extends AppCompatActivity {
             craterList[i].setOppositeCrater(craterList[16 - i]);
             craterList[i].setOwner(firstPlayer);
             craterList[i].setGravity(Gravity.BOTTOM);
+            craterList[i].setStones(0);
+            Crater.updateCraterImage(craterList[i],0);
         }
         for (int i = 9; i < 16; i++) {
             craterList[i].setOppositeCrater(craterList[16 - i]);
             craterList[i].setOwner(secondPlayer);
             craterList[i].setGravity(Gravity.TOP);
+            craterList[i].setStones(0);
+            Crater.updateCraterImage(craterList[i], 0);
         }
+
+        craterList[0].setStones(53);
+        Crater.updateStoreImage(craterList[0], 53);
+        craterList[8].setStones(53);
+        Crater.updateStoreImage(craterList[8], 53);
+        craterList[7].setStones(1);
+        Crater.updateCraterImage(craterList[7], 1);
     }
     public void createGameOverDialog(){
         DialogFragment fragment = new GameOverDialog();
