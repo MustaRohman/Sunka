@@ -171,11 +171,11 @@ public class GameOverDialog extends DialogFragment {
         }
 
         addRow(player1st.getPlayerRank(), player1st.getPlayerName(),
-                player1st.getNumberOfGamesWon(), table, inflater);
+                player1st.getNumberOfGamesWon(), player1st.getNumberOfGamesLost(), table, inflater);
         addRow(player2nd.getPlayerRank(), player2nd.getPlayerName(),
-                player2nd.getNumberOfGamesWon(), table, inflater);
+                player2nd.getNumberOfGamesWon(), player2nd.getNumberOfGamesLost(), table, inflater);
         if (player3rd != null) addRow(player3rd.getPlayerRank(), player3rd.getPlayerName(),
-                player3rd.getNumberOfGamesWon(), table, inflater);
+                player3rd.getNumberOfGamesWon(), player3rd.getNumberOfGamesLost(), table, inflater);
 
 
         Log.d("GameOverDialog", String.valueOf(victorPlayer.getNumberOfGamesWon()));
@@ -185,7 +185,8 @@ public class GameOverDialog extends DialogFragment {
             addBlankRow(table, inflater);
 
             addRow(victorPlayer.getPlayerRank(), victorPlayer.getPlayerName(),
-                    victorPlayer.getNumberOfGamesWon(),table, inflater);
+                    victorPlayer.getNumberOfGamesWon(),victorPlayer.getNumberOfGamesLost(),
+                    table, inflater);
         }
 
     }
@@ -194,7 +195,7 @@ public class GameOverDialog extends DialogFragment {
      * Takes in the player's rank, name and score, TableLayout and LayoutInflater and adds a row in the
      * provided TableLayout
      */
-    public static void addRow(Integer rank, String name, Integer score, TableLayout table, LayoutInflater inflater){
+    public static void addRow(Integer rank, String name, Integer score, Integer losses, TableLayout table, LayoutInflater inflater){
 
         View rowView = inflater.inflate(R.layout.leaderboard_row, null);
         TextView rankText = (TextView) rowView.findViewById(R.id.player_rank);
@@ -205,6 +206,9 @@ public class GameOverDialog extends DialogFragment {
 
         TextView scoreText = (TextView) rowView.findViewById(R.id.player_score);
         scoreText.setText(String.valueOf(score));
+
+        TextView lossesText = (TextView) rowView.findViewById(R.id.player_losses);
+        lossesText.setText(String.valueOf(losses));
 
         table.addView(rowView);
 

@@ -187,7 +187,6 @@ public class TwoPlayerLocal extends AppCompatActivity {
             craterList[i].setOppositeCrater(craterList[16 - i]);
             craterList[i].setOwner(firstPlayer);
             craterList[i].setGravity(Gravity.BOTTOM);
-
         }
         for (int i = 9; i < 16; i++) {
             craterList[i].setOppositeCrater(craterList[16 - i]);
