@@ -26,7 +26,8 @@ import java.util.Objects;
 
 public class OnlineGames extends AppCompatActivity {
 
-    final public static String SERVER_ADDRESS = "http://192.168.0.10:3000";
+    //              !!! MODIFY STRING BELOW !!!
+    final public static String SERVER_ADDRESS = "MODIFY SERVER HERE, ADD PORT :3000 AT THE END";
     final public static String KEY_PLAYER = "KEY_PLAYER";
     final public static String KEY_OPPONENT = "KEY_OPPONENT";
     final public static String KEY_ID = "KEY_ID";
