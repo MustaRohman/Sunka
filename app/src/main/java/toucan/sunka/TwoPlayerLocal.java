@@ -82,11 +82,6 @@ public class TwoPlayerLocal extends AppCompatActivity {
                     } else {
                         nextCrater = crater.getNextCrater();
                     }
-                    if (crater.isStore()) {
-                        Crater.updateStoreImage(crater, crater.getStones());
-                    } else {
-                        Crater.updateCraterImage(crater, crater.getStones());
-                    }
                     moveAnimation(nextCrater, count - 1, player, stoneImage);
                 }
                 @Override
@@ -130,52 +125,6 @@ public class TwoPlayerLocal extends AppCompatActivity {
         craterList[8] = playerOneStore;
     }
 
-    public void initializeCraters(){
-        initializeStores();
-        LinearLayout topRow = (LinearLayout) findViewById(R.id.top_row);
-        LinearLayout bottomRow = (LinearLayout) findViewById(R.id.bottom_row);
-        int j = 15;
-
-        for (int i = 1; i < bottomRow.getChildCount() + 1; i++ ) {
-            Crater currentCrater = (Crater) bottomRow.getChildAt(i-1);
-            craterList[i] = currentCrater;
-        }
-        for (int i = 0; i < topRow.getChildCount(); i++){
-            Crater currentCrater = (Crater) topRow.getChildAt(i);
-            craterList[j--] = currentCrater;
-        }
-        craterList[15].setNextCrater(craterList[0]);
-        for (int i = 0; i < 15; i++ )
-            craterList[i].setNextCrater(craterList[i+1]);
-
-        craterList[0].setOppositeCrater(craterList[8]);
-        craterList[8].setOppositeCrater(craterList[0]);
-        craterList[0].setOwner(secondPlayer);
-        secondPlayer.setStore(craterList[0]);
-        craterList[8].setOwner(firstPlayer);
-        firstPlayer.setStore(craterList[8]);
-        for (int i = 1; i < 8; i++) {
-            craterList[i].setOppositeCrater(craterList[16 - i]);
-            craterList[i].setOwner(firstPlayer);
-            craterList[i].setGravity(Gravity.BOTTOM);
-            craterList[i].setStones(0);
-            Crater.updateCraterImage(craterList[i],0);
-        }
-        for (int i = 9; i < 16; i++) {
-            craterList[i].setOppositeCrater(craterList[16 - i]);
-            craterList[i].setOwner(secondPlayer);
-            craterList[i].setGravity(Gravity.TOP);
-            craterList[i].setStones(0);
-            Crater.updateCraterImage(craterList[i], 0);
-        }
-
-        craterList[0].setStones(53);
-        Crater.updateStoreImage(craterList[0], 53);
-        craterList[8].setStones(53);
-        Crater.updateStoreImage(craterList[8], 53);
-        craterList[7].setStones(1);
-        Crater.updateCraterImage(craterList[7], 1);
-    }
     public void createGameOverDialog(){
         DialogFragment fragment = new GameOverDialog();
         FragmentManager fm = getSupportFragmentManager();
@@ -209,6 +158,43 @@ public class TwoPlayerLocal extends AppCompatActivity {
         fragment.setArguments(playerInfo);
         fragment.show(fm,"gameOverDialog");
     }
+
+    public void initializeCraters(){
+        initializeStores();
+        LinearLayout topRow = (LinearLayout) findViewById(R.id.top_row);
+        LinearLayout bottomRow = (LinearLayout) findViewById(R.id.bottom_row);
+        int j = 15;
+
+        for (int i = 1; i < bottomRow.getChildCount() + 1; i++ ) {
+            Crater currentCrater = (Crater) bottomRow.getChildAt(i-1);
+            craterList[i] = currentCrater;
+        }
+        for (int i = 0; i < topRow.getChildCount(); i++){
+            Crater currentCrater = (Crater) topRow.getChildAt(i);
+            craterList[j--] = currentCrater;
+        }
+        craterList[15].setNextCrater(craterList[0]);
+        for (int i = 0; i < 15; i++ )
+            craterList[i].setNextCrater(craterList[i+1]);
+
+        craterList[0].setOppositeCrater(craterList[8]);
+        craterList[8].setOppositeCrater(craterList[0]);
+        craterList[0].setOwner(secondPlayer);
+        secondPlayer.setStore(craterList[0]);
+        craterList[8].setOwner(firstPlayer);
+        firstPlayer.setStore(craterList[8]);
+        for (int i = 1; i < 8; i++) {
+            craterList[i].setOppositeCrater(craterList[16 - i]);
+            craterList[i].setOwner(firstPlayer);
+            craterList[i].setGravity(Gravity.BOTTOM);
+        }
+        for (int i = 9; i < 16; i++) {
+            craterList[i].setOppositeCrater(craterList[16 - i]);
+            craterList[i].setOwner(secondPlayer);
+            craterList[i].setGravity(Gravity.TOP);
+        }
+    }
+
     private int getLeftInParent(View view) {
         if (view.getParent() == view.getRootView())
             return view.getLeft();
