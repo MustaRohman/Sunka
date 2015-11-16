@@ -48,28 +48,9 @@ public class TwoPlayerLocal extends AppCompatActivity {
 
     public void onCraterClick(View view){
         Crater crater = (Crater) view;
-        if (firstMove){
-            if (crater.getOwner() == firstPlayer) {
-                firstPlayer.setPlayingTurnTo(true);
-                firstPlayer.highlightText();
-                secondPlayer.setPlayingTurnTo(false);
-            }
-            else {
-                firstPlayer.setPlayingTurnTo(false);
-                secondPlayer.highlightText();
-                secondPlayer.setPlayingTurnTo(true);
-            }
-            firstMove = false;
-        }
-        if (crater.getActivePlayer().equals(firstPlayer)){
-            stoneImage = (ImageView) findViewById(R.id.store_imageView_p1);
-        } else {
-            stoneImage = (ImageView) findViewById(R.id.store_imageView_p2);
-        }
-        Crater.updateCraterImage(crater, 0);
-        moveAnimation(crater.getNextCrater(), crater.getStones(), crater.getActivePlayer(), stoneImage);
-        crater.makeMoveFromHere();
-        if (crater.checkGameOver()) createGameOverDialog();
+        if (crater.getOwner().isPlayingTurn() || firstMove)
+            executeMove(crater);
+
     }
 
     private void moveAnimation(final Crater crater, final int count, final Player player, final ImageView stoneImage){
@@ -116,27 +97,28 @@ public class TwoPlayerLocal extends AppCompatActivity {
         }
     }
 
-
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.menu_two_player_local, menu);
-        return true;
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
-        int id = item.getItemId();
-
-        //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
-            return true;
+    public void executeMove(Crater crater){
+        if (firstMove) {
+            if (crater.getOwner() == firstPlayer) {
+                firstPlayer.setPlayingTurnTo(true);
+                firstPlayer.highlightText();
+                secondPlayer.setPlayingTurnTo(false);
+            } else {
+                firstPlayer.setPlayingTurnTo(false);
+                secondPlayer.highlightText();
+                secondPlayer.setPlayingTurnTo(true);
+            }
+            firstMove = false;
         }
-
-        return super.onOptionsItemSelected(item);
+        if (crater.getActivePlayer().equals(firstPlayer)) {
+            stoneImage = (ImageView) findViewById(R.id.store_imageView_p1);
+        } else {
+            stoneImage = (ImageView) findViewById(R.id.store_imageView_p2);
+        }
+        Crater.updateCraterImage(crater, 0);
+        moveAnimation(crater.getNextCrater(), crater.getStones(), crater.getActivePlayer(), stoneImage);
+        crater.makeMoveFromHere();
+        if (crater.checkGameOver()) createGameOverDialog();
     }
 
     public void initializeStores() {
@@ -176,15 +158,12 @@ public class TwoPlayerLocal extends AppCompatActivity {
             craterList[i].setOppositeCrater(craterList[16 - i]);
             craterList[i].setOwner(firstPlayer);
             craterList[i].setGravity(Gravity.BOTTOM);
-            craterList[i].setStones(0);
         }
         for (int i = 9; i < 16; i++) {
             craterList[i].setOppositeCrater(craterList[16 - i]);
             craterList[i].setOwner(secondPlayer);
             craterList[i].setGravity(Gravity.TOP);
-            craterList[i].setStones(0);
         }
-        craterList[7].setStones(1);
     }
     public void createGameOverDialog(){
         DialogFragment fragment = new GameOverDialog();
@@ -239,5 +218,28 @@ public class TwoPlayerLocal extends AppCompatActivity {
     public Player getSecondPlayer() {
         return secondPlayer;
     }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        // Inflate the menu; this adds items to the action bar if it is present.
+        getMenuInflater().inflate(R.menu.menu_two_player_local, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        // Handle action bar item clicks here. The action bar will
+        // automatically handle clicks on the Home/Up button, so long
+        // as you specify a parent activity in AndroidManifest.xml.
+        int id = item.getItemId();
+
+        //noinspection SimplifiableIfStatement
+        if (id == R.id.action_settings) {
+            return true;
+        }
+
+        return super.onOptionsItemSelected(item);
+    }
+
 
 }
