@@ -208,12 +208,6 @@ public class TwoPlayerOnline extends AppCompatActivity {
                     nextCrater = crater.getNextCrater().equals(player.getStore().getOppositeCrater()) ?
                             crater.getNextCrater().getNextCrater() :
                             crater.getNextCrater();
-
-                    if (crater.isStore()) {
-                        Crater.updateStoreImage(crater, crater.getStones());
-                    } else {
-                        Crater.updateCraterImage(crater, crater.getStones());
-                    }
                     moveAnimation(nextCrater, count - 1, player, stoneImage);
                 }
                 @Override
