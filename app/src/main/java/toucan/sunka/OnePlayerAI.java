@@ -50,7 +50,7 @@ public class OnePlayerAI extends AppCompatActivity {
 
     private class makeAIMove extends AsyncTask<Integer, Boolean, Void> {
         protected int[] lastMove = new int[2];
-        protected boolean finished = false;
+        protected boolean emptyBoard = false;
         protected Void doInBackground(Integer... params){
             try {
                 Thread.sleep(2100);
@@ -73,9 +73,10 @@ public class OnePlayerAI extends AppCompatActivity {
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }
+            emptyBoard = false;
             publishProgress();
             Log.d("NORMAL TURN", "NORMAL TURN!");
-            while (aiPlayer.getsFreeMoveWith(lastMove[0], lastMove[1], 8)){
+            while (aiPlayer.getsFreeMoveWith(lastMove[0], lastMove[1], 8) || emptyBoard){
                     try {
                         Thread.sleep(5000);
                     } catch (InterruptedException e) {
@@ -84,7 +85,6 @@ public class OnePlayerAI extends AppCompatActivity {
                     Log.d("EXTRA TURN", "GOT EXTRA TURN");
                     aiPlayer.generateSevenStates();
                     aiPlayer.generateBestMove();
-                    finished = false;
                     publishProgress();
             }
             return null;
@@ -98,7 +98,7 @@ public class OnePlayerAI extends AppCompatActivity {
             moveAnimation(crater.getNextCrater(), crater.getStones(), crater.getActivePlayer(), stoneImage);
             updateLatestMove(crater);
             crater.makeMoveFromHere();
-            finished = true;
+            emptyBoard = crater.checkSide(firstPlayer);
         }
 
         protected void updateLatestMove(Crater crater){
@@ -222,16 +222,17 @@ public class OnePlayerAI extends AppCompatActivity {
         for (int i = 1; i < 8; i++) {
             craterList[i].setOppositeCrater(craterList[16 - i]);
             craterList[i].setOwner(firstPlayer);
+            craterList[i].setStones(0);
             craterList[i].setGravity(Gravity.BOTTOM);
         }
         for (int i = 9; i < 16; i++) {
             craterList[i].setOppositeCrater(craterList[16 - i]);
             craterList[i].setOwner(aiPlayer);
+            craterList[i].setStones(0);
             craterList[i].setGravity(Gravity.TOP);
         }
-        craterList[7].setStones(12);
-        craterList[4].setStones(1);
-        craterList[5].setStones(0);
+        craterList[9].setStones(6);
+        craterList[7].setStones(3);
         aiPlayer.setButtonChoices();
     }
 
