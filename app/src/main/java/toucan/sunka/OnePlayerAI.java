@@ -7,9 +7,13 @@ import android.support.v4.app.FragmentManager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.Gravity;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.animation.Animation;
+import android.view.animation.TranslateAnimation;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
@@ -22,6 +26,7 @@ public class OnePlayerAI extends AppCompatActivity {
     private SimpleAI aiPlayer;
     private TextView firstPlayerLabel;
     private TextView secondPlayerLabel;
+    private ImageView stoneImage;
     private boolean firstMove = true;
 
     @Override
@@ -35,9 +40,11 @@ public class OnePlayerAI extends AppCompatActivity {
 
         initializeCraters();
 
-        firstPlayerLabel = (TextView) findViewById(R.id.player_one_view);
+        firstPlayerLabel = (TextView) findViewById(R.id.vsai_player_one_view);
+        firstPlayer.setTextView(firstPlayerLabel);
         firstPlayerLabel.setText(firstPlayer.getPlayerName());
-        secondPlayerLabel = (TextView) findViewById(R.id.player_two_view);
+        secondPlayerLabel = (TextView) findViewById(R.id.vsai_player_two_view);
+        aiPlayer.setTextView(secondPlayerLabel);
         secondPlayerLabel.setText(aiPlayer.getPlayerName());
     }
 
@@ -63,8 +70,13 @@ public class OnePlayerAI extends AppCompatActivity {
         }
 
         protected void onPostExecute(Void result) {
+            Crater crater = aiPlayer.getBestCrater();
+            stoneImage = crater.getActivePlayer().equals(firstPlayer) ?
+                    ((ImageView) findViewById(R.id.vsai_store_imageView_p1)) :
+                    ((ImageView) findViewById(R.id.vsai_store_imageView_p2));
+            moveAnimation(crater.getNextCrater(), crater.getStones(), crater.getActivePlayer(), stoneImage);
+            crater.makeMoveFromHere();
 
-            aiPlayer.getBestCrater().makeMoveFromHere();
         }
 
     }
@@ -82,14 +94,73 @@ public class OnePlayerAI extends AppCompatActivity {
             }
             firstMove = false;
         }
+        boolean wait = false;
+        stoneImage = crater.getActivePlayer().equals(firstPlayer) ?
+                ((ImageView) findViewById(R.id.vsai_store_imageView_p1)) :
+                ((ImageView) findViewById(R.id.vsai_store_imageView_p2));
+        if (crater.getsFreeMove()) wait = true;
+        moveAnimation(crater.getNextCrater(), crater.getStones(), crater.getActivePlayer(), stoneImage);
         crater.makeMoveFromHere();
-        new makeAIMove().execute();
+        if (crater.checkSide(aiPlayer)) wait = true;
+        if (wait && crater.checkSide(firstPlayer))
+             createGameOverDialog();
+        if (!wait)
+            new makeAIMove().execute();
+    }
+
+    private void moveAnimation(final Crater crater, final int count, final Player player, final ImageView stoneImage){
+        stoneImage.setVisibility(View.INVISIBLE);
+        if (count > 0) {
+            stoneImage.setVisibility(View.VISIBLE);
+            int moveXCenter = (getLeftInParent(crater) - getLeftInParent(stoneImage)) +
+                    (crater.getRight() - crater.getLeft()) / 4;
+            int moveY = getTopInParent(crater) - getTopInParent(stoneImage) +
+                    (crater.getBottom() - crater.getTop()) / 4;
+            TranslateAnimation move = new TranslateAnimation(0, moveXCenter,
+                    0, moveY);
+            move.setDuration(500);
+            move.setFillAfter(false);
+            move.setAnimationListener(new Animation.AnimationListener() {
+                @Override
+                public void onAnimationStart(Animation animation) {
+
+                }
+
+                @Override
+                public void onAnimationEnd(Animation animation) {
+                    stoneImage.setVisibility(View.INVISIBLE);
+                    Crater nextCrater;
+                    nextCrater = crater.getNextCrater().equals(player.getStore().getOppositeCrater()) ?
+                            crater.getNextCrater().getNextCrater() :
+                            crater.getNextCrater();
+                    moveAnimation(nextCrater, count - 1, player, stoneImage);
+                }
+                @Override
+                public void onAnimationRepeat(Animation animation) {
+                }
+            });
+            stoneImage.startAnimation(move);
+        }
+    }
+
+    private int getLeftInParent(View view) {
+        if (view.getParent() == view.getRootView())
+            return view.getLeft();
+        else
+            return view.getLeft() + getLeftInParent((View) view.getParent());
+    }
+
+    private int getTopInParent(View view) {
+        if (view.getParent() == view.getRootView())
+            return view.getTop();
+        else
+            return view.getTop() + getTopInParent((View) view.getParent());
     }
 
     public void initializeStores() {
-        playerOneStore = (Crater) findViewById(R.id.store_right);
+        playerOneStore = (Crater) findViewById(R.id.vsai_store_right);
         playerOneStore.initialise(true);
-        aiTwoStore = (Crater) findViewById(R.id.store_left);
+        aiTwoStore = (Crater) findViewById(R.id.vsai_store_left);
         aiTwoStore.initialise(true);
         craterList[0] = aiTwoStore;
         aiPlayer.setStoreIndex(0);
@@ -98,8 +169,8 @@ public class OnePlayerAI extends AppCompatActivity {
 
     public void initializeCraters() {
         initializeStores();
-        LinearLayout topRow = (LinearLayout) findViewById(R.id.top_row);
-        LinearLayout bottomRow = (LinearLayout) findViewById(R.id.bottom_row);
+        LinearLayout topRow = (LinearLayout) findViewById(R.id.vsai_top_row);
+        LinearLayout bottomRow = (LinearLayout) findViewById(R.id.vsai_bottom_row);
         int j = 15;
 
         for (int i = 1; i < bottomRow.getChildCount() + 1; i++ ) {
@@ -123,11 +194,15 @@ public class OnePlayerAI extends AppCompatActivity {
         for (int i = 1; i < 8; i++) {
             craterList[i].setOppositeCrater(craterList[16 - i]);
             craterList[i].setOwner(firstPlayer);
+            craterList[i].setGravity(Gravity.BOTTOM);
         }
         for (int i = 9; i < 16; i++) {
             craterList[i].setOppositeCrater(craterList[16 - i]);
             craterList[i].setOwner(aiPlayer);
+            craterList[i].setGravity(Gravity.TOP);
         }
+        craterList[7].setStones(12);
+        craterList[4].setStones(0);
         aiPlayer.setButtonChoices();
     }
 
@@ -163,10 +238,6 @@ public class OnePlayerAI extends AppCompatActivity {
         fragment.show(fm,"gameOverDialog");
     }
 
-    public Player getFirstPlayer() {
-        return firstPlayer;
-    }
-    public Player getAiPlayer() { return aiPlayer; }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
