@@ -1,19 +1,16 @@
 package toucan.sunka;
 
-import android.util.Log;
-
 import java.util.ArrayList;
-import java.util.Comparator;
 import java.util.HashMap;
 import java.util.Iterator;
-import java.util.TreeMap;
+
 /**
  * Since the best store would result in the largest steal do not worry about which
  * move is getting us the largest store.
  *
  * There is flaw in which we do not decide if its better to block individual steals.
  * We are oblivious that a player may have multiple steal options. We either block all
- * or none.
+ * or one.
  */
 public class SimpleAI extends Player {
 
@@ -26,7 +23,7 @@ public class SimpleAI extends Player {
     private HashMap<int[], Integer> opponentChoicesToSteal;
     private HashMap<Integer, int[]> opponentBoardsBeforeSteal;
     private int[] bestMove;
-    private int[] currentState = new int[16];
+    private int[] currentState;
 
     public SimpleAI(Player p) {
         super(p.getPlayerName());
@@ -38,7 +35,11 @@ public class SimpleAI extends Player {
         setStore(p.getStore());
 
         //Initialise collections:
-
+        moveGeneratedFrom = new HashMap<>();
+        movesWithFreeTurn = new ArrayList<>();
+        movesWhichPreventSteals = new ArrayList<>();
+        opponentChoicesToSteal = new HashMap<>();
+        opponentBoardsBeforeSteal = new HashMap<>();
     }
 
     public void generateSevenStates() {
@@ -48,18 +49,21 @@ public class SimpleAI extends Player {
         for(int i = 0; i < buttonChoices.length - 1; ++i) {
             //Create a state based on a button choice:
             state = buttonChoices[i].getArrayBoard(getStore()); //Starting from the player one store
-            currentState = state;
-            //The next stuff need you to not perform the move yet:
-            if (getsFreeMoveWith(i + offset, state[i], storeIndex)) movesWithFreeTurn.add(state);
-
-            if (preventsSteal(state, state[i + offset]))
-                movesWhichPreventSteals.add(state);
-            //Make the move on the copyBoard and store the result to access the crater which
-            //would recreate it
-            state = makeMoveFrom(state, i + offset, true);
-            moveGeneratedFrom.put(state, buttonChoices[i]);
+            if (state[i + offset] != 0) {
+                currentState = state;
+                //The next stuff need you to not perform the move yet:
+                if (getsFreeMoveWith(i + offset, state[i + offset], storeIndex))
+                    movesWithFreeTurn.add(state);
+                else if (canOpponentStealThisIndex(state.clone(), i + offset, false, storeIndex))
+                    movesWhichPreventSteals.add(state);
+                //Make the move on the copyBoard and store the result to access the crater which
+                //would recreate it
+                state = makeMoveFrom(state.clone(), i + offset, true, storeIndex);
+                moveGeneratedFrom.put(state, buttonChoices[i]);
+                placeStateAt(state, i);
+            }
             //Add the state we just created
-            placeStateAt(state, i);
+            //placeStateAt(state, i);
         }
     }
 
@@ -69,7 +73,7 @@ public class SimpleAI extends Player {
         }
     }
 
-    public int[] makeMoveFrom(int[] board, int choice, boolean performTheSteal) {
+    public int[] makeMoveFrom(int[] board, int choice, boolean performTheSteal, int storeIndex) {
         int stones = board[choice];
         board[choice] = 0; // picked up the stones.
 
@@ -79,7 +83,7 @@ public class SimpleAI extends Player {
         int oppositeIndex = -1;
 
         //Index of crater to skip:
-        int otherPlayerStoreIndex = getOtherPlayerStoreIndex();
+        int otherPlayerStoreIndex = getOtherPlayerStoreIndex(storeIndex);
 
         //Move:
         while(stones != 0) {
@@ -88,16 +92,19 @@ public class SimpleAI extends Player {
             oppositeIndex = 16 - currentIndex;
             if ((currentIndex) != otherPlayerStoreIndex) {
                 //Try to steal:
-                if (performTheSteal && stones == 1 && board[currentIndex] == 0 && isIndexOnMySideAndAChoice(currentIndex)) {
+                if (currentIndex != storeIndex && stones == 1 &&
+                        board[currentIndex] == 0 &&
+                        isIndexOnTheCorrectSide(currentIndex, choice, storeIndex)) {
                     if (board[oppositeIndex] > 0) {
-                        //Steal:
-
-                        //Take stones from opponent
-                        board[storeIndex] += board[oppositeIndex];
-                        board[oppositeIndex] = 0;
-                        //Self reward
-                        board[storeIndex] += board[currentIndex];
-                        board[currentIndex] = 0;
+                        if (performTheSteal) {
+                            //Steal:
+                            //Take stones from opponent
+                            board[storeIndex] += board[oppositeIndex];
+                            board[oppositeIndex] = 0;
+                            //Self reward
+                            board[storeIndex] += stones;
+                            board[currentIndex] = 0;
+                        }
                     }
                 } else {
                     //Regular move:
@@ -113,70 +120,70 @@ public class SimpleAI extends Player {
         return board;
     }
 
-    public void generateBestMove() {
+    public boolean generateBestMove() {
         int[] bestMoveMoveSoFar;
-        int[] moveWithBestStore = getMoveWithBestStore(sevenStates);
+        int[] moveWithBestStore = getMoveWithBestStore();
         bestMoveMoveSoFar = moveWithBestStore;
+        boolean weDidNotChooseATurnWithAFreeMove = true;
         //Pick if some move equal the moveWithBestScore pick the one which will
         //give us a free turn:
         for(int[] move: movesWithFreeTurn) {
-            if (bestMoveMoveSoFar[storeIndex] == move[storeIndex]) {
+            if (bestMoveMoveSoFar[storeIndex] == move[storeIndex] &&
+                    !areGeneratedFromSameMove(bestMoveMoveSoFar, move)) {
                 bestMoveMoveSoFar = move;
+                weDidNotChooseATurnWithAFreeMove = false;
             }
         }
-        //Check (if any) prevents of steals are worth it:
-        for(int[] move: movesWhichPreventSteals) {
-            //Check store of the opponent if we give him the opportunity to steal
-            int opponentChoiceForSteal;
-            if (!opponentChoicesToSteal.isEmpty()) {
-                opponentChoiceForSteal = opponentChoicesToSteal.get(move).intValue();
-                if (bestMoveMoveSoFar[storeIndex] >
-                        makeMoveFrom(opponentBoardsBeforeSteal.get(opponentChoiceForSteal),
-                                opponentChoiceForSteal,
-                                true)[getOtherPlayerStoreIndex()]) {
-                    bestMoveMoveSoFar = move;
+        if (weDidNotChooseATurnWithAFreeMove) {
+            //Check (if any) prevents of steals are worth it:
+            for (int[] move : movesWhichPreventSteals) {
+                //Check store of the opponent if we give him the opportunity to steal
+                Integer opponentChoiceForSteal;
+                if (!opponentChoicesToSteal.isEmpty()) {
+                    opponentChoiceForSteal = getOpponentChoiceForSteal(move);
+                    if (bestMoveMoveSoFar[storeIndex] <
+                            opponentBoardsBeforeSteal.get(opponentChoiceForSteal)[getOtherPlayerStoreIndex(storeIndex)]) {
+                        bestMoveMoveSoFar = makeMoveFrom(move, 16 - getLastIndex(opponentChoiceForSteal, move[opponentChoiceForSteal]), true, storeIndex);
+                    }
                 }
             }
         }
 
         bestMove = bestMoveMoveSoFar;
+        return weDidNotChooseATurnWithAFreeMove;
     }
 
-    public int[] getMoveWithBestStore(int[][] moves) {
-        int[] bestYet = moves[0];
-        int lastIndex = 0;
-        for(int i = 1; i < moves.length; ++i) {
-            if (bestYet[storeIndex] < moves[i][storeIndex]) {
-                lastIndex = i;
-                bestYet = moves[i];
+    public int[] getMoveWithBestStore() {
+        int[] bestYet = sevenStates[0];
+        for(int i = 1; i < sevenStates.length; ++i) {
+            if (bestYet[storeIndex] < sevenStates[i][storeIndex]) {
+                bestYet = sevenStates[i];
             }
         }
-        return moves[lastIndex];
+        return bestYet;
     }
 
     public boolean getsFreeMoveWith(int craterIndex, int stones, int storeIndex) {
-        int lastIndex = getLastIndex(craterIndex, stones);
-        if (storeIndex == 8 && lastIndex == storeIndex) return true;
-        else if (storeIndex == 0 && lastIndex == 16) return true;
+        if (getLastIndex(craterIndex, stones) == storeIndex) return true;
         return false;
     }
 
-    public boolean performsSteal(int[] board, int craterIndex, int stones) {
+    public boolean performsSteal(int[] board, int craterIndex, int stones, int storeIndex) {
         int lastIndex = getLastIndex(craterIndex, stones);
-        board = makeMoveFrom(board, craterIndex, false);
+        board = makeMoveFrom(board, craterIndex, false, storeIndex);
         //Check condition:
-        if (isIndexOnMySideAndAChoice(lastIndex) &&
+        if (isIndexOnTheCorrectSide(lastIndex, craterIndex, storeIndex) &&
                 board[lastIndex] == 0 &&
                 board[16 - lastIndex] > 0) return true;
         return false;
     }
 
-    public boolean preventsSteal(int[] board, int craterIndex) {
-        int[] screenBoardCopy = getStore().getArrayBoard(getStore());
+    public boolean canOpponentStealThisIndex(int[] board, int craterIndex, boolean query, int storeIndex) {
         int startIndex;
         int lengthPosition;
+        int oppositeStoreIndex = getOtherPlayerStoreIndex(storeIndex);
 
-        if (getOtherPlayerStoreIndex() == 0) {
+        if (getOtherPlayerStoreIndex(storeIndex) == 8) {
             startIndex = 1;
             lengthPosition = 8;
         } else {
@@ -185,71 +192,100 @@ public class SimpleAI extends Player {
         }
 
         for(int i = startIndex; i < lengthPosition; ++i) {
-            if (performsSteal(screenBoardCopy, i, board[i])) {
-                opponentChoicesToSteal.put(currentState, i);
-                return false;
+            if (getLastIndex(i, board[i]) == 16 - craterIndex) {
+                if (performsSteal(board.clone(), i, board[i], oppositeStoreIndex)) {
+                    if (!query) {
+                        opponentChoicesToSteal.put(currentState.clone(), i);
+                        opponentBoardsBeforeSteal.put(i, currentState.clone());
+                    }
+                    return true;
+                }
             }
         }
-        return true;
+        return false;
     }
 
-    public boolean isIndexOnMySideAndAChoice(int index) {
+
+    public boolean isIndexOnTheCorrectSide(int index, int choice, int storeIndex) {
         if (storeIndex == 8) return index < 8 && 0 < index;
         else return index > 8 && 16 > index;
     }
 
     public int getLastIndex(int craterIndex, int stones) {
-        int tempLastIndex = (craterIndex + stones) + 1;
+        int tempLastIndex = (craterIndex + stones);
         int lastIndex = 0;
         //Get to the last index:
-        if (tempLastIndex > 16) {
+        if (tempLastIndex >= 16) {
             //Do some working out to derive the last index.
-            for (int i = 0; i < tempLastIndex; ++i) {
+            for (int i = 0; i <= tempLastIndex; ++i) {
                 if (i == 16) lastIndex = 0;
-                else lastIndex = i;
+                else ++lastIndex;
             }
         } else return tempLastIndex;
         return lastIndex;
     }
 
-    public int getOtherPlayerStoreIndex() {
+    public boolean choiceBelongsToOtherPlayer(int choice) {
+        return choice < 8 && choice > 0;
+    }
+
+    public int getOtherPlayerStoreIndex(int storeIndex) {
         if (storeIndex == 0) return 8;
         else return 0;
     }
 
     public Crater[] getButtonChoices() {return buttonChoices;}
 
+    public int[][] getSevenStates() {return sevenStates;}
+
+    public int getStoreIndex() {
+        return storeIndex;
+    }
+
+    public void setSevenStates(int[][] states) {sevenStates = states;}
+
     public void setButtonChoices() {buttonChoices = getStore().getTruePlayerCraters(SimpleAI.this);}
 
     public void setStoreIndex(int index) {storeIndex = index;}
 
-    public Crater getBestCrater(){
-        Iterator it = moveGeneratedFrom.entrySet().iterator();
-        for (int i =0 ; i < 16; i ++ ) Log.d("bestmove",bestMove[i] + "");
+
+    public Crater getBestCrater() {
+        return (Crater) searchThrough(moveGeneratedFrom.entrySet().iterator(), bestMove);
+    }
+
+    public Integer getOpponentChoiceForSteal(int[] key) {
+        return (Integer) searchThrough(opponentChoicesToSteal.entrySet().iterator(), key);
+    }
+
+    public Object searchThrough(Iterator it, int[] key) {
         boolean isEquals;
         while (it.hasNext()){
             HashMap.Entry pair = (HashMap.Entry) it.next();
             isEquals = true;
-            for (int i = 0; i < bestMove.length; i++)
-                if ( ((int[]) pair.getKey())[i] != bestMove[i] ) {
+            for (int i = 0; i < key.length; i++)
+                if ( ((int[]) pair.getKey())[i] != key[i] ) {
                     isEquals = false;
-                    Log.d("BREAK","BREAK TRIGGERED");
                     break;
                 }
             if (isEquals){
-                Log.d("Info", "FOUND CRATER!!!");
-                return (Crater) pair.getValue();
+                return pair.getValue();
             }
         }
         return null;
     }
 
+    public boolean areGeneratedFromSameMove(int[] board1, int[] board2) {
+        Crater from1 = (Crater) searchThrough(moveGeneratedFrom.entrySet().iterator(), board1);
+        Crater from2 = (Crater) searchThrough(moveGeneratedFrom.entrySet().iterator(), board2);
+        return from1 == from2;
+    }
+
     public void clearCollections() {
-        moveGeneratedFrom = new HashMap<>();
-        movesWithFreeTurn = new ArrayList<>();
-        movesWhichPreventSteals = new ArrayList<>();
-        opponentChoicesToSteal = new HashMap<>();
-        opponentBoardsBeforeSteal = new HashMap<>();
+//        moveGeneratedFrom = new HashMap<>();
+//        movesWithFreeTurn = new ArrayList<>();
+//        movesWhichPreventSteals = new ArrayList<>();
+//        opponentChoicesToSteal = new HashMap<>();
+//        opponentBoardsBeforeSteal = new HashMap<>();
         sevenStates = new int[7][16];
         moveGeneratedFrom.clear();
         movesWithFreeTurn.clear();
