@@ -194,8 +194,6 @@ public class TwoPlayerLocal extends AppCompatActivity {
             craterList[i].setOwner(secondPlayer);
             craterList[i].setGravity(Gravity.TOP);
         }
-        craterList[7].setStones(12);
-        craterList[4].setStones(0);
     }
 
     private int getLeftInParent(View view) {
