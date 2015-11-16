@@ -160,19 +160,19 @@ public class AITest {
     @Test
     public void preventsSteal1() {
         int[] testBoard = {21, 6, 3, 10, 7, 7, 7, 0, 37, 9, 5, 7, 7, 16, 7, 7};
-        assertFalse(aiPlayer.preventsSteal(testBoard, 10, true, 0));
+        assertFalse(aiPlayer.canOpponentStealThisIndex(testBoard, 10, true, 0));
     }
 
     @Test
     public void preventsSteal2() {
-        int[] testBoard = {21, 6, 3, 10, 7, 7, 7, 12, 37, 6, 9, 7, 7, 16, 7, 7};
-        assertTrue(aiPlayer.preventsSteal(testBoard, 1, true, 8));
+        int[] testBoard = {21, 6, 3, 10, 7, 7, 7, 12, 37, 6, 9, 7, 7, 16, 7, 0};
+        assertTrue(aiPlayer.canOpponentStealThisIndex(testBoard, 1, true, 8));
     }
 
     @Test
     public void preventsSteal3() {
         int[] testBoard = {21, 6, 4, 10, 7, 7, 7, 0, 37, 6, 9, 7, 7, 16, 7, 7};
-        assertFalse(aiPlayer.preventsSteal(testBoard, 10, true, 0));
+        assertFalse(aiPlayer.canOpponentStealThisIndex(testBoard, 10, true, 0));
     }
 
     @Test
@@ -234,6 +234,7 @@ public class AITest {
 
     @Test
     public void testGenerateBestMove() {
+        int[] expected = {33, 7, 7, 7, 1, 0, 7, 7, 31, 0, 0, 0, 1, 1, 1, 2};
         board[0].setStones(33);
         board[4].setStones(1);
         board[5].setStones(0);
@@ -247,7 +248,13 @@ public class AITest {
         board[15].setStones(1);
         aiPlayer.generateSevenStates();
         aiPlayer.generateBestMove();
-        assertTrue(aiPlayer.getButtonChoices()[3] == aiPlayer.getBestCrater());
+        aiPlayer.getBestCrater().makeMoveFromHere();
+        int[] result = board[0].getArrayBoard(aiPlayer.getStore());
+        //assertArrayEquals(expected, result);
+        boolean b = board[11] == aiPlayer.getBestCrater();
+        String one = board[11].toString();
+        String two = aiPlayer.getBestCrater().toString();
+        assertTrue(b);
     }
 
 
