@@ -34,6 +34,7 @@
         android:layout_alignParentLeft="true"
         android:textColor="@android:color/white"
         android:textSize="@dimen/main_screen_text_size"
+        android:onClick="createAIDialog"
         android:background="@drawable/store2"/>
     <Button
         android:id="@+id/two_player_local"

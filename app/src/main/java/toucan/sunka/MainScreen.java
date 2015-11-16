@@ -16,6 +16,7 @@ import android.widget.Button;
 public class MainScreen extends FragmentActivity {
 
     Button multiPlayerLocal;
+    Button singlePlayerLocal;
     Button multiPlayer;
     Button statistics;
     Button exit;
@@ -56,6 +57,13 @@ public class MainScreen extends FragmentActivity {
                 finish();
             }
         });
+        singlePlayerLocal = (Button) findViewById(R.id.single_player);
+        singlePlayerLocal.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                createAIDialog();
+            }
+        });
 
         multiPlayer = (Button) findViewById (R.id.two_player_online);
         final FragmentActivity activity = this;
@@ -94,12 +102,24 @@ public class MainScreen extends FragmentActivity {
 
     /**
      * Creates an instance of the MultiplayerDialogFragment and displays it on screen.
+     * The user can use the dialog to enter her name and open a two player game on
+     * the local device.
      */
     public void createMultiplayerDialog() {
         DialogFragment fragment = new MultiplayerDialogFragment();
         FragmentManager fm = getSupportFragmentManager();
         fragment.show(fm,"multiplayerDialog");
+    }
 
+    /**
+     * Creates an instance of the AIDialogFragment and displays it on screen.
+     * The user can use the dialog to enter her name and to open a single player
+     * game on the local device which puts her up against an AI player.
+     */
+    public void createAIDialog(){
+        DialogFragment fragment = new AIDialogFragment();
+        FragmentManager fm = getSupportFragmentManager();
+        fragment.show(fm,"aiDialog");
     }
 
     public void onStop() {

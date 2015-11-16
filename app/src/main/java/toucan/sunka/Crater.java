@@ -28,11 +28,6 @@ public class Crater extends Button {
     public Crater(Context context, AttributeSet attrs){
         super(context, attrs);
         initialise(false);
-        try {
-            //activity = (TwoPlayerLocal) getContext();
-        } catch (ClassCastException e) {
-           // activity = (TwoPlayerOnline) getContext();
-        }
     }
 
     public Crater(boolean store) {
@@ -225,7 +220,6 @@ public class Crater extends Button {
                 winner.setGamesWon(winner.getNumberOfGamesWon() + 1);
                 loser.setGamesLost(loser.getNumberOfGamesLost()+1);}
                 catch (NullPointerException n){}
-//                getContext().createGameOverDialog();
             }
         }
     }
@@ -356,6 +350,15 @@ public class Crater extends Button {
         craterList[i] = currentCrater;
         craterList[i + 1] = player.getStore().getOppositeCrater();
         return craterList;
+    }
+
+    public Crater[] getTruePlayerCraters(Player player) {
+        Crater[] craters = new Crater[8];
+        craters[0] = player.getStore().getOppositeCrater().getNextCrater();
+        for(int i = 1; i < craters.length; ++i) {
+            craters[i] = craters[i - 1].getNextCrater();
+        }
+        return craters;
     }
 
     /**
@@ -629,4 +632,17 @@ public class Crater extends Button {
                 break;
         }
     }
+
+    public int[] getArrayBoard(Crater startingFrom) {
+        int[] array = new int[16];
+        array[0] = startingFrom.getStones();
+        Crater currentCrater = startingFrom.getNextCrater();
+        int index = 1;
+        while(currentCrater != startingFrom) {
+            array[index++] = currentCrater.getStones();
+            currentCrater = currentCrater.getNextCrater();
+        }
+        return array;
+    }
+
 }

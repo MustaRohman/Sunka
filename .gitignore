@@ -13,7 +13,7 @@ node_modules/
 # generated files
 bin/
 gen/
-
+node_modules/
 # Local configuration file (sdk path, etc)
 local.properties
 

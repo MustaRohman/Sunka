@@ -33,6 +33,11 @@
             android:label="@string/title_activity_two_player_online"
             android:screenOrientation="landscape" >
         </activity>
+        <activity
+            android:name=".OnePlayerAI"
+            android:label="@string/title_activity_one_player_ai"
+            android:screenOrientation="landscape" >
+        </activity>
     </application>
 
 </manifest>

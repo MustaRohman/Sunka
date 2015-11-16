@@ -55,10 +55,8 @@ public class TwoPlayerLocal extends AppCompatActivity {
 
     private void moveAnimation(final Crater crater, final int count, final Player player, final ImageView stoneImage){
         stoneImage.setVisibility(View.INVISIBLE);
-        Log.d("moveAnimation", "stoneImage has been set as Invisible");
         if (count > 0) {
             stoneImage.setVisibility(View.VISIBLE);
-            Log.d("moveAnimation", "stoneImage has been set as Visible");
             int moveXCenter = (getLeftInParent(crater) - getLeftInParent(stoneImage)) +
                     (crater.getRight() - crater.getLeft()) / 4;
             int moveY = getTopInParent(crater) - getTopInParent(stoneImage) +
@@ -74,7 +72,6 @@ public class TwoPlayerLocal extends AppCompatActivity {
                 @Override
                 public void onAnimationEnd(Animation animation) {
                     stoneImage.setVisibility(View.INVISIBLE);
-                    Log.d("moveAnimation", "stoneImage has been set as Invisible");
                     Crater nextCrater;
                     //Checks if next crater is opponent's store
                     if (crater.getNextCrater().equals(player.getStore().getOppositeCrater())) {
@@ -105,11 +102,9 @@ public class TwoPlayerLocal extends AppCompatActivity {
             }
             firstMove = false;
         }
-        if (crater.getActivePlayer().equals(firstPlayer)) {
-            stoneImage = (ImageView) findViewById(R.id.store_imageView_p1);
-        } else {
-            stoneImage = (ImageView) findViewById(R.id.store_imageView_p2);
-        }
+        stoneImage = crater.getActivePlayer().equals(firstPlayer) ?
+                ((ImageView) findViewById(R.id.store_imageView_p1)) :
+                ((ImageView) findViewById(R.id.store_imageView_p2));
         Crater.updateCraterImage(crater, 0);
         moveAnimation(crater.getNextCrater(), crater.getStones(), crater.getActivePlayer(), stoneImage);
         crater.makeMoveFromHere();
