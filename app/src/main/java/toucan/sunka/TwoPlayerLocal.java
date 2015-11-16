@@ -21,15 +21,6 @@ public class TwoPlayerLocal extends AppCompatActivity {
     private Crater playerOneStore;
     private Crater playerTwoStore;
     Crater[] craterList = new Crater[16];
-
-    public Player getFirstPlayer() {
-        return firstPlayer;
-    }
-
-    public Player getSecondPlayer() {
-        return secondPlayer;
-    }
-
     private Player firstPlayer;
     private Player secondPlayer;
     private TextView firstPlayerLabel;
@@ -57,27 +48,9 @@ public class TwoPlayerLocal extends AppCompatActivity {
 
     public void onCraterClick(View view){
         Crater crater = (Crater) view;
-        if (firstMove){
-            if (crater.getOwner() == firstPlayer) {
-                firstPlayer.setPlayingTurnTo(true);
-                firstPlayer.highlightText();
-                secondPlayer.setPlayingTurnTo(false);
-            }
-            else {
-                firstPlayer.setPlayingTurnTo(false);
-                secondPlayer.highlightText();
-                secondPlayer.setPlayingTurnTo(true);
-            }
-            firstMove = false;
-        }
-        if (crater.getActivePlayer().equals(firstPlayer)){
-            stoneImage = (ImageView) findViewById(R.id.store_imageView_p1);
-        } else {
-            stoneImage = (ImageView) findViewById(R.id.store_imageView_p2);
-        }
-        Crater.updateCraterImage(crater, 0);
-        moveAnimation(crater.getNextCrater(), crater.getStones(), crater.getActivePlayer(), stoneImage);
-        crater.makeMoveFromHere();
+        if (crater.getOwner().isPlayingTurn() || firstMove)
+            executeMove(crater);
+
     }
 
     private void moveAnimation(final Crater crater, final int count, final Player player, final ImageView stoneImage){
@@ -109,11 +82,6 @@ public class TwoPlayerLocal extends AppCompatActivity {
                     } else {
                         nextCrater = crater.getNextCrater();
                     }
-                    if (crater.isStore()) {
-                        Crater.updateStoreImage(crater, crater.getStones());
-                    } else {
-                        Crater.updateCraterImage(crater, crater.getStones());
-                    }
                     moveAnimation(nextCrater, count - 1, player, stoneImage);
                 }
                 @Override
@@ -124,27 +92,28 @@ public class TwoPlayerLocal extends AppCompatActivity {
         }
     }
 
-
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.menu_two_player_local, menu);
-        return true;
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
-        int id = item.getItemId();
-
-        //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
-            return true;
+    public void executeMove(Crater crater){
+        if (firstMove) {
+            if (crater.getOwner() == firstPlayer) {
+                firstPlayer.setPlayingTurnTo(true);
+                firstPlayer.highlightText();
+                secondPlayer.setPlayingTurnTo(false);
+            } else {
+                firstPlayer.setPlayingTurnTo(false);
+                secondPlayer.highlightText();
+                secondPlayer.setPlayingTurnTo(true);
+            }
+            firstMove = false;
         }
-
-        return super.onOptionsItemSelected(item);
+        if (crater.getActivePlayer().equals(firstPlayer)) {
+            stoneImage = (ImageView) findViewById(R.id.store_imageView_p1);
+        } else {
+            stoneImage = (ImageView) findViewById(R.id.store_imageView_p2);
+        }
+        Crater.updateCraterImage(crater, 0);
+        moveAnimation(crater.getNextCrater(), crater.getStones(), crater.getActivePlayer(), stoneImage);
+        crater.makeMoveFromHere();
+        if (crater.checkGameOver()) createGameOverDialog();
     }
 
     public void initializeStores() {
@@ -156,42 +125,6 @@ public class TwoPlayerLocal extends AppCompatActivity {
         craterList[8] = playerOneStore;
     }
 
-    public void initializeCraters(){
-        initializeStores();
-        LinearLayout topRow = (LinearLayout) findViewById(R.id.top_row);
-        LinearLayout bottomRow = (LinearLayout) findViewById(R.id.bottom_row);
-        int j = 15;
-
-        for (int i = 1; i < bottomRow.getChildCount() + 1; i++ ) {
-            Crater currentCrater = (Crater) bottomRow.getChildAt(i-1);
-            craterList[i] = currentCrater;
-        }
-        for (int i = 0; i < topRow.getChildCount(); i++){
-            Crater currentCrater = (Crater) topRow.getChildAt(i);
-            craterList[j--] = currentCrater;
-        }
-        craterList[15].setNextCrater(craterList[0]);
-        for (int i = 0; i < 15; i++ )
-            craterList[i].setNextCrater(craterList[i+1]);
-
-        craterList[0].setOppositeCrater(craterList[8]);
-        craterList[8].setOppositeCrater(craterList[0]);
-        craterList[0].setOwner(secondPlayer);
-        secondPlayer.setStore(craterList[0]);
-        craterList[8].setOwner(firstPlayer);
-        firstPlayer.setStore(craterList[8]);
-        for (int i = 1; i < 8; i++) {
-            craterList[i].setOppositeCrater(craterList[16 - i]);
-            craterList[i].setOwner(firstPlayer);
-            craterList[i].setGravity(Gravity.BOTTOM);
-        }
-        for (int i = 9; i < 16; i++) {
-            craterList[i].setOppositeCrater(craterList[16 - i]);
-            craterList[i].setOwner(secondPlayer);
-            craterList[i].setGravity(Gravity.TOP);
-
-        }
-    }
     public void createGameOverDialog(){
         DialogFragment fragment = new GameOverDialog();
         FragmentManager fm = getSupportFragmentManager();
@@ -225,16 +158,44 @@ public class TwoPlayerLocal extends AppCompatActivity {
         fragment.setArguments(playerInfo);
         fragment.show(fm,"gameOverDialog");
     }
-    public void turnNotification(Player p){
-        if(firstPlayer.equals(p)){
-            firstPlayerLabel.setBackgroundColor(Color.GREEN);
-            secondPlayerLabel.setBackgroundColor(Color.TRANSPARENT);
+
+    public void initializeCraters(){
+        initializeStores();
+        LinearLayout topRow = (LinearLayout) findViewById(R.id.top_row);
+        LinearLayout bottomRow = (LinearLayout) findViewById(R.id.bottom_row);
+        int j = 15;
+
+        for (int i = 1; i < bottomRow.getChildCount() + 1; i++ ) {
+            Crater currentCrater = (Crater) bottomRow.getChildAt(i-1);
+            craterList[i] = currentCrater;
         }
-        else{
-            secondPlayerLabel.setBackgroundColor(Color.GREEN);
-            firstPlayerLabel.setBackgroundColor(Color.TRANSPARENT);
+        for (int i = 0; i < topRow.getChildCount(); i++){
+            Crater currentCrater = (Crater) topRow.getChildAt(i);
+            craterList[j--] = currentCrater;
+        }
+        craterList[15].setNextCrater(craterList[0]);
+        for (int i = 0; i < 15; i++ )
+            craterList[i].setNextCrater(craterList[i+1]);
+
+        craterList[0].setOppositeCrater(craterList[8]);
+        craterList[8].setOppositeCrater(craterList[0]);
+        craterList[0].setOwner(secondPlayer);
+        secondPlayer.setStore(craterList[0]);
+        craterList[8].setOwner(firstPlayer);
+        firstPlayer.setStore(craterList[8]);
+        for (int i = 1; i < 8; i++) {
+            craterList[i].setOppositeCrater(craterList[16 - i]);
+            craterList[i].setOwner(firstPlayer);
+            craterList[i].setGravity(Gravity.BOTTOM);
+
+        }
+        for (int i = 9; i < 16; i++) {
+            craterList[i].setOppositeCrater(craterList[16 - i]);
+            craterList[i].setOwner(secondPlayer);
+            craterList[i].setGravity(Gravity.TOP);
         }
     }
+
     private int getLeftInParent(View view) {
         if (view.getParent() == view.getRootView())
             return view.getLeft();
@@ -248,5 +209,35 @@ public class TwoPlayerLocal extends AppCompatActivity {
         else
             return view.getTop() + getTopInParent((View) view.getParent());
     }
+    public Player getFirstPlayer() {
+        return firstPlayer;
+    }
+
+    public Player getSecondPlayer() {
+        return secondPlayer;
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        // Inflate the menu; this adds items to the action bar if it is present.
+        getMenuInflater().inflate(R.menu.menu_two_player_local, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        // Handle action bar item clicks here. The action bar will
+        // automatically handle clicks on the Home/Up button, so long
+        // as you specify a parent activity in AndroidManifest.xml.
+        int id = item.getItemId();
+
+        //noinspection SimplifiableIfStatement
+        if (id == R.id.action_settings) {
+            return true;
+        }
+
+        return super.onOptionsItemSelected(item);
+    }
+
 
 }

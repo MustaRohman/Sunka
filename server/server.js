@@ -3,7 +3,7 @@
   var http = require('http').Server(app)
   var io = require('socket.io')(http)
   var INFO = "INFO", ERROR = "ERROR", REC = "RECEIVED", BRD = "BROADCAST"
-  var serverList = ['opposite']
+  var serverList = ['']
   var games = {}
   var matchID = []
   var player1, player2
@@ -26,9 +26,13 @@
     })
   })
 
-  http.listen(3000, function(){
+  http.listen(process.env.PORT || 3000, function(){
     Log(INFO, "Listening on port 3000")
   })
+
+  app.get('/', function(req, res) {
+    res.send('Server started. All information restarted')
+});
 
   function parseRequest(request) {
     switch (true) {

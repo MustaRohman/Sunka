@@ -64,6 +64,7 @@
         android:textAppearance="?android:attr/textAppearanceLarge"
         android:id="@+id/opponent_name"
         android:text="OpponentName"
+        android:textColor="@android:color/white"
         android:layout_gravity="center_vertical"
         android:layout_centerVertical="true"
         android:layout_below="@id/server_list"
@@ -92,9 +93,9 @@
     <TextView
         android:layout_width="350dp"
         android:layout_height="50dp"
-        android:text="PlayerName"
         android:textSize="@dimen/text_size"
         android:textColor="@android:color/white"
+        android:id="@+id/player_text_view_mp"
         android:layout_above="@id/create_server"
         android:layout_alignParentRight="true"
         android:gravity="center"
