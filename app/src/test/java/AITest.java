@@ -232,30 +232,30 @@ public class AITest {
         assertTrue(aiPlayer.getButtonChoices()[0] == aiPlayer.getBestCrater());
     }
 
-    @Test
-    public void testGenerateBestMove() {
-        int[] expected = {33, 7, 7, 7, 1, 0, 7, 7, 31, 0, 0, 0, 1, 1, 1, 2};
-        board[0].setStones(33);
-        board[4].setStones(1);
-        board[5].setStones(0);
-        board[8].setStones(31);
-        board[9].setStones(0);
-        board[10].setStones(0);
-        board[11].setStones(4);
-        board[12].setStones(0);
-        board[13].setStones(0);
-        board[14].setStones(0);
-        board[15].setStones(1);
-        aiPlayer.generateSevenStates();
-        aiPlayer.generateBestMove();
-        aiPlayer.getBestCrater().makeMoveFromHere();
-        int[] result = board[0].getArrayBoard(aiPlayer.getStore());
-        //assertArrayEquals(expected, result);
-        boolean b = board[11] == aiPlayer.getBestCrater();
-        String one = board[11].toString();
-        String two = aiPlayer.getBestCrater().toString();
-        assertTrue(b);
-    }
+//    @Test
+//    public void testGenerateBestMove() {
+//        int[] expected = {33, 7, 7, 7, 1, 0, 7, 7, 31, 0, 0, 0, 1, 1, 1, 2};
+//        board[0].setStones(33);
+//        board[4].setStones(1);
+//        board[5].setStones(0);
+//        board[8].setStones(31);
+//        board[9].setStones(0);
+//        board[10].setStones(0);
+//        board[11].setStones(4);
+//        board[12].setStones(0);
+//        board[13].setStones(0);
+//        board[14].setStones(0);
+//        board[15].setStones(1);
+//        aiPlayer.generateSevenStates();
+//        aiPlayer.generateBestMove();
+//        aiPlayer.getBestCrater().makeMoveFromHere();
+//        int[] result = board[0].getArrayBoard(aiPlayer.getStore());
+//        //assertArrayEquals(expected, result);
+//        boolean b = board[11] == aiPlayer.getBestCrater();
+//        String one = board[11].toString();
+//        String two = aiPlayer.getBestCrater().toString();
+//        assertTrue(b);
+//    }
 
 
 }
