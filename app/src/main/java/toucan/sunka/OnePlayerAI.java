@@ -48,8 +48,10 @@ public class OnePlayerAI extends AppCompatActivity {
         secondPlayerLabel.setText(aiPlayer.getPlayerName());
     }
 
-    private class makeAIMove extends AsyncTask<Void, Void, Void> {
-        protected Void doInBackground(Void... params){
+    private class makeAIMove extends AsyncTask<Integer, Boolean, Void> {
+        protected int[] lastMove = new int[2];
+        protected boolean finished = false;
+        protected Void doInBackground(Integer... params){
             try {
                 Thread.sleep(2100);
                 Log.d("INFO","Waiting for human player to finish");
@@ -66,17 +68,42 @@ public class OnePlayerAI extends AppCompatActivity {
             }
             aiPlayer.generateSevenStates();
             aiPlayer.generateBestMove();
+            try {
+                Thread.sleep(2000);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+            publishProgress();
+            Log.d("NORMAL TURN", "NORMAL TURN!");
+            while (aiPlayer.getsFreeMoveWith(lastMove[0], lastMove[1], 8)){
+                    try {
+                        Thread.sleep(5000);
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    }
+                    Log.d("EXTRA TURN", "GOT EXTRA TURN");
+                    aiPlayer.generateSevenStates();
+                    aiPlayer.generateBestMove();
+                    finished = false;
+                    publishProgress();
+            }
             return null;
         }
 
-        protected void onPostExecute(Void result) {
+        protected void onProgressUpdate(Boolean... result) {
             Crater crater = aiPlayer.getBestCrater();
             stoneImage = crater.getActivePlayer().equals(firstPlayer) ?
                     ((ImageView) findViewById(R.id.vsai_store_imageView_p1)) :
                     ((ImageView) findViewById(R.id.vsai_store_imageView_p2));
             moveAnimation(crater.getNextCrater(), crater.getStones(), crater.getActivePlayer(), stoneImage);
+            updateLatestMove(crater);
             crater.makeMoveFromHere();
+            finished = true;
+        }
 
+        protected void updateLatestMove(Crater crater){
+            int [] ret = {crater.getPositionOnBoard(), crater.getStones()};
+            lastMove = ret;
         }
 
     }
@@ -99,13 +126,14 @@ public class OnePlayerAI extends AppCompatActivity {
                 ((ImageView) findViewById(R.id.vsai_store_imageView_p1)) :
                 ((ImageView) findViewById(R.id.vsai_store_imageView_p2));
         if (crater.getsFreeMove()) wait = true;
+        int pos = crater.getPositionOnBoard(), stn = crater.getStones();
         moveAnimation(crater.getNextCrater(), crater.getStones(), crater.getActivePlayer(), stoneImage);
         crater.makeMoveFromHere();
         if (crater.checkSide(aiPlayer)) wait = true;
         if (wait && crater.checkSide(firstPlayer))
              createGameOverDialog();
         if (!wait)
-            new makeAIMove().execute();
+            new makeAIMove().execute(pos,stn);
     }
 
     private void moveAnimation(final Crater crater, final int count, final Player player, final ImageView stoneImage){
@@ -202,7 +230,8 @@ public class OnePlayerAI extends AppCompatActivity {
             craterList[i].setGravity(Gravity.TOP);
         }
         craterList[7].setStones(12);
-        craterList[4].setStones(0);
+        craterList[4].setStones(1);
+        craterList[5].setStones(0);
         aiPlayer.setButtonChoices();
     }
 

@@ -120,7 +120,7 @@ public class SimpleAI extends Player {
         return board;
     }
 
-    public void generateBestMove() {
+    public boolean generateBestMove() {
         int[] bestMoveMoveSoFar;
         int[] moveWithBestStore = getMoveWithBestStore();
         bestMoveMoveSoFar = moveWithBestStore;
@@ -150,6 +150,7 @@ public class SimpleAI extends Player {
         }
 
         bestMove = bestMoveMoveSoFar;
+        return weDidNotChooseATurnWithAFreeMove;
     }
 
     public int[] getMoveWithBestStore() {
