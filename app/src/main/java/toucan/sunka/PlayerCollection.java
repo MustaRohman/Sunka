@@ -131,6 +131,10 @@ public class PlayerCollection {
         String playerDatabase = "";
         int counter = 1;
 
+        if (isClear()) {
+            return "Empty :(";
+        }
+
         for(Player p: players) {
             playerDatabase += "*** Player " + counter + " ***" + "\n" + p + "\n";
             ++counter;

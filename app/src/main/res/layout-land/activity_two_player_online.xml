@@ -1,0 +1,246 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                xmlns:tools="http://schemas.android.com/tools" android:layout_width="match_parent"
+                android:layout_height="match_parent" android:paddingLeft="@dimen/activity_horizontal_margin"
+                android:paddingRight="@dimen/activity_horizontal_margin"
+                android:paddingTop="@dimen/activity_vertical_margin"
+                android:paddingBottom="@dimen/activity_vertical_margin"
+                tools:context="toucan.sunka.TwoPlayerLocal"
+                android:background="@drawable/rainforest">
+
+
+    <LinearLayout
+        android:id="@+id/online_sunka_board_layout"
+        android:layout_width="match_parent"
+        android:layout_height="400dp"
+        android:background="@drawable/sunka_board"
+        android:gravity="center"
+        android:layout_centerInParent="true"
+        android:orientation="horizontal"
+        android:animateLayoutChanges="true">
+
+        <LinearLayout
+            android:id="@+id/online_linear_layout"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:orientation="horizontal"
+            android:animateLayoutChanges="true">
+
+            <toucan.sunka.Crater
+                android:background="@drawable/store2"
+                android:layout_width="@dimen/button_width_2"
+                android:layout_height="fill_parent"
+                android:id="@+id/online_store_left"
+                android:textSize="@dimen/store_text_size"
+                android:textColor="@android:color/white"
+                android:rotation="180.00"/>
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="vertical" >
+
+                <LinearLayout
+                    android:id="@+id/online_top_row"
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal" >
+
+                    <toucan.sunka.Crater
+                        android:onClick="onCraterClick"
+                        android:background="@drawable/button_enabled"
+                        android:layout_width="@dimen/button_width_2"
+                        android:layout_height="@dimen/button_height_2"
+                        android:textSize="@dimen/crater_text_size"
+                        android:textColor="@android:color/white"
+                        android:rotation="180.00"/>
+
+                    <toucan.sunka.Crater
+                        android:id="@+id/online_crater14"
+                        android:background="@drawable/button_disabled"
+                        android:layout_width="@dimen/button_width_2"
+                        android:layout_height="@dimen/button_height_2"
+                        android:textSize="@dimen/crater_text_size"
+                        android:textColor="@android:color/white"
+                        android:rotation="180.00"/>
+
+                    <toucan.sunka.Crater
+                        android:onClick="onCraterClick"
+                        android:background="@drawable/button_enabled"
+                        android:layout_width="@dimen/button_width_2"
+                        android:layout_height="@dimen/button_height_2"
+                        android:textSize="@dimen/crater_text_size"
+                        android:textColor="@android:color/white"
+                        android:rotation="180.00"/>
+
+                    <toucan.sunka.Crater
+                        android:onClick="onCraterClick"
+                        android:background="@drawable/button_enabled"
+                        android:layout_width="@dimen/button_width_2"
+                        android:layout_height="@dimen/button_height_2"
+                        android:textSize="@dimen/crater_text_size"
+                        android:textColor="@android:color/white"
+                        android:rotation="180.00"/>
+
+                    <toucan.sunka.Crater
+                        android:onClick="onCraterClick"
+                        android:background="@drawable/button_enabled"
+                        android:layout_width="@dimen/button_width_2"
+                        android:layout_height="@dimen/button_height_2"
+                        android:textSize="@dimen/crater_text_size"
+                        android:textColor="@android:color/white"
+                        android:rotation="180.00"/>
+
+                    <toucan.sunka.Crater
+                        android:id="@+id/online_crater10"
+                        android:background="@drawable/button_enabled"
+                        android:layout_width="@dimen/button_width_2"
+                        android:layout_height="@dimen/button_height_2"
+                        android:textSize="@dimen/crater_text_size"
+                        android:textColor="@android:color/white"
+                        android:rotation="180.00"/>
+
+                    <toucan.sunka.Crater
+                        android:id="@+id/online_crater9"
+                        android:background="@drawable/button_enabled"
+                        android:layout_width="@dimen/button_width_2"
+                        android:layout_height="@dimen/button_height_2"
+                        android:textSize="@dimen/crater_text_size"
+                        android:textColor="@android:color/white"
+                        android:rotation="180.00"/>
+
+                </LinearLayout>
+
+                <LinearLayout
+                    android:id="@+id/online_bottom_row"
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:animateLayoutChanges="true">
+
+                    <toucan.sunka.Crater
+                        android:id="@+id/online_crater1"
+                        android:onClick="onCraterClick"
+                        android:background="@drawable/button_enabled"
+                        android:layout_width="@dimen/button_width_2"
+                        android:layout_height="@dimen/button_height_2"
+                        android:textSize="@dimen/crater_text_size"
+                        android:textColor="@android:color/white" />
+
+                    <toucan.sunka.Crater
+                        android:id="@+id/online_crater2"
+                        android:onClick="onCraterClick"
+                        android:background="@drawable/button_enabled"
+                        android:layout_width="@dimen/button_width_2"
+                        android:layout_height="@dimen/button_height_2"
+                        android:textSize="@dimen/crater_text_size"
+                        android:textColor="@android:color/white"/>
+
+                    <toucan.sunka.Crater
+                        android:id="@+id/online_crater3"
+                        android:onClick="onCraterClick"
+                        android:background="@drawable/button_enabled"
+                        android:layout_width="@dimen/button_width_2"
+                        android:layout_height="@dimen/button_height_2"
+                        android:textSize="@dimen/crater_text_size"
+                        android:textColor="@android:color/white"/>
+
+                    <toucan.sunka.Crater
+                        android:id="@+id/online_crater4"
+                        android:onClick="onCraterClick"
+                        android:background="@drawable/button_enabled"
+                        android:layout_width="@dimen/button_width_2"
+                        android:layout_height="@dimen/button_height_2"
+                        android:textSize="@dimen/crater_text_size"
+                        android:textColor="@android:color/white"/>
+
+                    <toucan.sunka.Crater
+                        android:id="@+id/online_crater5"
+                        android:onClick="onCraterClick"
+                        android:background="@drawable/button_enabled"
+                        android:layout_width="@dimen/button_width_2"
+                        android:layout_height="@dimen/button_height_2"
+                        android:textSize="@dimen/crater_text_size"
+                        android:textColor="@android:color/white"/>
+
+                    <toucan.sunka.Crater
+                        android:id="@+id/online_crater6"
+                        android:onClick="onCraterClick"
+                        android:background="@drawable/button_enabled"
+                        android:layout_width="@dimen/button_width_2"
+                        android:layout_height="@dimen/button_height_2"
+                        android:textSize="@dimen/crater_text_size"
+                        android:textColor="@android:color/white"/>
+
+                    <toucan.sunka.Crater
+                        android:onClick="onCraterClick"
+                        android:id="@+id/online_crater7"
+                        android:background="@drawable/button_enabled"
+                        android:layout_width="@dimen/button_width_2"
+                        android:layout_height="@dimen/button_height_2"
+                        android:textSize="@dimen/crater_text_size"
+                        android:textColor="@android:color/white"/>
+
+                </LinearLayout>
+
+            </LinearLayout>
+
+            <toucan.sunka.Crater
+                android:background="@drawable/store2"
+                android:layout_width="@dimen/button_width_2"
+                android:layout_height="fill_parent"
+                android:id="@+id/online_store_right"
+                android:textSize="@dimen/store_text_size"
+                android:textColor="@android:color/white"/>
+
+        </LinearLayout>
+
+    </LinearLayout>
+
+    <!-- Labels, top and bottom respectively-->
+    <TextView
+        android:id="@+id/online_player_two_view"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:rotation="180.00"
+        android:layout_alignTop="@id/sunka_board_layout"
+        android:layout_alignParentTop="true"
+        android:layout_centerInParent="true"
+        android:padding="25dp"
+        android:text="Player Two"
+        android:background="@android:color/darker_gray"
+        android:textSize="@dimen/main_screen_text_size"/>
+
+    <TextView
+        android:id="@+id/online_player_one_view"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignBottom="@id/sunka_board_layout"
+        android:layout_alignParentBottom="true"
+        android:layout_centerInParent="true"
+        android:padding="25dp"
+        android:text="Player One"
+        android:background="@android:color/darker_gray"
+        android:textSize="@dimen/main_screen_text_size"/>
+
+    <ImageView
+        android:background="@drawable/stone"
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        android:id="@+id/online_store_imageView_p1"
+        android:layout_above="@+id/online_player_one_view"
+        android:layout_centerInParent="true"
+        android:onClick="onStoneClick"
+        android:visibility="invisible"/>
+
+    <ImageView
+        android:background="@drawable/stone"
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        android:id="@+id/online_store_imageView_p2"
+        android:layout_below="@+id/online_player_two_view"
+        android:layout_centerInParent="true"
+        android:onClick="onStoneClick"
+        android:visibility="invisible"/>
+
+</RelativeLayout>
